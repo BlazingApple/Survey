@@ -46,10 +46,11 @@ BlazingApples is an open-source set of packages that aims to speed application d
 - **[GPLv2](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)**
 
 ## Home Page :camera:
-![Homepage of the Copacetic Theme](https://github.com/taylorchasewhite/copacetic-frontity/blob/master/readme/2020-09-04%20-%20Frontity%20Site.png?raw=true)
+![Survey Administration](https://github.com/BlazingApple/Survey/blob/main/README/SurveyAdmin.png?raw=true)
 
-## Category :camera:
-![Category page of the Copacetic Theme](https://github.com/taylorchasewhite/copacetic-frontity/blob/master/readme/2020-09-04%20-%20Frontity%20Site%20-%20Category%20-%20Nature.png?raw=true)
+## Taking Surveys :camera:
+![Taking a survey](https://github.com/BlazingApple/Survey/blob/main/README/Taking%20a%20Survey.png?raw=true)
 
-## About Page :camera:
-![Random authored page of the Copacetic Theme](https://github.com/taylorchasewhite/copacetic-frontity/blob/master/readme/2020-09-04%20-%20Frontity%20Site%20-%20About.png?raw=true)
+## Monitoring Responses :camera:
+![Survey Responses](https://github.com/BlazingApple/Survey/blob/main/README/SurveyResults.png?raw=true)
+
