@@ -1,0 +1,122 @@
+﻿@inherits OwningComponentBase<SurveyService>
+
+@strError
+@if (ShowSurveyComplete)
+{
+	<h4>Responses Saved - Survey Complete</h4>
+}
+@if (SelectedSurvey.SurveyItems.Count == 0)
+{
+	<h4>No Survey Questions</h4>
+}
+else
+{
+	<RadzenTemplateForm TItem="DTOSurvey" Data="@SelectedSurvey" Submit="@SaveSurvey">
+		<div>
+			@foreach (var SurveyItem in SelectedSurvey.SurveyItems.OrderBy(x => x.Position))
+			{
+				<div class="row">
+					<div class="col-md-9" style="text-align: left;margin-bottom: 20px">
+						<b>@SurveyItem.ItemLabel</b>
+						<br />
+						@if (SurveyItem.ItemType == "Text Box")
+						{
+							<RadzenTextBox MaxLength="4000" Name="@SurveyItem.Id.ToString()"
+										   @bind-Value="@SurveyItem.AnswerValueString" />
+						}
+						@if (SurveyItem.ItemType == "Text Area")
+						{
+							<RadzenTextArea MaxLength="4000" Name="@SurveyItem.Id.ToString()"
+											@bind-Value="@SurveyItem.AnswerValueString" />
+						}
+						@if (SurveyItem.ItemType == "Date")
+						{
+							<RadzenDatePicker DateFormat="d" Name="@SurveyItem.Id.ToString()"
+											  @bind-Value="@SurveyItem.AnswerValueDateTime"
+											  TValue="DateTime?" ShowTime="false" />
+						}
+						@if (SurveyItem.ItemType == "Date Time")
+						{
+							<RadzenDatePicker TValue="DateTime?" Name="@SurveyItem.Id.ToString()"
+											  @bind-Value="@SurveyItem.AnswerValueDateTime"
+											  ShowTime="true" />
+						}
+						@if (SurveyItem.ItemType == "Dropdown")
+						{
+							<RadzenDropDown AllowClear="true" TValue="string" Name="@SurveyItem.Id.ToString()"
+											Data="@SurveyItem.SurveyItemOptions.OrderBy(x => x.Id)"
+											TextProperty="OptionLabel" ValueProperty="OptionLabel"
+											@bind-Value="@SurveyItem.AnswerValueString"
+											Style="width:300px;" />
+						}
+						@if (SurveyItem.ItemType == "Multi-Select Dropdown")
+						{
+							<RadzenDropDown Name="@SurveyItem.Id.ToString()"
+											TValue="IEnumerable<string>"
+											Multiple="true"
+											AllowClear="true"
+											AllowFiltering="true"
+											@bind-Value="SurveyItem.AnswerValueList"
+											Placeholder="Select..."
+											Data="@SurveyItem.SurveyItemOptions"
+											TextProperty="OptionLabel"
+											ValueProperty="OptionLabel"
+											Style="width:300px;" />
+						}
+						@if (SurveyItem.Required == 1)
+						{
+							<br /><RadzenRequiredValidator Component="@SurveyItem.Id.ToString()"
+													Text="Required" Popup="false"
+													Style="position: absolute" />
+						}
+					</div>
+				</div>
+			}
+		</div>
+		<div class="row">
+			<RadzenButton ButtonType="ButtonType.Submit" Text="Submit"></RadzenButton>
+		</div>
+	</RadzenTemplateForm>
+}
+
+
+@code {
+	[Parameter]
+	public DTOSurvey SelectedSurvey { get; set; }
+
+	[Parameter]
+	public EventHandler OnSubmit { get; set; }
+	private string strError = "";
+	private bool ShowSurveyComplete = false;
+	/// <summary>
+	/// Save and submit the survey to the database
+	/// </summary>
+	/// <returns></returns>
+	private async Task SaveSurvey()
+	{
+		try
+		{
+			var result = await @Service.CreateSurveyAnswersAsync(SelectedSurvey);
+
+			CompleteSurvey();
+		}
+		catch (Exception ex)
+		{
+			strError = ex.GetBaseException().Message;
+		}
+		OnSubmit.Invoke(this, null);
+	}
+
+	private void CompleteSurvey()
+	{
+		ShowSurveyComplete = true;
+
+		// Clear Answers
+		foreach (var item in SelectedSurvey.SurveyItems)
+		{
+			item.AnswerValueString = null;
+			item.AnswerValueDateTime = null;
+			item.AnswerValueList = null;
+		}
+	}
+}

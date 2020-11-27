@@ -1,0 +1,27 @@
+﻿<RadzenCard Style="height:300px">
+	<div class="row">
+		<div class="col-md-12">
+			<RadzenChart>
+				<RadzenDonutSeries Data="@Responses"
+								   CategoryProperty="OptionLabel"
+								   ValueProperty="Responses">
+					<TitleTemplate>
+						<div class="rz-donut-content">
+							<div>@Label</div>
+						</div>
+					</TitleTemplate>
+				</RadzenDonutSeries>
+			</RadzenChart>
+		</div>
+	</div>
+</RadzenCard>
+
+@code {
+
+	[Parameter]
+	public List<AnswerResponse> Responses { get; set; }
+
+	[Parameter]
+	public string Label { get; set; }
+
+}

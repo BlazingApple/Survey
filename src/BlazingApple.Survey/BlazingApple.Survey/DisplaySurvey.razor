@@ -1,0 +1,171 @@
+﻿@using System.Linq;
+@using System.Linq.Dynamic.Core
+@inject Radzen.DialogService dialogService
+@inherits OwningComponentBase<SurveyService>
+
+@strError
+@if (ExistingSurveys == null)
+{
+	<RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
+}
+else
+{
+	@if (ExistingSurveys.Value == true)
+	{
+		<div>
+			<RadzenDropDown TValue="DTOSurvey"
+							Data="@colSurveys"
+							TextProperty="SurveyName"
+							@bind-Value="SelectedSurvey"
+							Change="@(args => SelectedSurveyChange(args))" />
+		</div>
+		<br />
+		<RadzenTabs>
+			<Tabs>
+				<RadzenTabsItem Text="Survey">
+					<RenderSurveyToTake SelectedSurvey="@SelectedSurvey" OnSubmit="@((sender, args) => OnSurveySubmit(sender,args))" />
+				</RadzenTabsItem>
+				<RadzenTabsItem Text="Responses">
+					<RadzenPanel AllowCollapse="false" Style="margin-bottom: 10px">
+						<ChildContent>
+							<RadzenDataList Count="@SurveyResultsCount"
+											Data="@SurveyResults"
+											LoadData="@LoadSurveyResultsData"
+											PageSize="1" WrapItems="true" AllowPaging="true"
+											TItem="DTOSurveyItem">
+								<Template Context="item">
+									<RenderSurveyResults Label="@item.ItemLabel" Responses="@item.AnswerResponses"></RenderSurveyResults>
+								</Template>
+							</RadzenDataList>
+						</ChildContent>
+					</RadzenPanel>
+				</RadzenTabsItem>
+			</Tabs>
+		</RadzenTabs>
+	}
+}
+
+@code {
+	string strError = "";
+
+	bool? ExistingSurveys = null;
+	List<DTOSurvey> colSurveys;
+	DTOSurvey SelectedSurvey = new DTOSurvey();
+	protected override async Task OnInitializedAsync()
+	{
+		colSurveys = new List<DTOSurvey>();
+		try
+		{
+			var Surveys = await @Service.GetAllSurveysAsync();
+
+			foreach (var survey in Surveys)
+			{
+				colSurveys.Add(ConvertToDTO(survey));
+			}
+
+			if (colSurveys.Count > 0)
+			{
+				ExistingSurveys = true;
+				SelectedSurvey = colSurveys.FirstOrDefault();
+			}
+			else
+			{
+				ExistingSurveys = false;
+			}
+		}
+		catch (Exception ex)
+		{
+			strError = ex.GetBaseException().Message;
+		}
+	}
+
+	// SelectedSurveyChange
+
+	async Task SelectedSurveyChange(object value)
+	{
+		colSurveys = new List<DTOSurvey>();
+		await RefreshSurveys(SelectedSurvey.Id);
+
+		// Refresh results
+		LoadDataArgs args = new LoadDataArgs();
+		args.Filter = null;
+		args.OrderBy = null;
+		args.Skip = 0;
+		args.Top = 1;
+
+		await LoadSurveyResultsData(args);
+	}
+
+	// Refresh RefreshSurveys
+
+	async Task RefreshSurveys(int SurveyId)
+	{
+		var Surveys = await @Service.GetAllSurveysAsync();
+
+		foreach (var survey in Surveys)
+		{
+			colSurveys.Add(ConvertToDTO(survey));
+		}
+
+		SelectedSurvey = colSurveys.Where(x => x.Id == SurveyId).FirstOrDefault();
+	}
+
+	private DTOSurvey ConvertToDTO(Survey objSurvey)
+	{
+		DTOSurvey objDTOSurvey = new DTOSurvey();
+		objDTOSurvey.Id = objSurvey.Id;
+		objDTOSurvey.SurveyName = objSurvey.SurveyName;
+
+		objDTOSurvey.SurveyItems = new List<DTOSurveyItem>();
+
+		foreach (var SurveyItem in objSurvey.SurveyItems)
+		{
+			DTOSurveyItem objDTOSurveyItem = new DTOSurveyItem();
+
+			objDTOSurveyItem.Id = SurveyItem.Id;
+			objDTOSurveyItem.ItemLabel = SurveyItem.ItemLabel;
+			objDTOSurveyItem.ItemType = SurveyItem.ItemType;
+			objDTOSurveyItem.Position = SurveyItem.Position;
+			objDTOSurveyItem.Required = SurveyItem.Required;
+
+			objDTOSurveyItem.SurveyItemOptions =
+				new List<DTOSurveyItemOption>();
+
+			foreach (var SurveyItemOption in SurveyItem.SurveyItemOptions.OrderBy(x => x.Id))
+			{
+				DTOSurveyItemOption objDTOSurveyItemOption = new DTOSurveyItemOption();
+
+				objDTOSurveyItemOption.Id = SurveyItemOption.Id;
+				objDTOSurveyItemOption.OptionLabel = SurveyItemOption.OptionLabel;
+
+				objDTOSurveyItem.SurveyItemOptions.Add(objDTOSurveyItemOption);
+			}
+
+			objDTOSurvey.SurveyItems.Add(objDTOSurveyItem);
+		}
+
+
+		return objDTOSurvey;
+	}
+
+	// Survey Results
+	int SurveyResultsCount;
+	IEnumerable<DTOSurveyItem> SurveyResults;
+
+	public async Task LoadSurveyResultsData(LoadDataArgs args)
+	{
+		SurveyResultsCount = await Service.GetSurveyResultsCount(SelectedSurvey.Id);
+		SurveyResults = await Service.GetSurveyResults(SelectedSurvey.Id, args);
+		await InvokeAsync(StateHasChanged);
+	}
+
+	async void OnSurveySubmit(object sender, EventArgs args)
+	{
+		LoadDataArgs loadArgs = new LoadDataArgs();
+		loadArgs.Filter = null;
+		loadArgs.OrderBy = null;
+		loadArgs.Skip = 0;
+		loadArgs.Top = 1;
+		await LoadSurveyResultsData(loadArgs);
+	}
+}

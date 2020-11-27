@@ -1,0 +1,158 @@
+﻿@inject SurveyService Service
+
+@if (SelectedSurvey != null)
+{
+	foreach (var SurveyItem in SelectedSurvey.SurveyItems.OrderBy(x => x.Position))
+	{
+		<div class="row">
+			<div class="col-md-2" style="text-align:right">
+				@if (SurveyItem.Position > 0)
+				{
+					<RadzenButton ButtonStyle="ButtonStyle.Light"
+								  Size="Radzen.ButtonSize.Medium"
+								  Icon="arrow_circle_up"
+								  Style="margin-top: 20px"
+								  Click="@(args => SelectedSurveyMoveUp(SurveyItem))" />
+				}
+				@if (SurveyItem.Position < SelectedSurvey.SurveyItems.Count() - 1)
+				{
+					<RadzenButton ButtonStyle="ButtonStyle.Light"
+								  Size="Radzen.ButtonSize.Medium"
+								  Icon="arrow_circle_down"
+								  Style="margin-top: 20px"
+								  Click="@(args => SelectedSurveyMoveDown(SurveyItem))" />
+				}
+				<RadzenButton ButtonStyle="ButtonStyle.Light"
+							  Size="Radzen.ButtonSize.Medium"
+							  Icon="edit"
+							  Style="margin-top: 20px"
+							  Click="@(args =>
+									DialogService.Open<EditSurveyItem>($"Edit Survey Item",
+									new Dictionary<string, object>() { { "SelectedSurveyItem", SurveyItem } },
+									new DialogOptions() { Width = "500px", Height = "380px" }))" />
+			</div>
+			<div class="col-md-10" style="text-align: left;margin-bottom: 20px">
+				<b>@SurveyItem.ItemLabel</b>
+				<br />
+				@if (SurveyItem.ItemType == "Text Box")
+				{
+					<RadzenTextBox MaxLength="4000" />
+				}
+				@if (SurveyItem.ItemType == "Text Area")
+				{
+					<RadzenTextArea MaxLength="4000" />
+				}
+				@if (SurveyItem.ItemType == "Date")
+				{
+					<RadzenDatePicker DateFormat="d" TValue="DateTime?" ShowTime="false" />
+				}
+				@if (SurveyItem.ItemType == "Date Time")
+				{
+					<RadzenDatePicker TValue="DateTime?" ShowTime="true" />
+				}
+				@if (SurveyItem.ItemType == "Dropdown")
+				{
+					<RadzenDropDown AllowClear="true" TValue="string"
+									Data="@SurveyItem.SurveyItemOptions.OrderBy(x => x.Id)"
+									TextProperty="OptionLabel" ValueProperty="OptionLabel"
+									@bind-Value="@Answer.AnswerValueString"
+									Style="width:300px;" />
+				}
+				@if (SurveyItem.ItemType == "Multi-Select Dropdown")
+				{
+					<RadzenDropDown TValue="IEnumerable<string>"
+									Multiple="true"
+									AllowClear="true"
+									AllowFiltering="true"
+									Placeholder="Select..."
+									Data="@SurveyItem.SurveyItemOptions.OrderBy(x => x.Id)"
+									@bind-Value="Answer.AnswerValueList"
+									TextProperty="OptionLabel"
+									ValueProperty="OptionLabel"
+									Style="width:300px;" />
+				}
+			</div>
+		</div>
+	}
+}
+@code {
+	[Parameter]
+	public Survey SelectedSurvey { get; set; }
+
+	[Parameter]
+	public DialogService DialogService { get; set; }
+	private DTOSurveyItem Answer;
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+		Answer = new DTOSurveyItem();
+	}
+
+	private async Task SelectedSurveyMoveUp(object value)
+	{
+		SurveyItem objSurveyItem = (SurveyItem)value;
+		int DesiredPosition = (objSurveyItem.Position - 1);
+
+		// Move the current element in that position
+		var CurrentSurveyItem = SelectedSurvey.SurveyItems.FirstOrDefault(x => x.Position == DesiredPosition);
+
+		if (CurrentSurveyItem != null)
+		{
+			// Move it down
+			CurrentSurveyItem.Position = CurrentSurveyItem.Position + 1;
+			// Update it
+			await Service.UpdateSurveyItemAsync(CurrentSurveyItem);
+		}
+
+		// Move Item Up
+		SurveyItem SurveyItemToMoveUp = objSurveyItem;
+
+		if (SurveyItemToMoveUp != null)
+		{
+			// Move it up
+			SurveyItemToMoveUp.Position = SurveyItemToMoveUp.Position - 1;
+			// Update it
+			await Service.UpdateSurveyItemAsync(SurveyItemToMoveUp);
+		}
+
+		// Refresh SelectedSurvey
+		SelectedSurvey = await @Service.GetSurvey(SelectedSurvey.Id);
+	}
+
+	private async Task SelectedSurveyMoveDown(object value)
+	{
+		SurveyItem objSurveyItem = (SurveyItem)value;
+		int DesiredPosition = (objSurveyItem.Position + 1);
+
+		// Move the current element in that position
+		var CurrentSurveyItem = SelectedSurvey.SurveyItems.FirstOrDefault(x => x.Position == DesiredPosition);
+
+		if (CurrentSurveyItem != null)
+		{
+			// Move it up
+			CurrentSurveyItem.Position = CurrentSurveyItem.Position - 1;
+			// Update it
+			await Service.UpdateSurveyItemAsync(CurrentSurveyItem);
+		}
+
+		// Move Item Down
+		SurveyItem SurveyItemToMoveDown = objSurveyItem;
+
+		if (SurveyItemToMoveDown != null)
+		{
+			// Move it up
+			SurveyItemToMoveDown.Position = SurveyItemToMoveDown.Position + 1;
+			// Update it
+			await Service.UpdateSurveyItemAsync(SurveyItemToMoveDown);
+		}
+
+		// Refresh SelectedSurvey
+		await RefreshSurvey(SelectedSurvey.Id);
+	}
+
+	// Refresh RefreshSurvey
+	private async Task RefreshSurvey(int SurveyId)
+	{
+		SelectedSurvey = await @Service.GetSurvey(SurveyId);
+	}
+}

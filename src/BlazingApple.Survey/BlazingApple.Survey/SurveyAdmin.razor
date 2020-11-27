@@ -1,0 +1,203 @@
+﻿@inject DialogService dialogService
+@inject TooltipService tooltipService
+@inherits OwningComponentBase<SurveyService>
+
+@strError
+@if (SelectedSurvey != null && colSurveys != null)
+{
+	<div>
+		<div>
+			<h2>
+				<RadzenButton ButtonStyle="ButtonStyle.Success"
+							  Size="Radzen.ButtonSize.Medium"
+							  MouseEnter="@(args => ShowTooltip(args, new TooltipOptions(){ Text= "New Survey" }))"
+							  Icon="addchart" Click="OnNewSurveyClick" />
+				Survey Administration
+			</h2>
+			<br />
+		</div>
+
+		@if (ExistingSurveys == null)
+		{
+			<RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
+		}
+		else
+		{
+			if (ExistingSurveys.Value == true)
+			{
+				<RadzenButton ButtonStyle="ButtonStyle.Success"
+							  Style="vertical-align:top"
+							  Size="Radzen.ButtonSize.Medium"
+							  Icon="add"
+							  MouseEnter="@(args => ShowTooltip(args, new TooltipOptions(){ Text= "New Survey Item" }))"
+							  Click="@(args =>
+												dialogService.Open<EditSurveyItem>($"New Survey Item",
+												new Dictionary<string, object>() { { "SelectedSurveyItem", new SurveyItem() { Id = 0, Survey = SelectedSurvey } } },
+												new DialogOptions() { Width = "500px", Height = "380px" }))" />
+				<RadzenButton ButtonStyle="ButtonStyle.Secondary"
+							  Style="vertical-align:top"
+							  Size="Radzen.ButtonSize.Medium"
+							  MouseEnter="@(args => ShowTooltip(args, new TooltipOptions(){ Text= "Edit Survey" }))"
+							  Icon="edit" Click="@(args =>
+										dialogService.Open<EditSurvey>($"Edit Survey",
+										new Dictionary<string, object>() { { "SelectedSurvey", SelectedSurvey } },
+										new DialogOptions() { Width = "500px", Height = "280px" }))" />
+				<RadzenDropDown TValue="Survey"
+								Data="@colSurveys"
+								TextProperty="SurveyName"
+								@bind-Value="SelectedSurvey"
+								Change="@(args => SelectedSurveyChange(args))" />
+				<br /><br />
+				<div>
+					<SurveyItems SelectedSurvey="@SelectedSurvey" DialogService="@dialogService"></SurveyItems>
+				</div>
+				@if (SelectedSurvey.SurveyItems.Count == 0)
+				{
+					<h4>No Survey Items</h4>
+				}
+				<br />
+			}
+		}
+	</div>
+}
+
+@code {
+	string strError = "";
+	bool? ExistingSurveys = null;
+	List<Survey> colSurveys;
+	Survey SelectedSurvey;
+
+	protected override async Task OnInitializedAsync()
+	{
+		colSurveys = new List<Survey>();
+		SelectedSurvey = new Survey();
+
+		dialogService.OnClose += DialogClose; // detect when a dialog has closed
+
+		colSurveys = await @Service.GetAllSurveysAsync();
+		if (colSurveys.Count > 0)
+		{
+			ExistingSurveys = true;
+			SelectedSurvey = colSurveys.FirstOrDefault();
+		}
+		else
+		{
+			ExistingSurveys = false;
+		}
+	}
+
+	void ShowTooltip(ElementReference elementReference, TooltipOptions options = null)
+	{
+		tooltipService.Open(elementReference, options.Text, options);
+	}
+
+	// SelectedSurveyChange
+
+	async Task SelectedSurveyChange(object value)
+	{
+		await RefreshSurveys(SelectedSurvey.Id);
+		StateHasChanged();
+	}
+
+	// Refresh RefreshSurveys
+
+	async Task RefreshSurveys(int SurveyId)
+	{
+		colSurveys = await @Service.GetAllSurveysAsync();
+		SelectedSurvey = colSurveys.Where(x => x.Id == SurveyId).FirstOrDefault();
+	}
+
+	void DialogClose(dynamic result)
+	{
+		Console.WriteLine("Hit Dialog close");
+		if (result != null)
+		{
+			Survey objSurvey = result as Survey;
+			SurveyItem objSurveyItem = result as SurveyItem;
+
+			if (objSurveyItem != null) // A SurveyItem was edited
+			{
+				// Refresh the SurveyItem
+				var ExistingSurveyItem = SelectedSurvey.SurveyItems.Where(x => x.Id == objSurveyItem.Id).FirstOrDefault();
+
+				if (objSurveyItem.Id == -1)
+				{
+					// It was deleted
+					SelectedSurvey.SurveyItems.Remove(ExistingSurveyItem);
+				}
+				else
+				{
+					// Update existing Survey
+					SelectedSurvey.SurveyItems.Remove(ExistingSurveyItem);
+					SelectedSurvey.SurveyItems.Add(objSurveyItem);
+				}
+
+				StateHasChanged();
+				return;
+			}
+
+			if (objSurvey != null) // A Survey was Edited
+			{
+				// See if Survey is already in the list
+				var ExistingSurvey = colSurveys.Where(x => x.Id == objSurvey.Id).FirstOrDefault();
+
+				if (ExistingSurvey == null)
+				{
+					// Survey does not exist - Add it
+					colSurveys.Add(objSurvey);
+				}
+				else
+				{
+					// Update existing Survey
+					colSurveys.Remove(ExistingSurvey);
+					colSurveys.Add(objSurvey);
+
+					return;
+				}
+
+				ExistingSurveys = true;
+				Console.WriteLine("Existing Surveys: " + ExistingSurveys);
+				SelectedSurvey = colSurveys.Where(x => x.Id == objSurvey.Id).FirstOrDefault();
+				Console.WriteLine("SelectedSurvey Is Null: " + SelectedSurvey);
+				StateHasChanged();
+			}
+			else
+			{
+				// A Survey was deleted
+				int? SurveyDeletedId = result as int?;
+
+				if (SurveyDeletedId != null)
+				{
+					var SurveyToDelete = colSurveys.Where(x => x.Id == SurveyDeletedId).FirstOrDefault();
+
+					if (SurveyToDelete != null)
+					{
+						colSurveys.Remove(SurveyToDelete);
+					}
+
+					if (colSurveys.Count > 0)
+					{
+						ExistingSurveys = true;
+						SelectedSurvey = colSurveys.FirstOrDefault();
+					}
+					else
+					{
+						ExistingSurveys = false;
+						SelectedSurvey = null;
+					}
+
+					StateHasChanged();
+				}
+			}
+		}
+	}
+}
+@code {
+	private void OnNewSurveyClick(MouseEventArgs args)
+	{
+		dialogService.Open<EditSurvey>($"New Survey",
+		new Dictionary<string, object>() {
+			{ "SelectedSurvey", new Survey() { Id = 0 } } },
+		new DialogOptions() { Width = "500px", Height = "280px" });
+	}
+}
