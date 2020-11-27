@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BlazingApple.Survey.Shared\BlazingApple.Survey.Shared.csproj" />
     <ProjectReference Include="..\BlazingApple.Survey.Shared\BlazingApple.Survey.Shared\BlazingApple.Survey.Shared.csproj" />
   </ItemGroup>
 
