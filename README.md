@@ -5,7 +5,7 @@
 ## About BlazingApples
 BlazingApples is an open-source set of packages that aims to speed application development for Blazor WebAssembly organizations.
 
-:zap: Check out the [demo site here](https://copacetic-frontity.vercel.app/), [or my own site](https://taylorchasewhite.com/)!
+:zap: Check out the [demo site here](https://blazorsimplesurvey.azurewebsites.net/displaysurvey),https://blazorsimplesurvey.azurewebsites.net/displaysurvey [or this blog post on how the components work](https://blazorhelpwebsite.com/ViewBlogPost/44)!
 
 :clap: Special thanks to [ADefWebServer](https://github.com/ADefWebserver/BlazorSimpleSurvey/commits?author=ADefWebserver) for creating the [BlazorSimpleSurvey](https://github.com/ADefWebserver/BlazorSimpleSurvey) demo application which this is based off of.
 
@@ -33,7 +33,7 @@ BlazingApples is an open-source set of packages that aims to speed application d
 
 ## Credits :white_flower:
 
-- Build with love :blue_heart:, using [Frontity's](https://frontity.org) [frontity-chakra-theme](https://www.npmjs.com/package/frontity-chakra-theme) as base.
+- Build with love :blue_heart:, using [Radzen's Component Library](https://razor.radzen.com/) and [ADefWebServer](https://github.com/ADefWebserver/BlazorSimpleSurvey/commits?author=ADefWebserver)'s [BlazorSimpleSurvey](https://github.com/ADefWebserver/BlazorSimpleSurvey) as a starting point.
 
 ## Authors
 
