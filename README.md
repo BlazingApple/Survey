@@ -7,7 +7,7 @@ BlazingApples is an open-source set of packages that aims to speed application d
 
 :zap: Check out the [demo site here](https://copacetic-frontity.vercel.app/), [or my own site](https://taylorchasewhite.com/)!
 
-:clap: Special thanks to [Segun Adebayo](https://twitter.com/thesegunadebayo) for creating the [Chakra UI theme](https://github.com/chakra-ui/frontity-chakra-ui-theme) of which this is based off of.
+:clap: Special thanks to [ADefWebServer](https://github.com/ADefWebserver/BlazorSimpleSurvey/commits?author=ADefWebserver) for creating the [BlazorSimpleSurvey](https://github.com/ADefWebserver/BlazorSimpleSurvey) demo application which this is based off of.
 
 # Demo :video_camera:
 
