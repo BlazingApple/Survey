@@ -17,15 +17,41 @@ BlazingApples is an open-source set of packages that aims to speed application d
 
 # Installation :wrench:
 
-## 1. Check out the Examples/.
+## 1. Get the required dependencies.
 
-1. `git clone https://github.com/taylorchasewhite/copacetic-frontity`.
-2. `cd copacetic-frontity`.
-3. `npm install && npx frontity dev` (from the project's root directory).
+1. On Client Project, right click and get to the NuGet Package Manager ("Manage NuGetPackages").
+2. Install `BlazingApple.Survey`
+![Survey Administration](https://github.com/BlazingApple/Survey/blob/main/README/InstallBlazingApplePackage.png?raw=true)
+3. Add the following to `Program.cs's Main`:
+```
+			builder.Services.AddScoped<DialogService>();
+			builder.Services.AddScoped<TooltipService>();
+			builder.Services.AddScoped<NotificationService>();
+			builder.Services.AddScoped<BlazorSurvey.Services.SurveyService>();
+```
 
-4. Your site will now be available at `http://localhost:3000/`
+4. In your `index.html` file, add the required Radzen style and script:
+```
+    <link rel="stylesheet" href="_content/Radzen.Blazor/css/default-base.css"> <!-- this adds a lot of styles we don't want -->
+    <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+```
 
-## 2. For new/existing project: use npm.
+## 2. Set up your server's API controller to receive the requests.
+It is recommended to do this with EntityFrameworkCore to create the tables in my database and receive and process the request. This portion of the setup shows how to do this.
+
+1. In your `Server` project, open `ApplicationDbContext`, add the following tables:
+```
+		using BlazingApples.Shared;
+		...
+    public DbSet<Survey> Surveys { get; set; }
+		public DbSet<SurveyAnswer> SurveyAnswers { get; set; }
+		public DbSet<SurveyItem> SurveyItems { get; set; }
+		public DbSet<SurveyItemOption> SurveyItemOptions { get; set; }
+```
+2. Create a `SurveysController.cs` in the `Controllers` directory. Feel free to copy [this controller](#).
+
+
+# Usage.
 
 1. Step 1
 2. Step 2
