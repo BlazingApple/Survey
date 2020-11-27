@@ -2,6 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <SignAssembly>true</SignAssembly>
+    <Company>BlazingApple</Company>
+    <Authors>Taylor White</Authors>
+    <Description>BlazingApple is a collection of business objects and corresponding components to speed application development. BlazingApple.Survey renders survey management components and components to take a survey as well as sending the objects to a server.</Description>
+    <PackageIcon>BlazingApple.png</PackageIcon>
+    <RepositoryUrl>https://github.com/BlazingApple/Survey</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageTags>Blazor-WASM, Blazor</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   
@@ -17,6 +27,13 @@
   <ItemGroup>
     <ProjectReference Include="..\BlazingApple.Survey.Shared\BlazingApple.Survey.Shared.csproj" />
     <ProjectReference Include="..\BlazingApple.Survey.Shared\BlazingApple.Survey.Shared\BlazingApple.Survey.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\..\BlazingApple.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
