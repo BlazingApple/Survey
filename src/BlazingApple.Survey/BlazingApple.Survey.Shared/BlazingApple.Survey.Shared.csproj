@@ -2,6 +2,21 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Product>BlazingApple Models</Product>
+    <Company>BlazingApple</Company>
+    <Authors>Taylor White</Authors>
+    <Copyright>2020</Copyright>
+    <PackageProjectUrl></PackageProjectUrl>
+    <RepositoryUrl>https://github.com/BlazingApple/Survey</RepositoryUrl>
+    <PackageIcon>BlazingApple.png</PackageIcon>
+    <PackageTags>Blazor,Blazor-WASM,Survey</PackageTags>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\..\BlazingApple.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>
