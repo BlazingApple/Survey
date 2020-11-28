@@ -12,7 +12,7 @@ BlazingApples is an open-source set of packages that aims to speed application d
 # Demo :video_camera:
 
 <p align="center">
-  <img alt="Demo of Copacetic" src="https://github.com/taylorchasewhite/copacetic-frontity/blob/master/readme/2020-09-04 - Frontity Site - Video.gif?raw=true">
+  <img alt="Demo of Copacetic" src="https://github.com/BlazingApple/Survey/blob/main/README/BlazingApplesDemo.gif?raw=true">
 </p>
 
 # Installation :wrench:
