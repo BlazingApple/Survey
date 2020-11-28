@@ -52,7 +52,7 @@ It is recommended to do this with EntityFrameworkCore to create the tables in my
 2. Create a `SurveysController.cs` in the `Controllers` directory. Feel free to copy [this controller](#).
 
 
-# Usage.
+# Usage :muscle:
 
 Once the (admittedly rather involved) setup is complete, using the components is straightforward:
 
@@ -64,7 +64,7 @@ Once the (admittedly rather involved) setup is complete, using the components is
 
 - Build with love :blue_heart:, using [Radzen's Component Library](https://razor.radzen.com/) and [ADefWebServer](https://github.com/ADefWebserver/BlazorSimpleSurvey/commits?author=ADefWebserver)'s [BlazorSimpleSurvey](https://github.com/ADefWebserver/BlazorSimpleSurvey) as a starting point.
 
-## Authors
+## Authors :pencil:
 
 1. [Taylor White](https://twitter.com/taychasewhite)
 
