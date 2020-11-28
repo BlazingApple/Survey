@@ -13,7 +13,7 @@ BlazingApples is an open-source set of packages that aims to speed application d
 # Demo :video_camera:
 
 <p align="center">
-  <img alt="Demo of Copacetic" src="https://github.com/BlazingApple/Survey/blob/main/README/BlazingApplesDemo.gif?raw=true">
+  <img alt="Demo of BlazingApple.Survey" src="https://github.com/BlazingApple/Survey/blob/main/README/BlazingApplesDemo.gif?raw=true" style="max-width:1000px;">
 </p>
 
 # Installation :wrench:
@@ -22,7 +22,8 @@ BlazingApples is an open-source set of packages that aims to speed application d
 
 1. On Client Project, right click and get to the NuGet Package Manager ("Manage NuGetPackages").
 2. Install `BlazingApple.Survey`
-![Survey Administration](https://github.com/BlazingApple/Survey/blob/main/README/InstallBlazingApplePackage.png?raw=true)
+<img alt="Survey Administration" src="https://github.com/BlazingApple/Survey/blob/main/README/InstallBlazingApplePackage.png?raw=true" style="max-width:1000px;">
+
 3. Add the following to `Program.cs's Main`:
 ```
 			builder.Services.AddScoped<DialogService>();
@@ -75,11 +76,11 @@ Once the (admittedly rather involved) setup is complete, using the components is
 - **[GPLv2](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)**
 
 ## Home Page :camera:
-![Survey Administration](https://github.com/BlazingApple/Survey/blob/main/README/SurveyAdmin.png?raw=true)
+<img alt="Survey Administration" src="https://github.com/BlazingApple/Survey/blob/main/README/SurveyAdmin.png?raw=true" style="max-width:1000px;">
 
 ## Taking Surveys :camera:
-![Taking a survey](https://github.com/BlazingApple/Survey/blob/main/README/Taking%20a%20Survey.png?raw=true)
+<img alt="Taking a Survey" src="https://github.com/BlazingApple/Survey/blob/main/README/Taking%20a%20Survey.png?raw=true" style="max-width:1000px;">
 
 ## Monitoring Responses :camera:
-![Survey Responses](https://github.com/BlazingApple/Survey/blob/main/README/SurveyResults.png?raw=true)
+<img alt="Survey Responses" src="https://github.com/BlazingApple/Survey/blob/main/README/SurveyResults.png?raw=true" style="max-width:1000px;">
 
