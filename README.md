@@ -11,10 +11,7 @@ BlazingApples is an open-source set of packages that aims to speed application d
 :clap: Special thanks to [ADefWebServer](https://github.com/ADefWebserver/BlazorSimpleSurvey/commits?author=ADefWebserver) for creating the [BlazorSimpleSurvey](https://github.com/ADefWebserver/BlazorSimpleSurvey) demo application which this is based off of.
 
 # Demo :video_camera:
-
-<p align="center">
   <img alt="Demo of BlazingApple.Survey" src="https://github.com/BlazingApple/Survey/blob/main/README/BlazingApplesDemo.gif?raw=true" style="max-width:1000px;">
-</p>
 
 # Installation :wrench:
 
