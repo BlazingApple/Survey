@@ -1,11 +1,12 @@
 # BlazingApple.Survey :apple:
 
 :fire:  A totally copacetic, easy-to-use front-end Blazor Survey package.
+This front-end Razor Class Library is intended to be used by Blazor WASM projects, and targets .NET 5.
 
 ## About BlazingApples
 BlazingApples is an open-source set of packages that aims to speed application development for Blazor WebAssembly organizations.
 
-:zap: Check out the [demo site here](https://blazorsimplesurvey.azurewebsites.net/displaysurvey),https://blazorsimplesurvey.azurewebsites.net/displaysurvey [or this blog post on how the components work](https://blazorhelpwebsite.com/ViewBlogPost/44)!
+:zap: Check out the [demo site here](https://blazorsimplesurvey.azurewebsites.net/displaysurvey), [or this blog post on how the components work](https://blazorhelpwebsite.com/ViewBlogPost/44)!
 
 :clap: Special thanks to [ADefWebServer](https://github.com/ADefWebserver/BlazorSimpleSurvey/commits?author=ADefWebserver) for creating the [BlazorSimpleSurvey](https://github.com/ADefWebserver/BlazorSimpleSurvey) demo application which this is based off of.
 
@@ -53,8 +54,10 @@ It is recommended to do this with EntityFrameworkCore to create the tables in my
 
 # Usage.
 
-1. Step 1
-2. Step 2
+Once the (admittedly rather involved) setup is complete, using the components is straightforward:
+
+1. In a component, add the `<DisplaySurvey></DisplaySurvey>` component to show surveys to a user. If no survey is provided, this component will download all the active surveys from the server and give the user options to take them.
+2. Use the `<SurveyAdmin></SurveyAdmin>` component in a page in which you'd like to enable users to create or modify surveys.
 3. Step 3
 
 ## Credits :white_flower:
