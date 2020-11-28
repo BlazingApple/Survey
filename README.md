@@ -28,7 +28,7 @@ BlazingApples is an open-source set of packages that aims to speed application d
 			builder.Services.AddScoped<DialogService>();
 			builder.Services.AddScoped<TooltipService>();
 			builder.Services.AddScoped<NotificationService>();
-			builder.Services.AddScoped<BlazorSurvey.Services.SurveyService>();
+			builder.Services.AddScoped<BlazingApple.SurveyService>();
 ```
 
 4. In your `index.html` file, add the required Radzen style and script:
