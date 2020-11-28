@@ -1,11 +1,14 @@
 ﻿@inject SurveyService Service
-
+@inject TooltipService tooltipService
 @if (SelectedSurvey != null)
 {
+	<h4>
+		Questions for @SelectedSurvey.SurveyName
+	</h4>
 	foreach (var SurveyItem in SelectedSurvey.SurveyItems.OrderBy(x => x.Position))
 	{
 		<div class="row">
-			<div class="col-md-2" style="text-align:right">
+			<div class="col-md-2">
 				@if (SurveyItem.Position > 0)
 				{
 					<RadzenButton ButtonStyle="ButtonStyle.Light"
@@ -27,7 +30,7 @@
 							  Icon="edit"
 							  Style="margin-top: 20px"
 							  Click="@(args =>
-									DialogService.Open<EditSurveyItem>($"Edit Survey Item",
+									DialogService.Open<EditSurveyItem>($"Edit Question",
 									new Dictionary<string, object>() { { "SelectedSurveyItem", SurveyItem } },
 									new DialogOptions() { Width = "500px", Height = "380px" }))" />
 			</div>
@@ -74,6 +77,20 @@
 			</div>
 		</div>
 	}
+	<div class="row">
+		<div class="col-md-12">
+			<RadzenButton ButtonStyle="ButtonStyle.Success"
+						  Style="vertical-align:top; margin-right: .25rem;"
+						  Size="Radzen.ButtonSize.Medium"
+						  Icon="add"
+						  Text="Add Question"
+						  MouseEnter="@(args => ShowTooltip(args, new TooltipOptions(){ Text= "New Question" }))"
+						  Click="@(args =>
+						DialogService.Open<EditSurveyItem>($"New Question",
+						new Dictionary<string, object>() { { "SelectedSurveyItem", new SurveyItem() { Id = 0, Survey = SelectedSurvey } } },
+						new DialogOptions() { Width = "500px", Height = "380px" }))" />
+		</div>
+	</div>
 }
 @code {
 	[Parameter]
@@ -154,5 +171,10 @@
 	private async Task RefreshSurvey(int SurveyId)
 	{
 		SelectedSurvey = await @Service.GetSurvey(SurveyId);
+	}
+
+	void ShowTooltip(ElementReference elementReference, TooltipOptions options = null)
+	{
+		tooltipService.Open(elementReference, options.Text, options);
 	}
 }

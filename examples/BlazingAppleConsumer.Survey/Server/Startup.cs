@@ -41,7 +41,9 @@ namespace BlazingAppleConsumer.Server
 			services.AddAuthentication()
 				.AddIdentityServerJwt();
 
-			services.AddControllersWithViews();
+			services.AddControllersWithViews()
+				.AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
 			services.AddRazorPages();
 		}
 

@@ -29,7 +29,7 @@
 	<div class="row">
 		<div class="col-md-12">
 			@if ((SelectedSurveyItem.ItemType == "Dropdown")
-			  || (SelectedSurveyItem.ItemType == "Multi-Select Dropdown"))
+			 || (SelectedSurveyItem.ItemType == "Multi-Select Dropdown"))
 			{
 				<RadzenButton Click="OpenPopup"
 							  Text="Edit Options"
@@ -55,7 +55,7 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h3 class="modal-title">Edit Options</h3>
+					<h3 class="modal-title">Edit Responses</h3>
 				</div>
 				<div class="modal-body">
 					<ul style="list-style-type:none;">
@@ -88,7 +88,9 @@
 	</div>
 }
 @code {
-	[Parameter] public SurveyItem SelectedSurveyItem { get; set; }
+	[Parameter]
+	public SurveyItem SelectedSurveyItem { get; set; }
+
 
 	string strError = "";
 	bool ShowPopup = false;
@@ -103,6 +105,7 @@
 	{
 		boolRequired = (SelectedSurveyItem.Required == 1);
 	}
+
 
 	async Task UpdateSurveyItem()
 	{
@@ -136,18 +139,25 @@
 		}
 	}
 
+	/// <summary>
+	/// Opens the popup.
+	/// </summary>
 	void OpenPopup()
 	{
-		// Open Popup
 		ShowPopup = true;
 	}
 
+	/// <summary>
+	/// Closes the popup.
+	/// </summary>
 	void ClosePopup()
 	{
-		// Close Popup
 		ShowPopup = false;
 	}
 
+	/// <summary>
+	/// Adds a response option to the survey question being edited.
+	/// </summary>
 	private void AddOption()
 	{
 		if (!string.IsNullOrWhiteSpace(newOption))
@@ -180,7 +190,7 @@
 	}
 
 	async Task DeleteSurveyItemDialog() =>
-		await dialogService.OpenAsync("Delete Survey Item", ds =>
+		await dialogService.OpenAsync("Delete Question", ds =>
 	@<RadzenCard Style="padding: 20px;">
 		<p Style="margin-bottom: 10px;">Confirm?</p>
 		<div class="row">

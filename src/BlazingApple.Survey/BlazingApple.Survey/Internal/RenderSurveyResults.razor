@@ -1,0 +1,41 @@
+﻿@inherits OwningComponentBase<SurveyService>
+
+@if (SelectedSurvey != null)
+{
+	<RadzenDataList Count="@SurveyResultsCount"
+					Data="@SurveyResultSet"
+					LoadData="@LoadSurveyResultsData"
+					PageSize="1" WrapItems="true" AllowPaging="true"
+					TItem="DTOSurveyItem">
+		<Template Context="item">
+			<RenderSurveyResult Label="@item.ItemLabel" Responses="@item.AnswerResponses"></RenderSurveyResult>
+		</Template>
+	</RadzenDataList>
+}
+@code {
+	[Parameter]
+	public DTOSurvey SelectedSurvey { get; set; }
+
+	// Survey Results
+	int SurveyResultsCount;
+	IEnumerable<DTOSurveyItem> SurveyResultSet;
+
+	protected override async Task OnInitializedAsync()
+	{
+		await base.OnInitializedAsync();
+
+		LoadDataArgs loadArgs = new LoadDataArgs();
+		loadArgs.Filter = null;
+		loadArgs.OrderBy = null;
+		loadArgs.Skip = 0;
+		loadArgs.Top = 1;
+		await LoadSurveyResultsData(loadArgs);
+	}
+
+	public async Task LoadSurveyResultsData(LoadDataArgs args)
+	{
+		SurveyResultsCount = await Service.GetSurveyResultsCount(SelectedSurvey.Id);
+		SurveyResultSet = await Service.GetSurveyResults(SelectedSurvey.Id, args);
+		await InvokeAsync(StateHasChanged);
+	}
+}

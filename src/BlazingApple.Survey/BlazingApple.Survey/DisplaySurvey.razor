@@ -28,15 +28,7 @@ else
 				<RadzenTabsItem Text="Responses">
 					<RadzenPanel AllowCollapse="false" Style="margin-bottom: 10px">
 						<ChildContent>
-							<RadzenDataList Count="@SurveyResultsCount"
-											Data="@SurveyResults"
-											LoadData="@LoadSurveyResultsData"
-											PageSize="1" WrapItems="true" AllowPaging="true"
-											TItem="DTOSurveyItem">
-								<Template Context="item">
-									<RenderSurveyResults Label="@item.ItemLabel" Responses="@item.AnswerResponses"></RenderSurveyResults>
-								</Template>
-							</RadzenDataList>
+							<RenderSurveyResults @ref="surveyResultsRef" SelectedSurvey="@SelectedSurvey"></RenderSurveyResults>
 						</ChildContent>
 					</RadzenPanel>
 				</RadzenTabsItem>
@@ -46,13 +38,18 @@ else
 }
 
 @code {
-	string strError = "";
-
-	bool? ExistingSurveys = null;
+	string strError;
+	bool? ExistingSurveys;
+	
 	List<DTOSurvey> colSurveys;
-	DTOSurvey SelectedSurvey = new DTOSurvey();
+	DTOSurvey SelectedSurvey;
+	RenderSurveyResults surveyResultsRef;
+
 	protected override async Task OnInitializedAsync()
-	{
+	{	
+		strError = "";
+		ExistingSurveys = null;
+		SelectedSurvey = new DTOSurvey();
 		colSurveys = new List<DTOSurvey>();
 		try
 		{
@@ -60,7 +57,7 @@ else
 
 			foreach (var survey in Surveys)
 			{
-				colSurveys.Add(ConvertToDTO(survey));
+				colSurveys.Add(Service.ConvertSurveyToDTO(survey));
 			}
 
 			if (colSurveys.Count > 0)
@@ -104,48 +101,10 @@ else
 
 		foreach (var survey in Surveys)
 		{
-			colSurveys.Add(ConvertToDTO(survey));
+			colSurveys.Add(Service.ConvertSurveyToDTO(survey));
 		}
 
 		SelectedSurvey = colSurveys.Where(x => x.Id == SurveyId).FirstOrDefault();
-	}
-
-	private DTOSurvey ConvertToDTO(Survey objSurvey)
-	{
-		DTOSurvey objDTOSurvey = new DTOSurvey();
-		objDTOSurvey.Id = objSurvey.Id;
-		objDTOSurvey.SurveyName = objSurvey.SurveyName;
-
-		objDTOSurvey.SurveyItems = new List<DTOSurveyItem>();
-
-		foreach (var SurveyItem in objSurvey.SurveyItems)
-		{
-			DTOSurveyItem objDTOSurveyItem = new DTOSurveyItem();
-
-			objDTOSurveyItem.Id = SurveyItem.Id;
-			objDTOSurveyItem.ItemLabel = SurveyItem.ItemLabel;
-			objDTOSurveyItem.ItemType = SurveyItem.ItemType;
-			objDTOSurveyItem.Position = SurveyItem.Position;
-			objDTOSurveyItem.Required = SurveyItem.Required;
-
-			objDTOSurveyItem.SurveyItemOptions =
-				new List<DTOSurveyItemOption>();
-
-			foreach (var SurveyItemOption in SurveyItem.SurveyItemOptions.OrderBy(x => x.Id))
-			{
-				DTOSurveyItemOption objDTOSurveyItemOption = new DTOSurveyItemOption();
-
-				objDTOSurveyItemOption.Id = SurveyItemOption.Id;
-				objDTOSurveyItemOption.OptionLabel = SurveyItemOption.OptionLabel;
-
-				objDTOSurveyItem.SurveyItemOptions.Add(objDTOSurveyItemOption);
-			}
-
-			objDTOSurvey.SurveyItems.Add(objDTOSurveyItem);
-		}
-
-
-		return objDTOSurvey;
 	}
 
 	// Survey Results

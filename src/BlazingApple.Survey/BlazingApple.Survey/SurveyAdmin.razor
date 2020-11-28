@@ -6,16 +6,13 @@
 @if (SelectedSurvey != null && colSurveys != null)
 {
 	<div>
-		<div>
-			<h2>
-				<RadzenButton ButtonStyle="ButtonStyle.Success"
-							  Size="Radzen.ButtonSize.Medium"
-							  MouseEnter="@(args => ShowTooltip(args, new TooltipOptions(){ Text= "New Survey" }))"
-							  Icon="addchart" Click="OnNewSurveyClick" />
-				Survey Administration
-			</h2>
-			<br />
-		</div>
+		<h2 style="display:flex; align-items: center;">
+			<RadzenButton ButtonStyle="ButtonStyle.Success"
+							Size="Radzen.ButtonSize.Medium" Style="margin-right:.5rem;"
+							MouseEnter="@(args => ShowTooltip(args, new TooltipOptions(){ Text= "New Survey" }))"
+							Icon="addchart" Click="OnNewSurveyClick" />
+			@Title
+		</h2>
 
 		@if (ExistingSurveys == null)
 		{
@@ -25,31 +22,29 @@
 		{
 			if (ExistingSurveys.Value == true)
 			{
-				<RadzenButton ButtonStyle="ButtonStyle.Success"
-							  Style="vertical-align:top"
-							  Size="Radzen.ButtonSize.Medium"
-							  Icon="add"
-							  MouseEnter="@(args => ShowTooltip(args, new TooltipOptions(){ Text= "New Survey Item" }))"
-							  Click="@(args =>
-												dialogService.Open<EditSurveyItem>($"New Survey Item",
-												new Dictionary<string, object>() { { "SelectedSurveyItem", new SurveyItem() { Id = 0, Survey = SelectedSurvey } } },
-												new DialogOptions() { Width = "500px", Height = "380px" }))" />
-				<RadzenButton ButtonStyle="ButtonStyle.Secondary"
-							  Style="vertical-align:top"
-							  Size="Radzen.ButtonSize.Medium"
-							  MouseEnter="@(args => ShowTooltip(args, new TooltipOptions(){ Text= "Edit Survey" }))"
-							  Icon="edit" Click="@(args =>
+				<div>
+					<RadzenLabel Text="Select a Survey" Component="selectsurvey"></RadzenLabel>
+				</div>
+				<div class="mb-2">
+					<RadzenDropDown id="selectsurvey" TValue="Survey"
+									Data="@colSurveys"
+									TextProperty="SurveyName"
+									@bind-Value="SelectedSurvey"
+									Change="@(args => SelectedSurveyChange(args))" />
+					<RadzenButton id="editsurvey"
+								  ButtonStyle="ButtonStyle.Secondary"
+								  Style="vertical-align:top"
+								  Size="Radzen.ButtonSize.Medium"
+								  MouseEnter="@(args => ShowTooltip(args, new TooltipOptions(){ Text= "Edit Survey" }))"
+								  Icon="edit" Click="@(args =>
 										dialogService.Open<EditSurvey>($"Edit Survey",
 										new Dictionary<string, object>() { { "SelectedSurvey", SelectedSurvey } },
 										new DialogOptions() { Width = "500px", Height = "280px" }))" />
-				<RadzenDropDown TValue="Survey"
-								Data="@colSurveys"
-								TextProperty="SurveyName"
-								@bind-Value="SelectedSurvey"
-								Change="@(args => SelectedSurveyChange(args))" />
-				<br /><br />
-				<div>
-					<SurveyItems SelectedSurvey="@SelectedSurvey" DialogService="@dialogService"></SurveyItems>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<SurveyItems SelectedSurvey="@SelectedSurvey" DialogService="@dialogService"></SurveyItems>
+					</div>
 				</div>
 				@if (SelectedSurvey.SurveyItems.Count == 0)
 				{
@@ -67,6 +62,8 @@
 	List<Survey> colSurveys;
 	Survey SelectedSurvey;
 
+	[Parameter]
+	public string Title { get; set; }
 	protected override async Task OnInitializedAsync()
 	{
 		colSurveys = new List<Survey>();
@@ -86,6 +83,14 @@
 		}
 	}
 
+	protected override void OnParametersSet()
+	{
+		base.OnParametersSet();
+		if(string.IsNullOrEmpty(Title))
+		{
+			Title = "Manage Surveys";
+		}
+	}
 	void ShowTooltip(ElementReference elementReference, TooltipOptions options = null)
 	{
 		tooltipService.Open(elementReference, options.Text, options);
@@ -109,7 +114,6 @@
 
 	void DialogClose(dynamic result)
 	{
-		Console.WriteLine("Hit Dialog close");
 		if (result != null)
 		{
 			Survey objSurvey = result as Survey;
@@ -156,9 +160,7 @@
 				}
 
 				ExistingSurveys = true;
-				Console.WriteLine("Existing Surveys: " + ExistingSurveys);
 				SelectedSurvey = colSurveys.Where(x => x.Id == objSurvey.Id).FirstOrDefault();
-				Console.WriteLine("SelectedSurvey Is Null: " + SelectedSurvey);
 				StateHasChanged();
 			}
 			else

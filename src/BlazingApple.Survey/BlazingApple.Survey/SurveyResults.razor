@@ -1,0 +1,21 @@
+﻿@inherits OwningComponentBase<SurveyService>
+
+@if (surveyDTO != null)
+{
+	<RenderSurveyResults SelectedSurvey="surveyDTO"></RenderSurveyResults>
+}
+@code {
+	[Parameter]
+	public int SurveyId{ get; set; }
+	Survey survey;
+	DTOSurvey surveyDTO;
+
+	protected override async Task OnParametersSetAsync()
+	{
+		await base.OnParametersSetAsync();
+
+		survey = await Service.GetSurvey(SurveyId);
+		surveyDTO = Service.ConvertSurveyToDTO(survey);
+	}
+
+}

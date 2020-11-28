@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazingApple.Survey", "BlazingApple.Survey\BlazingApple.Survey.csproj", "{1D2BF750-A3A6-4366-8F2D-8E2CC84F9895}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazingApple.Survey", "BlazingApple.Survey\BlazingApple.Survey.csproj", "{1D2BF750-A3A6-4366-8F2D-8E2CC84F9895}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazingApple.Survey.Shared", "BlazingApple.Survey.Shared\BlazingApple.Survey.Shared.csproj", "{ABB75C11-328B-4F18-863E-81B5797E62FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazingApple.Survey.Shared", "BlazingApple.Survey.Shared\BlazingApple.Survey.Shared.csproj", "{ABB75C11-328B-4F18-863E-81B5797E62FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

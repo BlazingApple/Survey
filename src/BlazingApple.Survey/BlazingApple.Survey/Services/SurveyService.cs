@@ -168,5 +168,41 @@ namespace BlazingApple
 			dtoSurveyItem.SurveyItemOptions = itemToCopy.SurveyItemOptions;
 			return dtoSurveyItem;
 		}
+
+		public DTOSurvey ConvertSurveyToDTO(shared.Survey objSurvey)
+		{
+			DTOSurvey objDTOSurvey = new DTOSurvey();
+			objDTOSurvey.Id = objSurvey.Id;
+			objDTOSurvey.SurveyName = objSurvey.SurveyName;
+
+			objDTOSurvey.SurveyItems = new List<DTOSurveyItem>();
+
+			foreach (var SurveyItem in objSurvey.SurveyItems)
+			{
+				DTOSurveyItem objDTOSurveyItem = new DTOSurveyItem();
+
+				objDTOSurveyItem.Id = SurveyItem.Id;
+				objDTOSurveyItem.ItemLabel = SurveyItem.ItemLabel;
+				objDTOSurveyItem.ItemType = SurveyItem.ItemType;
+				objDTOSurveyItem.Position = SurveyItem.Position;
+				objDTOSurveyItem.Required = SurveyItem.Required;
+
+				objDTOSurveyItem.SurveyItemOptions =
+					new List<DTOSurveyItemOption>();
+
+				foreach (var SurveyItemOption in SurveyItem.SurveyItemOptions.OrderBy(x => x.Id))
+				{
+					DTOSurveyItemOption objDTOSurveyItemOption = new DTOSurveyItemOption();
+
+					objDTOSurveyItemOption.Id = SurveyItemOption.Id;
+					objDTOSurveyItemOption.OptionLabel = SurveyItemOption.OptionLabel;
+
+					objDTOSurveyItem.SurveyItemOptions.Add(objDTOSurveyItemOption);
+				}
+
+				objDTOSurvey.SurveyItems.Add(objDTOSurveyItem);
+			}
+			return objDTOSurvey;
+		}
 	}
 }
