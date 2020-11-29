@@ -47,8 +47,15 @@ It is recommended to do this with EntityFrameworkCore to create the tables in my
 		public DbSet<SurveyItem> SurveyItems { get; set; }
 		public DbSet<SurveyItemOption> SurveyItemOptions { get; set; }
 ```
-2. Create a `SurveysController.cs` in the `Controllers` directory. Feel free to copy [this controller](#).
+2. Create a `SurveysController.cs` in the `Controllers` directory, use [this controller](https://github.com/BlazingApple/Survey/blob/main/examples/BlazingAppleConsumer.Survey/Server/Controllers/SurveysController.cs) as the controller.
 
+3. In the `Package Manager Console`, enter the following commands:
+<img alt="Survey Administration" src="https://github.com/BlazingApple/Survey/blob/main/README/Package%20Manager%20Console.png?raw=true" style="max-width:750px;">
+```
+Add-Migration AddSurveyData
+Update-Database
+```
+Now you shoudl be all set to use the components.
 
 # Usage :muscle:
 
