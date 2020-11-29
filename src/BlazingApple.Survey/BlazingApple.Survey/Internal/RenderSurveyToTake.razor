@@ -3,8 +3,7 @@
 @strError
 @if (SeeResults)
 {
-	<RadzenButton ButtonType="ButtonType.Button" Text="Back" Click="OnStartOverClick"
-				  Style="margin-left:.5rem;"></RadzenButton>
+	<button @onclick="OnStartOverClick" class="ml-1 btn btn-primary">Back</button>
 	<RenderSurveyResults SelectedSurvey="SelectedSurvey"></RenderSurveyResults>
 }
 else
@@ -23,79 +22,80 @@ else
 	}
 	else
 	{
-		<RadzenTemplateForm TItem="DTOSurvey" Data="@SelectedSurvey" Submit="@SaveSurvey">
+		<EditForm Model="@SelectedSurvey" OnValidSubmit="@SaveSurvey">
 			<div>
 				@foreach (var SurveyItem in SelectedSurvey.SurveyItems.OrderBy(x => x.Position))
 				{
 					<div class="row">
 						<div class="col-md-9" style="text-align: left;margin-bottom: 20px">
-							<b>@SurveyItem.ItemLabel</b>
-							<br />
-							@if (SurveyItem.ItemType == "Text Box")
-							{
-								<RadzenTextBox MaxLength="4000" Name="@SurveyItem.Id.ToString()"
-											   @bind-Value="@SurveyItem.AnswerValueString" Disabled="ShowSurveyComplete" />
-							}
-							@if (SurveyItem.ItemType == "Text Area")
-							{
-								<RadzenTextArea MaxLength="4000" Name="@SurveyItem.Id.ToString()"
-												@bind-Value="@SurveyItem.AnswerValueString" Disabled="ShowSurveyComplete" />
-							}
-							@if (SurveyItem.ItemType == "Date")
-							{
-								<RadzenDatePicker DateFormat="d" Name="@SurveyItem.Id.ToString()"
-												  @bind-Value="@SurveyItem.AnswerValueDateTime"
-												  TValue="DateTime?" ShowTime="false" Disabled="ShowSurveyComplete" />
-							}
-							@if (SurveyItem.ItemType == "Date Time")
-							{
-								<RadzenDatePicker TValue="DateTime?" Name="@SurveyItem.Id.ToString()"
-												  @bind-Value="@SurveyItem.AnswerValueDateTime"
-												  ShowTime="true" Disabled="ShowSurveyComplete" />
-							}
-							@if (SurveyItem.ItemType == "Dropdown")
-							{
-								<RadzenDropDown AllowClear="true" TValue="string" Name="@SurveyItem.Id.ToString()"
-												Data="@SurveyItem.SurveyItemOptions.OrderBy(x => x.Id)"
-												TextProperty="OptionLabel" ValueProperty="OptionLabel"
-												@bind-Value="@SurveyItem.AnswerValueString"
-												Style="width:300px;" Disabled="ShowSurveyComplete" />
-							}
-							@if (SurveyItem.ItemType == "Multi-Select Dropdown")
-							{
-								<RadzenDropDown Name="@SurveyItem.Id.ToString()"
-												TValue="IEnumerable<string>"
-												Multiple="true"
-												AllowClear="true"
-												AllowFiltering="true"
-												@bind-Value="SurveyItem.AnswerValueList"
-												Placeholder="Select..."
-												Data="@SurveyItem.SurveyItemOptions"
-												TextProperty="OptionLabel"
-												ValueProperty="OptionLabel"
-												Style="width:300px;" Disabled="ShowSurveyComplete" />
-							}
-							@if (SurveyItem.Required == 1)
-							{
-								<br /><RadzenRequiredValidator Component="@SurveyItem.Id.ToString()"
-													   Text="Required" Popup="false"
-													   Style="position: absolute" />
-							}
+							<div class="form-group">
+								<label for="@SurveyItem.Id.ToString()">@SurveyItem.ItemLabel</label>
+								@if (SurveyItem.ItemType == "Text Box")
+								{
+									<InputText id="@SurveyItem.Id.ToString()" class="form-control"
+											   @bind-Value="@SurveyItem.AnswerValueString" disabled="@ShowSurveyComplete" />
+								}
+								@if (SurveyItem.ItemType == "Text Area")
+								{
+									<InputTextArea id="@SurveyItem.Id.ToString()" class="form-control"
+												   @bind-Value="@SurveyItem.AnswerValueString" disabled="@ShowSurveyComplete" />
+								}
+								@if (SurveyItem.ItemType == "Date")
+								{
+									<InputDate id="@SurveyItem.Id.ToString()" class="form-control"
+													  @bind-Value="@SurveyItem.AnswerValueDateTime"
+													  TValue="DateTime?" disabled="@ShowSurveyComplete" />
+								}
+								@if (SurveyItem.ItemType == "Date Time")
+								{
+									<InputDateTime TValue="DateTime?" id="@SurveyItem.Id.ToString()" class="form-control"
+													  @bind-Value="@SurveyItem.AnswerValueDateTime" disabled="@ShowSurveyComplete" />
+								}
+								@if (SurveyItem.ItemType == "Dropdown")
+								{
+									<InputSelect id="@SurveyItem.Id.ToString()" @bind-Value="@SurveyItem.AnswerValueString"
+												 class="form-control"
+												 disabled="@ShowSurveyComplete" >
+										@foreach(DTOSurveyItemOption option in @SurveyItem.SurveyItemOptions.OrderBy(x => x.Id)) {
+											<option value="@option.OptionLabel">@option.OptionLabel</option>
+										}
+									</InputSelect>
+								}
+								@if (SurveyItem.ItemType == "Multi-Select Dropdown")
+								{
+									<RadzenDropDown Name="@SurveyItem.Id.ToString()"
+													TValue="IEnumerable<string>"
+													Multiple="true"
+													AllowClear="true"
+													AllowFiltering="true"
+													@bind-Value="SurveyItem.AnswerValueList"
+													Placeholder="Select..."
+													Data="@SurveyItem.SurveyItemOptions"
+													TextProperty="OptionLabel"
+													ValueProperty="OptionLabel"
+													Style="max-width:300px;" Disabled="ShowSurveyComplete" />
+								}
+								@if (SurveyItem.Required == 1)
+								{
+									@*<br /><RadzenRequiredValidator Component="@SurveyItem.Id.ToString()"
+														  Text="Required" Popup="false"
+														  Style="position: absolute" />*@
+								}
+							</div>
 						</div>
 					</div>
 				}
 			</div>
 			<div class="row">
 				<div class="col-lg-12">
-					<RadzenButton ButtonType="ButtonType.Submit" Text="Submit" Disabled="ShowSurveyComplete"></RadzenButton>
+					<button class="btn btn-primary" type="submit" disabled="@ShowSurveyComplete">Submit</button>
 					@if (ShowSurveyComplete && AllowSeeResults.HasValue && AllowSeeResults.Value == true)
 					{
-						<RadzenButton ButtonType="ButtonType.Button" Text="See Results" Click="OnSeeResultsClick"
-									  Style="margin-left:.5rem;"></RadzenButton>
+						<button class="btn btn-outline-primary" @onclick="OnSeeResultsClick" style="margin-left:.5rem;">See Results</button>
 					}
 				</div>
 			</div>
-		</RadzenTemplateForm>
+		</EditForm>
 	}
 }
 

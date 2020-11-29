@@ -3,11 +3,7 @@
 {
 	<div class="d-flex" style="flex-direction:row;">
 		<div class="mr-2">
-			<RadzenButton ButtonStyle="ButtonStyle.Light"
-						  Size="Radzen.ButtonSize.Medium"
-						  Icon="edit"
-						  Style="margin-top: 20px"
-						  Click="@(args => OpenQuestion())" />
+			<button class="btn btn-light btn-sm mt-2" @onclick="@(args => OpenQuestion())">Edit</button>
 		</div>
 		<div>
 			<RenderSurveyItem item="item" />

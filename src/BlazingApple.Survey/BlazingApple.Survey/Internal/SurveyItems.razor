@@ -39,13 +39,7 @@
 			}
 			@if (!ShowNewQuestion)
 			{
-				<RadzenButton ButtonStyle="ButtonStyle.Success"
-							  Style="vertical-align:top; margin-right: .25rem;"
-							  Size="Radzen.ButtonSize.Medium"
-							  Icon="add"
-							  Text="Add Question"
-							  MouseEnter="@(args => ShowTooltip(args, new TooltipOptions(){ Text= "New Question" }))"
-							  Click="@(args =>OpenQuestion())" />
+				<button class="btn btn-primary mr-2" @onclick="@(args =>OpenQuestion())">Add Question</button>
 			}
 		</div>
 	</div>

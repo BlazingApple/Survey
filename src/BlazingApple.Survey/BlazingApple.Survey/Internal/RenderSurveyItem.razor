@@ -1,28 +1,30 @@
-﻿<b>@item.ItemLabel</b>
+﻿<label for="@idString">@item.ItemLabel</label>
 <br />
-@if (item.ItemType == "Text Box")
-{
-	<RadzenTextBox MaxLength="4000" />
-}
+<EditForm Model="item">
+	@if (item.ItemType == "Text Box")
+	{
+		<InputText id="@idString" class="form-control" @bind-Value="@dummyString" />
+	}
 @if (item.ItemType == "Text Area")
 {
-	<RadzenTextArea MaxLength="4000" />
+	<InputTextArea id="@idString" class="form-control" @bind-Value="@dummyString" />
 }
 @if (item.ItemType == "Date")
 {
-	<RadzenDatePicker DateFormat="d" TValue="DateTime?" ShowTime="false" />
+	<InputDate id="@idString" class="form-control" DateFormat="d" TValue="DateTime?" @bind-Value="dummyDateTime" />
 }
 @if (item.ItemType == "Date Time")
 {
-	<RadzenDatePicker TValue="DateTime?" ShowTime="true" />
+	<InputDateTime id="@idString" class="form-control" TValue="DateTime?" @bind-Value="dummyDateTime" />
 }
 @if (item.ItemType == "Dropdown")
 {
-	<RadzenDropDown AllowClear="true" TValue="string"
-					Data="@item.SurveyItemOptions.OrderBy(x => x.Id)"
-					TextProperty="OptionLabel" ValueProperty="OptionLabel"
-					@bind-Value="@Answer.AnswerValueString"
-					Style="width:300px;" />
+	<InputSelect id="@idString" class="form-control" @bind-Value="@Answer.AnswerValueString">
+		@foreach (SurveyItemOption option in @item.SurveyItemOptions.OrderBy(x => x.Id))
+			{
+			<option value="@option.OptionLabel">@option.OptionLabel</option>
+			}
+	</InputSelect>
 }
 @if (item.ItemType == "Multi-Select Dropdown")
 {
@@ -37,10 +39,20 @@
 					ValueProperty="OptionLabel"
 					Style="width:300px;" />
 }
+</EditForm>
+
 @code {
 	[Parameter]
 	public BlazingApple.Survey.Shared.SurveyItem item { get; set; }
 
+	private string dummyString,idString;
+	private DateTime? dummyDateTime;
 	DTOSurveyItem Answer = new DTOSurveyItem();
+
+	protected override void OnParametersSet()
+	{
+		base.OnParametersSet();
+		idString = "itemControl-" + item.Position;
+	}
 
 }

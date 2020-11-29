@@ -7,10 +7,7 @@
 {
 	<div>
 		<h2 style="display:flex; align-items: center;">
-			<RadzenButton ButtonStyle="ButtonStyle.Success"
-							Size="Radzen.ButtonSize.Medium" Style="margin-right:.5rem;"
-							MouseEnter="@(args => ShowTooltip(args, new TooltipOptions(){ Text= "New Survey" }))"
-							Icon="addchart" Click="OnNewSurveyClick" />
+			<button class="btn btn-primary mr-2" title="New Survey" @onclick="OnNewSurveyClick">New</button>
 			@Title
 		</h2>
 		@if(PromptInline && ShouldShowNewInline) {
@@ -27,19 +24,15 @@
 				<div>
 					<RadzenLabel Text="Select a Survey" Component="selectsurvey"></RadzenLabel>
 				</div>
-				<div class="mb-2">
+				<div class="mb-2 d-flex">
 					<RadzenDropDown id="selectsurvey" TValue="Survey"
 									Data="@colSurveys"
 									TextProperty="SurveyName"
 									@bind-Value="SelectedSurvey"
 									Change="@(args => SelectedSurveyChange(args))" />
-					<RadzenButton id="editsurvey"
-								  ButtonStyle="ButtonStyle.Secondary"
-								  Style="vertical-align:top"
-								  Size="Radzen.ButtonSize.Medium"
-								  MouseEnter="@(args => ShowTooltip(args, new TooltipOptions(){ Text= "Edit Survey" }))"
-								  Icon="edit" Click="@OnEditSurveyClick" />
+					<button id="editsurvey" class="btn btn-outline-primary ml-1" title="Edit Survey" @onclick="OnEditSurveyClick">Edit Survey</button>
 				</div>
+
 				@if(PromptInline && ShouldShowEditInline) {
 					<EditSurveyInline @bind-Value="ShouldShowEditInline" SelectedSurvey="SelectedSurvey"></EditSurveyInline>
 				}

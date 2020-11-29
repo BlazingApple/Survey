@@ -3,34 +3,27 @@
 @inherits OwningComponentBase<SurveyService>
 
 @strError
-
-<RadzenCard Style="margin: .1rem; margin-bottom: 20px;">
-	<div class="row">
-		<div class="col-md-12">
-			<div>
-				<RadzenLabel Component="surveyName" Text="Survey Name"></RadzenLabel>
+<EditForm Model="SelectedSurvey">
+	<RadzenCard Style="margin: .1rem; margin-bottom: 20px;">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-group">
+					<label for="surveyName">Survey Name</label>
+				</div>
+				<InputText id="surveyName" class="form-control" @bind-Value="SelectedSurvey.SurveyName"></InputText>
 			</div>
-			<RadzenTextBox id="surveyName" @bind-Value="SelectedSurvey.SurveyName" Style="width: 400px;" />
-			<br />
 		</div>
+	</RadzenCard>
+	<div class="d-flex" style="flex-direction:row;">
+		<button class="btn btn-success mb-1 mr-1" @onclick="UpdateSurvey">Save</button>
+		<button class="btn btn-light mb-1 mr-1" @onclick="Cancel">Close</button>
+
+		@if (SelectedSurvey.Id > 0)
+		{
+			<button class="btn btn-danger mb-1" @onclick="DeleteSurveyDialog">Delete</button>
+		}
 	</div>
-</RadzenCard>
-<div class="d-flex" style="flex-direction:row;">
-	<RadzenButton Click="UpdateSurvey"
-				  Text="Save" ButtonStyle="ButtonStyle.Success"
-				  Style="margin-bottom: 10px; width: 150px; margin-right:.25rem;" />
-	<RadzenButton Click="Cancel"
-				  ButtonStyle="ButtonStyle.Light"
-				  Text="Close"
-				  Style="margin-bottom: 10px; margin-left:.25rem; width: 150px; margin-right:.25rem;" />
-	@if (SelectedSurvey.Id > 0)
-	{
-		<RadzenButton Click="DeleteSurveyDialog"
-					  ButtonStyle="ButtonStyle.Danger"
-					  Text="Delete"
-					  Style="margin-bottom: 10px; width: 150px; margin-right:.25rem;" />
-	}
-</div>
+</EditForm>
 @code {
 	[Parameter]
 	public Survey SelectedSurvey { get; set; }
@@ -83,14 +76,11 @@
 		{
 			await dialogService.OpenAsync("Delete Survey", ds =>
 			@<RadzenCard Style="padding: 20px;">
-				<p Style="margin-bottom: 10px;">Confirm?</p>
+				<p class="mb-2">Confirm?</p>
 				<div class="row">
 					<div class="col-md-12">
-						<RadzenButton Text="Yes" Click="DeleteSurvey"
-									  Style="margin-bottom: 10px; width: 150px" />
-						<RadzenButton Text="No" Click="() => ds.Close(false)"
-									  ButtonStyle="ButtonStyle.Secondary"
-									  Style="margin-bottom: 10px; width: 150px" />
+						<button @onclick="DeleteSurvey" class="btn btn-primary mb-1">Yes</button>
+						<button @onclick="() => ds.Close(false)" class="btn btn-secondary mb-1">No</button>
 					</div>
 				</div>
 			</RadzenCard>);

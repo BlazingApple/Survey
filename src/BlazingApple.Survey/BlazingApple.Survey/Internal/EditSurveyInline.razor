@@ -1,8 +1,7 @@
 ﻿
 <div class="d-flex" style="flex-direction: column;">
 	<div class="d-flex" style="justify-content:flex-end;">
-		<RadzenButton Icon="close"
-					  Click="OnButtonClick" ButtonStyle="ButtonStyle.Light"></RadzenButton>
+		<button @onclick="OnButtonClick" class="btn btn-light">Close</button>
 	</div>
 	<EditSurvey SelectedSurvey="SelectedSurvey" OnClose="OnSurveyEditClosed" PromptInline="true"></EditSurvey>
 </div>
