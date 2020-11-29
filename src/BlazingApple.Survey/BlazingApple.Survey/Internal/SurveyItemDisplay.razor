@@ -13,7 +13,7 @@
 			<RenderSurveyItem item="item" />
 			@if (ShowEditForm)
 			{
-				<EditSurveyItem SelectedSurveyItem="item" OnClose="CloseQuestion"></EditSurveyItem>
+				<EditSurveyItem SelectedSurveyItem="item" OnClose="CloseQuestion" PromptInline="true"></EditSurveyItem>
 			}
 		</div>
 	</div>
@@ -34,7 +34,7 @@
 		{
 			DialogService.Open<EditSurveyItem>($"Edit Question",
 									new Dictionary<string, object>() { { "SelectedSurveyItem", item } },
-									new DialogOptions() { Width = "500px", Height = "380px" });
+									new DialogOptions() { Width = "550px", Height = "380px" });
 		}
 		else
 		{

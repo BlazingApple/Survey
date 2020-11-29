@@ -2,7 +2,7 @@
 @inject Radzen.DialogService dialogService
 @inherits OwningComponentBase<SurveyService>
 @strError
-<RadzenCard Style="margin-bottom: 20px;">
+<RadzenCard Style="margin: .1rem; margin-bottom: 20px;">
 	<div class="row">
 		<div class="col-md-12">
 			<div><b>Name</b></div>
@@ -42,7 +42,7 @@
 <RadzenButton Click="UpdateSurveyItem"
 			  Text="Save" ButtonStyle="ButtonStyle.Success"
 			  Style="margin-bottom: 10px; width: 150px; margin-right:.25rem;" />
-<RadzenButton Click="CloseSurveyItem"
+<RadzenButton Click="(()=>CloseSurveyItem())"
 			  Text="Close" ButtonStyle="ButtonStyle.Light"
 			  Style="margin-bottom: 10px; width: 150px; margin-right:.25rem;" />
 @if (SelectedSurveyItem.Id > 0)
@@ -96,6 +96,9 @@
 
 	[Parameter]
 	public EventHandler OnClose { get; set; }
+
+	[Parameter]
+	public bool PromptInline { get; set; }
 	string strError = "";
 	bool ShowPopup = false;
 	bool boolRequired = false;
@@ -114,7 +117,7 @@
 	/// <summary>
 	/// Opens the popup.
 	/// </summary>
-	void OpenPopup()
+	private void OpenPopup()
 	{
 		ShowPopup = true;
 	}
@@ -122,18 +125,21 @@
 	/// <summary>
 	/// Closes the popup.
 	/// </summary>
-	void ClosePopup()
+	private void ClosePopup()
 	{
 		ShowPopup = false;
 	}
 
-	void CloseSurveyItem()
+	private void CloseSurveyItem(bool closeDialog=true)
 	{
 		if(OnClose!=null)
 		{
 			OnClose.Invoke(this, null);
 		}
-		dialogService.Close();
+		if(closeDialog)
+		{
+			dialogService.Close();
+		}
 	}
 	#endregion
 
@@ -188,7 +194,7 @@
 			}
 
 			dialogService.Close(SelectedSurveyItem);
-			CloseSurveyItem();
+			CloseSurveyItem(false);
 		}
 		catch (Exception ex)
 		{
@@ -204,21 +210,32 @@
 
 		dialogService.Close(SelectedSurveyItem);
 		dialogService.Close(SelectedSurveyItem);
+		CloseSurveyItem(false);
 	}
 
-	async Task DeleteSurveyItemDialog() =>
-		await dialogService.OpenAsync("Delete Question", ds =>
-	@<RadzenCard Style="padding: 20px;">
-		<p Style="margin-bottom: 10px;">Confirm?</p>
-		<div class="row">
-			<div class="col-md-12">
-				<RadzenButton Text="Yes" Click="DeleteSurveyItem"
-							  Style="margin-bottom: 10px; width: 150px" />
-				<RadzenButton Text="No" Click="()=> ds.Close(false)"
-							  ButtonStyle="ButtonStyle.Secondary"
-							  Style="margin-bottom: 10px; width: 150px" />
-			</div>
-		</div>
-	</RadzenCard>);
+	async Task DeleteSurveyItemDialog()
+	{
+		if(PromptInline)
+		{
+			await DeleteSurveyItem();
+		}
+		else
+		{
+			await dialogService.OpenAsync("Delete Question", ds =>
+			@<RadzenCard Style="padding: 20px;">
+				<p Style="margin-bottom: 10px;">Confirm?</p>
+				<div class="row">
+					<div class="col-md-12">
+						<RadzenButton Text="Yes" Click="DeleteSurveyItem"
+									  Style="margin-bottom: 10px; width: 150px" />
+						<RadzenButton Text="No" Click="() => ds.Close(false)"
+									  ButtonStyle="ButtonStyle.Secondary"
+									  Style="margin-bottom: 10px; width: 150px" />
+					</div>
+				</div>
+			</RadzenCard>);
+		}
+		
+	}
 	#endregion
 }

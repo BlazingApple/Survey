@@ -4,11 +4,13 @@
 
 @strError
 
-<RadzenCard Style="margin-bottom: 20px;">
+<RadzenCard Style="margin: .1rem; margin-bottom: 20px;">
 	<div class="row">
 		<div class="col-md-12">
-			<RadzenLabel Component="surveyName" Text="Survey Name"></RadzenLabel>
-			<RadzenTextBox id="surveyName" @bind-Value="SelectedSurvey.SurveyName" Style="width: 400px" />
+			<div>
+				<RadzenLabel Component="surveyName" Text="Survey Name"></RadzenLabel>
+			</div>
+			<RadzenTextBox id="surveyName" @bind-Value="SelectedSurvey.SurveyName" Style="width: 400px;" />
 			<br />
 		</div>
 	</div>
@@ -19,7 +21,7 @@
 				  Style="margin-bottom: 10px; width: 150px; margin-right:.25rem;" />
 	<RadzenButton Click="Cancel"
 				  ButtonStyle="ButtonStyle.Light"
-				  Text="Cancel"
+				  Text="Close"
 				  Style="margin-bottom: 10px; margin-left:.25rem; width: 150px; margin-right:.25rem;" />
 	@if (SelectedSurvey.Id > 0)
 	{
@@ -30,13 +32,16 @@
 	}
 </div>
 @code {
-		[Parameter]
-		public Survey SelectedSurvey { get; set; }
+	[Parameter]
+	public Survey SelectedSurvey { get; set; }
 
-		[Parameter]
-		public EventHandler OnClose { get; set; }
+	[Parameter]
+	public EventHandler OnClose { get; set; }
 
-		string strError = "";
+	[Parameter]
+	public bool PromptInline { get; set; }
+
+	string strError = "";
 
 	protected override async Task OnParametersSetAsync()
 	{
@@ -70,7 +75,13 @@
 	}
 
 	async Task DeleteSurveyDialog() {
-		await dialogService.OpenAsync("Delete Survey", ds =>
+		if(PromptInline)
+		{
+			await DeleteSurvey();
+		}
+		else
+		{
+			await dialogService.OpenAsync("Delete Survey", ds =>
 			@<RadzenCard Style="padding: 20px;">
 				<p Style="margin-bottom: 10px;">Confirm?</p>
 				<div class="row">
@@ -83,6 +94,7 @@
 					</div>
 				</div>
 			</RadzenCard>);
+		}
 	}
 
 	async Task DeleteSurvey()

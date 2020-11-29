@@ -258,13 +258,13 @@ namespace BlazingAppleConsumer.Server.Controllers
 		[HttpDelete("items/{id}")]
 		public async Task<IActionResult> DeleteSurveyItem(int id)
 		{
-			var survey = await _context.Surveys.FindAsync(id);
-			if (survey == null)
+			var surveyItem = await _context.SurveyItems.FindAsync(id);
+			if (surveyItem == null)
 			{
 				return NotFound();
 			}
 
-			_context.Surveys.Remove(survey);
+			_context.SurveyItems.Remove(surveyItem);
 			await _context.SaveChangesAsync();
 
 			return NoContent();
