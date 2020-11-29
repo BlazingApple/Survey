@@ -41,7 +41,10 @@
 </RadzenCard>
 <RadzenButton Click="UpdateSurveyItem"
 			  Text="Save" ButtonStyle="ButtonStyle.Success"
-			  Style="margin-bottom: 10px; width: 150px" />
+			  Style="margin-bottom: 10px; width: 150px; margin-right:.25rem;" />
+<RadzenButton Click="CloseSurveyItem"
+			  Text="Close" ButtonStyle="ButtonStyle.Light"
+			  Style="margin-bottom: 10px; width: 150px; margin-right:.25rem;" />
 @if (SelectedSurveyItem.Id > 0)
 {
 	<RadzenButton Click="DeleteSurveyItemDialog"
@@ -91,7 +94,8 @@
 	[Parameter]
 	public SurveyItem SelectedSurveyItem { get; set; }
 
-
+	[Parameter]
+	public EventHandler OnClose { get; set; }
 	string strError = "";
 	bool ShowPopup = false;
 	bool boolRequired = false;
@@ -106,7 +110,59 @@
 		boolRequired = (SelectedSurveyItem.Required == 1);
 	}
 
+	#region Popup
+	/// <summary>
+	/// Opens the popup.
+	/// </summary>
+	void OpenPopup()
+	{
+		ShowPopup = true;
+	}
 
+	/// <summary>
+	/// Closes the popup.
+	/// </summary>
+	void ClosePopup()
+	{
+		ShowPopup = false;
+	}
+
+	void CloseSurveyItem()
+	{
+		if(OnClose!=null)
+		{
+			OnClose.Invoke(this, null);
+		}
+		dialogService.Close();
+	}
+	#endregion
+
+	#region Options
+	/// <summary>
+	/// Adds a response option to the survey question being edited.
+	/// </summary>
+	private void AddOption()
+	{
+		if (!string.IsNullOrWhiteSpace(newOption))
+		{
+			SelectedSurveyItem.SurveyItemOptions
+				.Add(new SurveyItemOption
+				{
+					OptionLabel = newOption
+				});
+
+			newOption = string.Empty;
+		}
+	}
+
+	private void RemoveOption(SurveyItemOption paramSurveyItemOption)
+	{
+		// Remove the option from the collection
+		SelectedSurveyItem.SurveyItemOptions.Remove(paramSurveyItemOption);
+	}
+	#endregion
+
+	#region Update/Delete
 	async Task UpdateSurveyItem()
 	{
 		try
@@ -132,52 +188,13 @@
 			}
 
 			dialogService.Close(SelectedSurveyItem);
+			CloseSurveyItem();
 		}
 		catch (Exception ex)
 		{
 			strError = ex.GetBaseException().Message;
 		}
 	}
-
-	/// <summary>
-	/// Opens the popup.
-	/// </summary>
-	void OpenPopup()
-	{
-		ShowPopup = true;
-	}
-
-	/// <summary>
-	/// Closes the popup.
-	/// </summary>
-	void ClosePopup()
-	{
-		ShowPopup = false;
-	}
-
-	/// <summary>
-	/// Adds a response option to the survey question being edited.
-	/// </summary>
-	private void AddOption()
-	{
-		if (!string.IsNullOrWhiteSpace(newOption))
-		{
-			SelectedSurveyItem.SurveyItemOptions
-				.Add(new SurveyItemOption
-				{
-					OptionLabel = newOption
-				});
-
-			newOption = string.Empty;
-		}
-	}
-
-	private void RemoveOption(SurveyItemOption paramSurveyItemOption)
-	{
-		// Remove the option from the collection
-		SelectedSurveyItem.SurveyItemOptions.Remove(paramSurveyItemOption);
-	}
-
 	async Task DeleteSurveyItem()
 	{
 		var result = await @Service.DeleteSurveyItemAsync(SelectedSurveyItem);
@@ -203,4 +220,5 @@
 			</div>
 		</div>
 	</RadzenCard>);
+	#endregion
 }

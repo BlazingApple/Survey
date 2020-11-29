@@ -7,27 +7,36 @@
 <RadzenCard Style="margin-bottom: 20px;">
 	<div class="row">
 		<div class="col-md-12">
-			<div>Survey Name:</div>
-			<RadzenTextBox @bind-Value="SelectedSurvey.SurveyName" Style="width: 400px" />
+			<RadzenLabel Component="surveyName" Text="Survey Name"></RadzenLabel>
+			<RadzenTextBox id="surveyName" @bind-Value="SelectedSurvey.SurveyName" Style="width: 400px" />
 			<br />
 		</div>
 	</div>
 </RadzenCard>
-<RadzenButton Click="UpdateSurvey"
-			  Text="Save" ButtonStyle="ButtonStyle.Success"
-			  Style="margin-bottom: 10px; width: 150px" />
-@if (SelectedSurvey.Id > 0)
-{
-	<RadzenButton Click="DeleteSurveyDialog"
-				  ButtonStyle="ButtonStyle.Danger"
-				  Text="Delete"
-				  Style="margin-bottom: 10px; width: 150px" />
-}
+<div class="d-flex" style="flex-direction:row;">
+	<RadzenButton Click="UpdateSurvey"
+				  Text="Save" ButtonStyle="ButtonStyle.Success"
+				  Style="margin-bottom: 10px; width: 150px; margin-right:.25rem;" />
+	<RadzenButton Click="Cancel"
+				  ButtonStyle="ButtonStyle.Light"
+				  Text="Cancel"
+				  Style="margin-bottom: 10px; margin-left:.25rem; width: 150px; margin-right:.25rem;" />
+	@if (SelectedSurvey.Id > 0)
+	{
+		<RadzenButton Click="DeleteSurveyDialog"
+					  ButtonStyle="ButtonStyle.Danger"
+					  Text="Delete"
+					  Style="margin-bottom: 10px; width: 150px; margin-right:.25rem;" />
+	}
+</div>
 @code {
-	[Parameter]
-	public Survey SelectedSurvey { get; set; }
+		[Parameter]
+		public Survey SelectedSurvey { get; set; }
 
-	string strError = "";
+		[Parameter]
+		public EventHandler OnClose { get; set; }
+
+		string strError = "";
 
 	protected override async Task OnParametersSetAsync()
 	{
@@ -40,7 +49,6 @@
 
 	async Task UpdateSurvey()
 	{
-
 		try
 		{
 			if (SelectedSurvey.Id == 0)
@@ -53,6 +61,7 @@
 			}
 
 			dialogService.Close(SelectedSurvey);
+			InvokeOnClose();
 		}
 		catch (Exception ex)
 		{
@@ -60,26 +69,40 @@
 		}
 	}
 
-	async Task DeleteSurveyDialog() => await dialogService
-	 .OpenAsync("Delete Survey", ds =>
-	@<RadzenCard Style="padding: 20px;">
-		<p Style="margin-bottom: 10px;">Confirm?</p>
-		<div class="row">
-			<div class="col-md-12">
-				<RadzenButton Text="Yes" Click="DeleteSurvey"
-							  Style="margin-bottom: 10px; width: 150px" />
-				<RadzenButton Text="No" Click="()=> ds.Close(false)"
-							  ButtonStyle="ButtonStyle.Secondary"
-							  Style="margin-bottom: 10px; width: 150px" />
-			</div>
-		</div>
-	</RadzenCard>);
+	async Task DeleteSurveyDialog() {
+		await dialogService.OpenAsync("Delete Survey", ds =>
+			@<RadzenCard Style="padding: 20px;">
+				<p Style="margin-bottom: 10px;">Confirm?</p>
+				<div class="row">
+					<div class="col-md-12">
+						<RadzenButton Text="Yes" Click="DeleteSurvey"
+									  Style="margin-bottom: 10px; width: 150px" />
+						<RadzenButton Text="No" Click="() => ds.Close(false)"
+									  ButtonStyle="ButtonStyle.Secondary"
+									  Style="margin-bottom: 10px; width: 150px" />
+					</div>
+				</div>
+			</RadzenCard>);
+	}
 
-async Task DeleteSurvey()
-{
-var result = await @Service.DeleteSurveyAsync(SelectedSurvey);
+	async Task DeleteSurvey()
+	{
+		var result = await @Service.DeleteSurveyAsync(SelectedSurvey);
 
-dialogService.Close(SelectedSurvey.Id);
-dialogService.Close(SelectedSurvey.Id);
-}
+		dialogService.Close(SelectedSurvey.Id);
+		InvokeOnClose();
+	}
+
+	private void InvokeOnClose()
+	{
+		if (OnClose != null)
+		{
+			OnClose.Invoke(this, null);
+		}
+	}
+	private void Cancel()
+	{
+		dialogService.Close();
+		InvokeOnClose();
+	}
 }

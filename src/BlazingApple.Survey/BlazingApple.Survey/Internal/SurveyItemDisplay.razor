@@ -1,0 +1,50 @@
+﻿@inject DialogService DialogService
+@if (item != null)
+{
+	<div class="d-flex" style="flex-direction:row;">
+		<div class="mr-2">
+			<RadzenButton ButtonStyle="ButtonStyle.Light"
+						  Size="Radzen.ButtonSize.Medium"
+						  Icon="edit"
+						  Style="margin-top: 20px"
+						  Click="@(args => OpenQuestion())" />
+		</div>
+		<div>
+			<RenderSurveyItem item="item" />
+			@if (ShowEditForm)
+			{
+				<EditSurveyItem SelectedSurveyItem="item" OnClose="CloseQuestion"></EditSurveyItem>
+			}
+		</div>
+	</div>
+}
+@code
+{
+	[Parameter]
+	public BlazingApple.Survey.Shared.SurveyItem item { get; set; }
+
+	[Parameter]
+	public bool PromptInline { get; set; }
+	public bool ShowEditForm { get; set; }
+
+
+	private void OpenQuestion()
+	{
+		if (!PromptInline)
+		{
+			DialogService.Open<EditSurveyItem>($"Edit Question",
+									new Dictionary<string, object>() { { "SelectedSurveyItem", item } },
+									new DialogOptions() { Width = "500px", Height = "380px" });
+		}
+		else
+		{
+			ShowEditForm = true;
+		}
+	}
+
+	private void CloseQuestion(object sender, EventArgs args)
+	{
+		ShowEditForm = false;
+		StateHasChanged();
+	}
+}

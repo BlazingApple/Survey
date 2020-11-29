@@ -1,0 +1,21 @@
+﻿@inject HttpClient http
+@page "/singlesurvey"
+@attribute [Authorize]
+
+@if (surveyId != -1)
+{
+	<SurveyTaker SurveyId="@surveyId" />
+}
+
+@code {
+	private List<Survey> surveys;
+	private int surveyId = -1;
+	protected override async Task OnInitializedAsync()
+	{
+		await base.OnInitializedAsync();
+		surveys = await http.GetFromJsonAsync<List<Survey>>("api/surveys");
+		int count = surveys.Count;
+		int randomIndex = new Random().Next(0, count);
+		surveyId = surveys[randomIndex].Id;
+	}
+}

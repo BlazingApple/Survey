@@ -13,7 +13,9 @@
 							Icon="addchart" Click="OnNewSurveyClick" />
 			@Title
 		</h2>
-
+		@if(PromptInline && ShouldShowNewInline) {
+			<EditSurveyInline @bind-Value="ShouldShowNewInline"></EditSurveyInline>
+		}
 		@if (ExistingSurveys == null)
 		{
 			<RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
@@ -36,21 +38,16 @@
 								  Style="vertical-align:top"
 								  Size="Radzen.ButtonSize.Medium"
 								  MouseEnter="@(args => ShowTooltip(args, new TooltipOptions(){ Text= "Edit Survey" }))"
-								  Icon="edit" Click="@(args =>
-										dialogService.Open<EditSurvey>($"Edit Survey",
-										new Dictionary<string, object>() { { "SelectedSurvey", SelectedSurvey } },
-										new DialogOptions() { Width = "500px", Height = "280px" }))" />
+								  Icon="edit" Click="@OnEditSurveyClick" />
 				</div>
+				@if(PromptInline && ShouldShowEditInline) {
+					<EditSurveyInline @bind-Value="ShouldShowEditInline" SelectedSurvey="SelectedSurvey"></EditSurveyInline>
+				}
 				<div class="row">
 					<div class="col-md-12">
-						<SurveyItems SelectedSurvey="@SelectedSurvey" DialogService="@dialogService"></SurveyItems>
+						<SurveyItems SelectedSurvey="@SelectedSurvey" DialogService="@dialogService" PromptInline="PromptInline"></SurveyItems>
 					</div>
 				</div>
-				@if (SelectedSurvey.SurveyItems.Count == 0)
-				{
-					<h4>No Survey Items</h4>
-				}
-				<br />
 			}
 		}
 	</div>
@@ -64,6 +61,11 @@
 
 	[Parameter]
 	public string Title { get; set; }
+
+	[Parameter]
+	public bool PromptInline { get; set; }
+
+	private bool ShouldShowNewInline,ShouldShowEditInline;
 	protected override async Task OnInitializedAsync()
 	{
 		colSurveys = new List<Survey>();
@@ -197,9 +199,32 @@
 @code {
 	private void OnNewSurveyClick(MouseEventArgs args)
 	{
-		dialogService.Open<EditSurvey>($"New Survey",
-		new Dictionary<string, object>() {
-			{ "SelectedSurvey", new Survey() { Id = 0 } } },
-		new DialogOptions() { Width = "500px", Height = "280px" });
+		if(PromptInline) {
+			ShouldShowNewInline = !ShouldShowNewInline;
+			if(ShouldShowNewInline) {
+				ShouldShowEditInline=false;
+			}
+		}
+		else {
+			dialogService.Open<EditSurvey>($"New Survey",
+			new Dictionary<string, object>() {
+				{ "SelectedSurvey", new Survey() { Id = 0 } } },
+			new DialogOptions() { Width = "500px", Height = "280px" });
+		}
+	}
+
+	private void OnEditSurveyClick(MouseEventArgs args) {
+		if(PromptInline) {
+			ShouldShowEditInline = !ShouldShowEditInline;
+			if(ShouldShowEditInline) {
+				ShouldShowNewInline=false;
+			}
+		}
+		else {
+			dialogService.Open<EditSurvey>($"New Survey",
+			new Dictionary<string, object>() {
+				{ "SelectedSurvey", SelectedSurvey } },
+			new DialogOptions() { Width = "500px", Height = "280px" });
+		}
 	}
 }

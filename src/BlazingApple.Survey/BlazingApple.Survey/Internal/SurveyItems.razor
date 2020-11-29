@@ -5,90 +5,48 @@
 	<h4>
 		Questions for @SelectedSurvey.SurveyName
 	</h4>
-	foreach (var SurveyItem in SelectedSurvey.SurveyItems.OrderBy(x => x.Position))
+	foreach (SurveyItem item in SelectedSurvey.SurveyItems.OrderBy(x => x.Position))
 	{
 		<div class="row">
 			<div class="col-md-2">
-				@if (SurveyItem.Position > 0)
+				@if (item.Position > 0)
 				{
 					<RadzenButton ButtonStyle="ButtonStyle.Light"
 								  Size="Radzen.ButtonSize.Medium"
 								  Icon="arrow_circle_up"
 								  Style="margin-top: 20px"
-								  Click="@(args => SelectedSurveyMoveUp(SurveyItem))" />
+								  Click="@(args => SelectedSurveyMoveUp(item))" />
 				}
-				@if (SurveyItem.Position < SelectedSurvey.SurveyItems.Count() - 1)
+				@if (item.Position < SelectedSurvey.SurveyItems.Count() - 1)
 				{
 					<RadzenButton ButtonStyle="ButtonStyle.Light"
 								  Size="Radzen.ButtonSize.Medium"
 								  Icon="arrow_circle_down"
 								  Style="margin-top: 20px"
-								  Click="@(args => SelectedSurveyMoveDown(SurveyItem))" />
+								  Click="@(args => SelectedSurveyMoveDown(item))" />
 				}
-				<RadzenButton ButtonStyle="ButtonStyle.Light"
-							  Size="Radzen.ButtonSize.Medium"
-							  Icon="edit"
-							  Style="margin-top: 20px"
-							  Click="@(args =>
-									DialogService.Open<EditSurveyItem>($"Edit Question",
-									new Dictionary<string, object>() { { "SelectedSurveyItem", SurveyItem } },
-									new DialogOptions() { Width = "500px", Height = "380px" }))" />
 			</div>
 			<div class="col-md-10" style="text-align: left;margin-bottom: 20px">
-				<b>@SurveyItem.ItemLabel</b>
-				<br />
-				@if (SurveyItem.ItemType == "Text Box")
-				{
-					<RadzenTextBox MaxLength="4000" />
-				}
-				@if (SurveyItem.ItemType == "Text Area")
-				{
-					<RadzenTextArea MaxLength="4000" />
-				}
-				@if (SurveyItem.ItemType == "Date")
-				{
-					<RadzenDatePicker DateFormat="d" TValue="DateTime?" ShowTime="false" />
-				}
-				@if (SurveyItem.ItemType == "Date Time")
-				{
-					<RadzenDatePicker TValue="DateTime?" ShowTime="true" />
-				}
-				@if (SurveyItem.ItemType == "Dropdown")
-				{
-					<RadzenDropDown AllowClear="true" TValue="string"
-									Data="@SurveyItem.SurveyItemOptions.OrderBy(x => x.Id)"
-									TextProperty="OptionLabel" ValueProperty="OptionLabel"
-									@bind-Value="@Answer.AnswerValueString"
-									Style="width:300px;" />
-				}
-				@if (SurveyItem.ItemType == "Multi-Select Dropdown")
-				{
-					<RadzenDropDown TValue="IEnumerable<string>"
-									Multiple="true"
-									AllowClear="true"
-									AllowFiltering="true"
-									Placeholder="Select..."
-									Data="@SurveyItem.SurveyItemOptions.OrderBy(x => x.Id)"
-									@bind-Value="Answer.AnswerValueList"
-									TextProperty="OptionLabel"
-									ValueProperty="OptionLabel"
-									Style="width:300px;" />
-				}
+				<SurveyItemDisplay item="@item" PromptInline="PromptInline"/>
 			</div>
 		</div>
 	}
 	<div class="row">
 		<div class="col-md-12">
-			<RadzenButton ButtonStyle="ButtonStyle.Success"
-						  Style="vertical-align:top; margin-right: .25rem;"
-						  Size="Radzen.ButtonSize.Medium"
-						  Icon="add"
-						  Text="Add Question"
-						  MouseEnter="@(args => ShowTooltip(args, new TooltipOptions(){ Text= "New Question" }))"
-						  Click="@(args =>
-						DialogService.Open<EditSurveyItem>($"New Question",
-						new Dictionary<string, object>() { { "SelectedSurveyItem", new SurveyItem() { Id = 0, Survey = SelectedSurvey } } },
-						new DialogOptions() { Width = "500px", Height = "380px" }))" />
+			@if (PromptInline && ShowNewQuestion)
+			{
+				<EditSurveyItem OnClose="CloseQuestionHandler" SelectedSurveyItem="@(new SurveyItem() { Id = 0, Survey = SelectedSurvey })"></EditSurveyItem>
+			}
+			@if (!ShowNewQuestion)
+			{
+				<RadzenButton ButtonStyle="ButtonStyle.Success"
+							  Style="vertical-align:top; margin-right: .25rem;"
+							  Size="Radzen.ButtonSize.Medium"
+							  Icon="add"
+							  Text="Add Question"
+							  MouseEnter="@(args => ShowTooltip(args, new TooltipOptions(){ Text= "New Question" }))"
+							  Click="@(args =>OpenQuestion())" />
+			}
 		</div>
 	</div>
 }
@@ -98,13 +56,18 @@
 
 	[Parameter]
 	public DialogService DialogService { get; set; }
-	private DTOSurveyItem Answer;
+
+	[Parameter]
+	public bool PromptInline { get; set; }
+
+	private bool ShowNewQuestion;
+	private SurveyItem selectedSurveyItem;
 	protected override void OnInitialized()
 	{
 		base.OnInitialized();
-		Answer = new DTOSurveyItem();
 	}
 
+	#region Move Questions
 	private async Task SelectedSurveyMoveUp(object value)
 	{
 		SurveyItem objSurveyItem = (SurveyItem)value;
@@ -166,8 +129,8 @@
 		// Refresh SelectedSurvey
 		await RefreshSurvey(SelectedSurvey.Id);
 	}
-
-	// Refresh RefreshSurvey
+	#endregion
+	#region Helpers
 	private async Task RefreshSurvey(int SurveyId)
 	{
 		SelectedSurvey = await @Service.GetSurvey(SurveyId);
@@ -177,4 +140,29 @@
 	{
 		tooltipService.Open(elementReference, options.Text, options);
 	}
+	#endregion
+
+	#region Open/Close
+	private void OpenQuestion()
+	{
+		if(!PromptInline)
+		{
+			DialogService.Open<EditSurveyItem>($"New Question",
+						new Dictionary<string, object>() { { "SelectedSurveyItem", new SurveyItem() { Id = 0, Survey = SelectedSurvey } } },
+						new DialogOptions() { Width = "500px", Height = "380px" });
+		}
+		else {
+			ShowNewQuestion = true;
+		}
+	}
+	private void CloseQuestionHandler(object sender, EventArgs args)
+	{
+		CloseQuestion();
+	}
+	private void CloseQuestion()
+	{
+		ShowNewQuestion = false;
+		StateHasChanged();
+	}
+	#endregion
 }
