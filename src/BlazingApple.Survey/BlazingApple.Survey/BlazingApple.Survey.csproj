@@ -12,8 +12,10 @@
     <PackageTags>Blazor-WASM, Blazor</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Version>1.1.0</Version>
-    <PackageReleaseNotes>New components for folks to access--SurveyTaker &amp; SurveyResults, pass a survey identifier to these components and they will manage retrieving data from the server.</PackageReleaseNotes>
+    <Version>1.2.0</Version>
+    <PackageReleaseNotes>This release adds inline functionality, enabling consumers to host their survey components in a popup.</PackageReleaseNotes>
+    <AssemblyVersion>1.2.0.0</AssemblyVersion>
+    <FileVersion>1.2.0.0</FileVersion>
   </PropertyGroup>
 
   
