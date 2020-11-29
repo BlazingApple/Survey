@@ -60,7 +60,7 @@ namespace BlazingAppleConsumer.Server.Controllers
 		// PUT: api/Users/5
 		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 		[HttpPut("{id}")]
-		public async Task<IActionResult> PutSurvey(int id, apple.Survey survey)
+		public async Task<ActionResult<apple.Survey>> PutSurvey(int id, apple.Survey survey)
 		{
 			if (id != survey.Id)
 			{
@@ -84,7 +84,7 @@ namespace BlazingAppleConsumer.Server.Controllers
 				}
 			}
 
-			return NoContent();
+			return CreatedAtAction("GetSurvey", new { id = survey.Id }, survey);
 		}
 		#endregion
 
