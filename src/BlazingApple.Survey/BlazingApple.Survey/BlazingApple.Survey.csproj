@@ -12,14 +12,14 @@
     <PackageTags>Blazor-WASM, Blazor</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Version>1.2.1</Version>
+    <Version>1.2.2</Version>
     <PackageReleaseNotes>1.2.0
 This release adds inline functionality, enabling consumers to host their survey components in a popup.
 
-1.2.1
-Largely bug fixes, a few small UI tweaks including adding inline support for Deletion.</PackageReleaseNotes>
-    <AssemblyVersion>1.2.1.0</AssemblyVersion>
-    <FileVersion>1.2.1.0</FileVersion>
+1.2.2
+UI Changes reducing the reliance on Radzen components. The components now rely on Bootstrap.</PackageReleaseNotes>
+    <AssemblyVersion>1.2.2.0</AssemblyVersion>
+    <FileVersion>1.2.2.0</FileVersion>
   </PropertyGroup>
 
   
