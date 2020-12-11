@@ -1,0 +1,19 @@
+﻿
+$themeColours: ( "azure": #0085f2, "blush": #FF6665, "mediterranean": #19c295, "dahlia":#b429cc, "golden":#f4c100, "lime":#69c300, "tangerine":#ff9200, "caribbean":#00bfd4, );
+
+$index: 0;
+
+@each $themeColour, $i in $themeColours {
+	.customColors .rz-scheme-pastel {
+		.rz-series-#{$index}, .rz-series-item-#{$index} {
+			fill: $i;
+			stroke: $i;
+		}
+	}
+
+	.customColors .rz-scheme-pastel .rz-series-#{$index}-tooltip .rz-chart-tooltip-content, .customColors .rz-scheme-pastel .rz-series-item-#{$index} .rz-chart-tooltip-content {
+		border: 1px solid $i;
+	}
+
+	$index: $index + 1;
+}

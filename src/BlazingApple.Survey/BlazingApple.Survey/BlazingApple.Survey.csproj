@@ -10,18 +10,26 @@
     <RepositoryUrl>https://github.com/BlazingApple/Survey</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageTags>Blazor-WASM, Blazor</PackageTags>
+	<StaticWebAssetBasePath></StaticWebAssetBasePath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Version>1.2.2</Version>
+    <Version>1.2.4</Version>
     <PackageReleaseNotes>1.2.0
 This release adds inline functionality, enabling consumers to host their survey components in a popup.
 
 1.2.2
-UI Changes reducing the reliance on Radzen components. The components now rely on Bootstrap.</PackageReleaseNotes>
-    <AssemblyVersion>1.2.2.0</AssemblyVersion>
-    <FileVersion>1.2.2.0</FileVersion>
+UI Changes reducing the reliance on Radzen components. The components now rely on Bootstrap.
+1.2.3
+Minor bug fixes relating to the Edit Options button selection.
+1.2.4
+Better display of titles, and optionally colors for Blazing Apple</PackageReleaseNotes>
+    <AssemblyVersion>1.2.4.0</AssemblyVersion>
+    <FileVersion>1.2.4.0</FileVersion>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Remove="compilerconfig.json" />
+  </ItemGroup>
   
   <ItemGroup>
     <SupportedPlatform Include="browser" />
@@ -42,6 +50,7 @@ UI Changes reducing the reliance on Radzen components. The components now rely o
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+    <None Include="compilerconfig.json" />
   </ItemGroup>
 
 </Project>

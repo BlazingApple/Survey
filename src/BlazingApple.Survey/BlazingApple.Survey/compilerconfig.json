@@ -1,0 +1,10 @@
+﻿[
+  {
+    "outputFile": "Internal/RenderSurveyResult.razor.css",
+    "inputFile": "Internal/RenderSurveyResult.razor.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/survey.css",
+    "inputFile": "wwwroot/css/survey.scss"
+  }
+]

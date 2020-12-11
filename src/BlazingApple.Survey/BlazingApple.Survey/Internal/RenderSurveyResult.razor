@@ -1,20 +1,18 @@
-﻿<RadzenCard Style="height:300px">
+﻿@if (Responses != null)
+{
 	<div class="row">
 		<div class="col-md-12">
+			<div class="text-center customColors">@Label</div>
 			<RadzenChart>
 				<RadzenDonutSeries Data="@Responses"
-								   CategoryProperty="OptionLabel"
-								   ValueProperty="Responses">
-					<TitleTemplate>
-						<div class="rz-donut-content">
-							<div>@Label</div>
-						</div>
-					</TitleTemplate>
+									CategoryProperty="OptionLabel"
+									ValueProperty="Responses">
+					<Radzen.Blazor.RadzenLegend Position="LegendPosition.Bottom"></Radzen.Blazor.RadzenLegend>
 				</RadzenDonutSeries>
 			</RadzenChart>
 		</div>
 	</div>
-</RadzenCard>
+}
 
 @code {
 
