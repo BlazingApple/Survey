@@ -2,14 +2,16 @@
 {
 	<div class="row">
 		<div class="col-md-12">
-			<div class="text-center customColors">@Label</div>
-			<RadzenChart>
-				<RadzenDonutSeries Data="@Responses"
-									CategoryProperty="OptionLabel"
-									ValueProperty="Responses">
-					<Radzen.Blazor.RadzenLegend Position="LegendPosition.Bottom"></Radzen.Blazor.RadzenLegend>
-				</RadzenDonutSeries>
-			</RadzenChart>
+			<div class="text-center">@Label</div>
+			<div class="customColors">
+				<RadzenChart>
+					<RadzenDonutSeries Data="@Responses"
+									   CategoryProperty="OptionLabel"
+									   ValueProperty="Responses">
+						<Radzen.Blazor.RadzenLegend Position="LegendPosition.Bottom"></Radzen.Blazor.RadzenLegend>
+					</RadzenDonutSeries>
+				</RadzenChart>
+			</div>
 		</div>
 	</div>
 }

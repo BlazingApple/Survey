@@ -13,18 +13,20 @@
 	<StaticWebAssetBasePath></StaticWebAssetBasePath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Version>1.2.4</Version>
-    <PackageReleaseNotes>1.2.0
-This release adds inline functionality, enabling consumers to host their survey components in a popup.
+    <Version>1.2.4.1</Version>
+    <PackageReleaseNotes>1.2.4
+Better display of titles, and optionally colors for Blazing Apple
+
+1.2.3
+Minor bug fixes relating to the Edit Options button selection.
 
 1.2.2
 UI Changes reducing the reliance on Radzen components. The components now rely on Bootstrap.
-1.2.3
-Minor bug fixes relating to the Edit Options button selection.
-1.2.4
-Better display of titles, and optionally colors for Blazing Apple</PackageReleaseNotes>
-    <AssemblyVersion>1.2.4.0</AssemblyVersion>
-    <FileVersion>1.2.4.0</FileVersion>
+
+1.2.1
+This release adds inline functionality, enabling consumers to host their survey components in a popup.</PackageReleaseNotes>
+    <AssemblyVersion>1.2.4.1</AssemblyVersion>
+    <FileVersion>1.2.4.1</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
