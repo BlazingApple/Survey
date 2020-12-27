@@ -55,7 +55,7 @@ It is recommended to do this with EntityFrameworkCore to create the tables in my
 Add-Migration AddSurveyData
 Update-Database
 ```
-Now you shoudl be all set to use the components.
+Now you should be all set to use the components.
 
 # Usage :muscle:
 
