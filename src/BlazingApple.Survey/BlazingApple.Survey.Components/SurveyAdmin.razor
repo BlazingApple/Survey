@@ -1,0 +1,45 @@
+﻿@inherits OwningComponentBase<SurveyService>
+
+@strError
+@if (_selectedSurvey != null && _surveys != null)
+{
+	<div>
+		<h2 style="display:flex; align-items: center;">
+			<button class="btn btn-primary mr-2" title="New Survey" @onclick="OnNewSurveyClick">New</button>
+			@Title
+		</h2>
+		@if(PromptInline && ShouldShowNewInline) {
+			<EditSurveyInline @bind-Value="ShouldShowNewInline"></EditSurveyInline>
+		}
+		@if (ExistingSurveys == null)
+		{
+			<RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
+		}
+		else
+		{
+			if (ExistingSurveys.Value == true)
+			{
+				<div>
+					<RadzenLabel Text="Select a Survey" Component="selectsurvey"></RadzenLabel>
+				</div>
+				<div class="mb-2 d-flex">
+					<RadzenDropDown id="selectsurvey" TValue="Survey"
+									Data="@_surveys"
+									TextProperty="SurveyName"
+									@bind-Value="_selectedSurvey"
+									Change="@(args => SelectedSurveyChange(args))" />
+					<button id="editsurvey" class="btn btn-outline-primary ml-1" title="Edit Survey" @onclick="OnEditSurveyClick">Edit Survey</button>
+				</div>
+
+				@if(PromptInline && ShouldShowEditInline) {
+					<EditSurveyInline @bind-Value="ShouldShowEditInline" SelectedSurvey="_selectedSurvey"></EditSurveyInline>
+				}
+				<div class="row">
+					<div class="col-md-12">
+						<SurveyItems SelectedSurvey="@_selectedSurvey" DialogService="@DialogService" PromptInline="PromptInline"></SurveyItems>
+					</div>
+				</div>
+			}
+		}
+	</div>
+}

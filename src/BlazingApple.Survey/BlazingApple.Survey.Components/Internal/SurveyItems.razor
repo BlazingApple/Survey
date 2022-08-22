@@ -1,0 +1,44 @@
+﻿@if (SelectedSurvey != null)
+{
+	<h4>
+		Questions for @SelectedSurvey.SurveyName
+	</h4>
+	foreach (SurveyItem item in SelectedSurvey.SurveyItems.OrderBy(x => x.Position))
+	{
+		<div class="row">
+			<div class="col-md-2">
+				@if (item.Position > 0)
+				{
+					<RadzenButton ButtonStyle="ButtonStyle.Light"
+								  Size="Radzen.ButtonSize.Medium"
+								  Icon="arrow_circle_up"
+								  Style="margin-top: 20px"
+								  Click="@(args => SelectedSurveyMoveUp(item))" />
+				}
+				@if (item.Position < SelectedSurvey.SurveyItems.Count() - 1)
+				{
+					<RadzenButton ButtonStyle="ButtonStyle.Light"
+								  Size="Radzen.ButtonSize.Medium"
+								  Icon="arrow_circle_down"
+								  Style="margin-top: 20px"
+								  Click="@(args => SelectedSurveyMoveDown(item))" />
+				}
+			</div>
+			<div class="col-md-10" style="text-align: left;margin-bottom: 20px">
+				<SurveyItemDisplay item="@item" PromptInline="PromptInline"/>
+			</div>
+		</div>
+	}
+	<div class="row">
+		<div class="col-md-12">
+			@if (PromptInline && _showNewQuestion)
+			{
+				<EditSurveyItem OnClose="CloseQuestionHandler" SelectedSurveyItem="@(new SurveyItem() { Id = Guid.Empty, Survey = SelectedSurvey })"></EditSurveyItem>
+			}
+			@if (!_showNewQuestion)
+			{
+				<button class="btn btn-primary mr-2" @onclick="@(args =>OpenQuestion())">Add Question</button>
+			}
+		</div>
+	</div>
+}

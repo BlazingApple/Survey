@@ -1,7 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
+	<Nullable>enable</Nullable>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<ImplicitUsings>enable</ImplicitUsings>
     <SignAssembly>true</SignAssembly>
     <Company>BlazingApple</Company>
     <Authors>Taylor White</Authors>
@@ -13,8 +16,13 @@
 	<StaticWebAssetBasePath></StaticWebAssetBasePath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Version>1.2.4.1</Version>
-    <PackageReleaseNotes>1.2.4
+    <Version>2.0.0</Version>
+    <PackageReleaseNotes>
+2.0.0
+Make entities generic.
+1.2.5
+Change the Ids from ints to strings.
+1.2.4
 Better display of titles, and optionally colors for Blazing Apple
 
 1.2.3
@@ -25,8 +33,8 @@ UI Changes reducing the reliance on Radzen components. The components now rely o
 
 1.2.1
 This release adds inline functionality, enabling consumers to host their survey components in a popup.</PackageReleaseNotes>
-    <AssemblyVersion>1.2.4.1</AssemblyVersion>
-    <FileVersion>1.2.4.1</FileVersion>
+    <AssemblyVersion>1.2.5</AssemblyVersion>
+    <FileVersion>1.2.5</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -38,13 +46,8 @@ This release adds inline functionality, enabling consumers to host their survey 
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.8" />
     <PackageReference Include="Radzen.Blazor" Version="2.17.11" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\BlazingApple.Survey.Shared\BlazingApple.Survey.Shared.csproj" />
-    <ProjectReference Include="..\BlazingApple.Survey.Shared\BlazingApple.Survey.Shared\BlazingApple.Survey.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -53,6 +56,10 @@ This release adds inline functionality, enabling consumers to host their survey 
       <PackagePath></PackagePath>
     </None>
     <None Include="compilerconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BlazingApple.Survey.Shared\BlazingApple.Survey.Shared.csproj" />
   </ItemGroup>
 
 </Project>

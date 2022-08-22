@@ -1,0 +1,16 @@
+﻿@inject DialogService DialogService
+@if (Item != null)
+{
+	<div class="d-flex" style="flex-direction:row;">
+		<div class="mr-2">
+			<button class="btn btn-light btn-sm mt-2" @onclick="@(args => OpenQuestion())">Edit</button>
+		</div>
+		<div>
+			<RenderSurveyItem item="Item" />
+			@if (_showEditForm)
+			{
+				<EditSurveyItem SelectedSurveyItem="Item" OnClose="CloseQuestion" PromptInline="true"></EditSurveyItem>
+			}
+		</div>
+	</div>
+}

@@ -1,0 +1,6 @@
+﻿@inherits OwningComponentBase<SurveyService>
+
+@if (_survey != null && _surveyDTO != null)
+{
+	<RenderSurveyToTake SelectedSurvey="@_surveyDTO" />
+}

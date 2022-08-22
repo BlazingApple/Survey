@@ -1,0 +1,42 @@
+﻿@using System.Linq;
+@using System.Linq.Dynamic.Core
+@inject Radzen.DialogService dialogService
+@inherits OwningComponentBase<SurveyService>
+
+@strError
+@if (_existingSurveys == null)
+{
+	<RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
+}
+else
+{
+	@if (_existingSurveys.Value == true)
+	{
+		<div>
+			<RadzenDropDown TValue="DTOSurvey"
+							Data="@_surveys"
+							TextProperty="SurveyName"
+							@bind-Value="_selectedSurvey"
+							Change="@(args => SelectedSurveyChange(args))" />
+		</div>
+		<br />
+		@if(_selectedSurvey != null) {
+
+		
+		<RadzenTabs>
+			<Tabs>
+				<RadzenTabsItem Text="Survey">
+					<RenderSurveyToTake SelectedSurvey="@_selectedSurvey" OnSubmit="@((sender, args) => OnSurveySubmit(sender,args))" />
+				</RadzenTabsItem>
+				<RadzenTabsItem Text="Responses">
+					<RadzenPanel AllowCollapse="false" Style="margin-bottom: 10px">
+						<ChildContent>
+							<RenderSurveyResults @ref="surveyResultsRef" SelectedSurvey="@_selectedSurvey"></RenderSurveyResults>
+						</ChildContent>
+					</RadzenPanel>
+				</RadzenTabsItem>
+			</Tabs>
+		</RadzenTabs>
+		}
+	}
+}

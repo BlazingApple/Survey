@@ -3,19 +3,28 @@ using System.Collections.Generic;
 
 namespace BlazingApple.Survey.Shared
 {
+    /// <summary>Represents a survey to be filled out by users.</summary>
     public partial class Survey
     {
-        public Survey()
-        {
-            SurveyItems = new HashSet<SurveyItem>();
-        }
-
-        public int Id { get; set; }
-        public string SurveyName { get; set; }
+        /// <summary>The creation date of this survey.</summary>
         public DateTime DateCreated { get; set; }
+
+        /// <summary>The date the survey or questions were last modified.</summary>
         public DateTime? DateUpdated { get; set; }
+
+        /// <summary>The survey's identifier.</summary>
+        public Guid Id { get; set; }
+
+        /// <summary>The list of survey questions.</summary>
+        public virtual ICollection<SurveyItem> SurveyItems { get; set; }
+
+        /// <summary>The display name.</summary>
+        public string SurveyName { get; set; }
+
+        /// <summary>Foreign key for the user.</summary>
         public string UserId { get; set; }
 
-        public virtual ICollection<SurveyItem> SurveyItems { get; set; }
+        /// <summary>Default constructor.</summary>
+        public Survey() => SurveyItems = new HashSet<SurveyItem>();
     }
 }

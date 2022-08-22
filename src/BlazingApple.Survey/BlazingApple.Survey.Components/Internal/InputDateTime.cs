@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace BlazingApple.Survey.Internal
 {
+    /// <inheritdoc />
     public class InputDateTime<TValue> : InputDate<TValue>
     {
         private const string DateFormat = "yyyy-MM-ddTHH:mm";
@@ -22,29 +23,34 @@ namespace BlazingApple.Survey.Internal
             builder.AddAttribute(2, "type", "datetime-local");
             builder.AddAttribute(3, "class", CssClass);
             builder.AddAttribute(4, "value", BindConverter.FormatValue(CurrentValueAsString));
-            builder.AddAttribute(5, "onchange", EventCallback.Factory.CreateBinder<string>(this, __value => CurrentValueAsString = __value, CurrentValueAsString));
+            builder.AddAttribute(5, "onchange", EventCallback.Factory.CreateBinder<string?>(this, __value => CurrentValueAsString = __value, CurrentValueAsString));
             builder.CloseElement();
         }
 
         /// <inheritdoc />
-        protected override string FormatValueAsString(TValue value)
+        protected override string FormatValueAsString(TValue? value)
         {
             switch (value)
             {
                 case DateTime dateTimeValue:
                     return BindConverter.FormatValue(dateTimeValue, DateFormat, CultureInfo.InvariantCulture);
+
                 case DateTimeOffset dateTimeOffsetValue:
                     return BindConverter.FormatValue(dateTimeOffsetValue, DateFormat, CultureInfo.InvariantCulture);
+
                 default:
                     return string.Empty; // Handles null for Nullable<DateTime>, etc.
             }
         }
 
         /// <inheritdoc />
-        protected override bool TryParseValueFromString(string value, out TValue result, out string validationErrorMessage)
+#pragma warning disable CS8765 // Nullability of type of parameter doesn't match overridden member (possibly because of nullability attributes).
+
+        protected override bool TryParseValueFromString(string? value, out TValue? result, out string? validationErrorMessage)
+#pragma warning restore CS8765 // Nullability of type of parameter doesn't match overridden member (possibly because of nullability attributes).
         {
-            // Unwrap nullable types. We don't have to deal with receiving empty values for nullable
-            // types here, because the underlying InputBase already covers that.
+            // Unwrap nullable types. We don't have to deal with receiving empty values for nullable types here, because the underlying InputBase
+            // already covers that.
             var targetType = Nullable.GetUnderlyingType(typeof(TValue)) ?? typeof(TValue);
 
             bool success;
@@ -73,7 +79,7 @@ namespace BlazingApple.Survey.Internal
             }
         }
 
-        static bool TryParseDateTime(string value, out TValue result)
+        private static bool TryParseDateTime(string? value, out TValue? result)
         {
             var success = BindConverter.TryConvertToDateTime(value, CultureInfo.InvariantCulture, DateFormat, out var parsedValue);
             if (success)
@@ -88,7 +94,7 @@ namespace BlazingApple.Survey.Internal
             }
         }
 
-        static bool TryParseDateTimeOffset(string value, out TValue result)
+        private static bool TryParseDateTimeOffset(string? value, out TValue? result)
         {
             var success = BindConverter.TryConvertToDateTimeOffset(value, CultureInfo.InvariantCulture, DateFormat, out var parsedValue);
             if (success)
