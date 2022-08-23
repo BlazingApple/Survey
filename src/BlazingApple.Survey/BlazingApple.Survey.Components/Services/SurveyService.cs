@@ -29,7 +29,7 @@ public class SurveyService
         DTOSurvey dtoSurvey = new()
         {
             Id = survey.Id,
-            SurveyName = survey.SurveyName,
+            Name = survey.Name,
             SurveyItems = new List<DTOSurveyItem>(),
         };
 
@@ -38,15 +38,15 @@ public class SurveyService
             DTOSurveyItem dtoSurveyItem = new()
             {
                 Id = SurveyItem.Id,
-                ItemLabel = SurveyItem.ItemLabel,
+                Prompt = SurveyItem.Prompt,
                 ItemType = SurveyItem.ItemType,
                 Position = SurveyItem.Position,
                 Required = SurveyItem.Required,
 
-                SurveyItemOptions = new List<DTOSurveyItemOption>()
+                Options = new List<DTOSurveyItemOption>()
             };
 
-            foreach (SurveyItemOption option in SurveyItem.SurveyItemOptions!.OrderBy(x => x.Id))
+            foreach (SurveyItemOption option in SurveyItem.Options!.OrderBy(x => x.Id))
             {
                 DTOSurveyItemOption objDTOSurveyItemOption = new()
                 {
@@ -54,7 +54,7 @@ public class SurveyService
                     OptionLabel = option.OptionLabel,
                 };
 
-                dtoSurveyItem.SurveyItemOptions.Add(objDTOSurveyItemOption);
+                dtoSurveyItem.Options.Add(objDTOSurveyItemOption);
             }
 
             dtoSurvey.SurveyItems.Add(dtoSurveyItem);
@@ -148,7 +148,7 @@ public class SurveyService
     {
         List<shared.Survey> surveys = (await _client.GetFromJsonAsync<List<shared.Survey>>(API_PREFIX))!;
 
-        return surveys.OrderBy(x => x.SurveyName).ToList();
+        return surveys.OrderBy(x => x.Name).ToList();
     }
 
     /// <summary>Get a survey.</summary>
@@ -195,7 +195,7 @@ public class SurveyService
         HttpResponseMessage response = await _client.PutAsJsonAsync($"{API_PREFIX}/{existingSurvey.Id}", existingSurvey);
         response.EnsureSuccessStatusCode();
 
-        return await response.Content.ReadFromJsonAsync<shared.Survey>(); ;
+        return (await response.Content.ReadFromJsonAsync<shared.Survey>())!;
     }
 
     /// <summary>Update a particular <see cref="shared.SurveyItem" />.</summary>
@@ -218,11 +218,11 @@ public class SurveyService
         dtoSurveyItem.Id = itemToCopy.Id;
         dtoSurveyItem.SurveyId = itemToCopy.SurveyId;
         dtoSurveyItem.Position = itemToCopy.Position;
-        dtoSurveyItem.ItemLabel = itemToCopy.ItemLabel;
+        dtoSurveyItem.Prompt = itemToCopy.Prompt;
         dtoSurveyItem.ItemType = itemToCopy.ItemType;
         dtoSurveyItem.ItemValue = itemToCopy.ItemValue;
         dtoSurveyItem.Required = itemToCopy.Required;
-        dtoSurveyItem.SurveyItemOptions = itemToCopy.SurveyItemOptions;
+        dtoSurveyItem.Options = itemToCopy.Options;
         return dtoSurveyItem;
     }
 }

@@ -1,6 +1,5 @@
 ﻿@using System.Linq;
 @using System.Linq.Dynamic.Core
-@inject Radzen.DialogService dialogService
 @inherits OwningComponentBase<SurveyService>
 
 @strError
@@ -15,7 +14,7 @@ else
 		<div>
 			<RadzenDropDown TValue="DTOSurvey"
 							Data="@_surveys"
-							TextProperty="SurveyName"
+							TextProperty="Name"
 							@bind-Value="_selectedSurvey"
 							Change="@(args => SelectedSurveyChange(args))" />
 		</div>
@@ -31,7 +30,7 @@ else
 				<RadzenTabsItem Text="Responses">
 					<RadzenPanel AllowCollapse="false" Style="margin-bottom: 10px">
 						<ChildContent>
-							<RenderSurveyResults @ref="surveyResultsRef" SelectedSurvey="@_selectedSurvey"></RenderSurveyResults>
+							<RenderSurveyResults SelectedSurvey="@_selectedSurvey"></RenderSurveyResults>
 						</ChildContent>
 					</RadzenPanel>
 				</RadzenTabsItem>

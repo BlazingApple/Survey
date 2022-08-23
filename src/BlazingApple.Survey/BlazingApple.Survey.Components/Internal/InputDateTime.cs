@@ -30,17 +30,12 @@ namespace BlazingApple.Survey.Internal
         /// <inheritdoc />
         protected override string FormatValueAsString(TValue? value)
         {
-            switch (value)
+            return value switch
             {
-                case DateTime dateTimeValue:
-                    return BindConverter.FormatValue(dateTimeValue, DateFormat, CultureInfo.InvariantCulture);
-
-                case DateTimeOffset dateTimeOffsetValue:
-                    return BindConverter.FormatValue(dateTimeOffsetValue, DateFormat, CultureInfo.InvariantCulture);
-
-                default:
-                    return string.Empty; // Handles null for Nullable<DateTime>, etc.
-            }
+                DateTime dateTimeValue => BindConverter.FormatValue(dateTimeValue, DateFormat, CultureInfo.InvariantCulture),
+                DateTimeOffset dateTimeOffsetValue => BindConverter.FormatValue(dateTimeOffsetValue, DateFormat, CultureInfo.InvariantCulture),
+                _ => string.Empty,// Handles null for Nullable<DateTime>, etc.
+            };
         }
 
         /// <inheritdoc />

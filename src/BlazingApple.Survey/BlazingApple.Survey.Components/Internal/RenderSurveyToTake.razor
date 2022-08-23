@@ -10,13 +10,13 @@ else if(SelectedSurvey is not null)
 {
 	@if (ShowSurveyComplete)
 	{
-		<h4>@string.Concat(SelectedSurvey.SurveyName, " - ", @SurveyCompleteText)</h4>
+		<h4>@string.Concat(SelectedSurvey.Name, " - ", @SurveyCompleteText)</h4>
 	}
 	else
 	{
-		<h4>@SelectedSurvey.SurveyName</h4>
+		<h4>@SelectedSurvey.Name</h4>
 	}
-	@if (SelectedSurvey.SurveyItems.Count == 0)
+	@if (SelectedSurvey.SurveyItems?.Count <= 0)
 	{
 		<h4>@NoQuestionsText</h4>
 	}
@@ -30,7 +30,7 @@ else if(SelectedSurvey is not null)
 						<div class="row">
 							<div class="col-md-9" style="text-align: left;margin-bottom: 20px">
 								<div class="form-group">
-									<label for="@SurveyItem.Id.ToString()">@SurveyItem.ItemLabel</label>
+									<label for="@SurveyItem.Id.ToString()">@SurveyItem.Prompt</label>
 									@if (SurveyItem.ItemType == "Text Box")
 									{
 										<InputText id="@SurveyItem.Id.ToString()" class="form-control"
@@ -49,7 +49,7 @@ else if(SelectedSurvey is not null)
 									}
 									@if (SurveyItem.ItemType == "Date Time")
 									{
-										<InputDateTime TValue="DateTime?" id="@SurveyItem.Id.ToString()" class="form-control"
+										<BlazingApple.Survey.Internal.InputDateTime TValue="DateTime?" id="@SurveyItem.Id.ToString()" class="form-control"
 														  @bind-Value="@SurveyItem.AnswerValueDateTime" disabled="@ShowSurveyComplete" />
 									}
 									@if (SurveyItem.ItemType == "Dropdown")
@@ -57,7 +57,7 @@ else if(SelectedSurvey is not null)
 										<InputSelect id="@SurveyItem.Id.ToString()" @bind-Value="@SurveyItem.AnswerValueString"
 													 class="form-control"
 													 disabled="@ShowSurveyComplete" >
-											@foreach(DTOSurveyItemOption option in @SurveyItem.SurveyItemOptions.OrderBy(x => x.Id)) {
+											@foreach(DTOSurveyItemOption option in @SurveyItem.Options!.OrderBy(x => x.Id)) {
 												<option value="@option.OptionLabel">@option.OptionLabel</option>
 											}
 										</InputSelect>
@@ -71,7 +71,7 @@ else if(SelectedSurvey is not null)
 														AllowFiltering="true"
 														@bind-Value="SurveyItem.AnswerValueList"
 														Placeholder="Select..."
-														Data="@SurveyItem.SurveyItemOptions"
+														Data="@SurveyItem.Options"
 														TextProperty="OptionLabel"
 														ValueProperty="OptionLabel"
 														Style="max-width:300px;" Disabled="ShowSurveyComplete" />
@@ -91,7 +91,7 @@ else if(SelectedSurvey is not null)
 			<div class="row">
 				<div class="col-lg-12">
 					<button class="btn btn-primary" type="submit" disabled="@ShowSurveyComplete">Submit</button>
-					@if (ShowSurveyComplete && AllowSeeResults.HasValue && AllowSeeResults.Value == true)
+					@if (ShowSurveyComplete && AllowSeeResults)
 					{
 						<button class="btn btn-outline-primary" @onclick="OnSeeResultsClick" style="margin-left:.5rem;">See Results</button>
 					}

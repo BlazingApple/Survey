@@ -33,15 +33,43 @@ public partial class EditSurveyItem : OwningComponentBase<SurveyService>
     /// <summary>Adds a response option to the survey question being edited.</summary>
 	private void AddOption()
     {
-        if (!string.IsNullOrWhiteSpace(_newOption) && SelectedSurveyItem?.SurveyItemOptions != null)
+        if (!string.IsNullOrWhiteSpace(_newOption) && SelectedSurveyItem?.Options != null)
         {
-            SelectedSurveyItem.SurveyItemOptions
+            SelectedSurveyItem.Options
                 .Add(new SurveyItemOption
                 {
                     OptionLabel = _newOption
                 });
 
             _newOption = string.Empty;
+        }
+    }
+
+    private async Task AddOrUpdate()
+    {
+        if (SelectedSurveyItem == null)
+            return;
+
+        try
+        {
+            ItemRequest request;
+            if (SelectedSurveyItem.Id == default)
+            {
+                SelectedSurveyItem = await Service.CreateSurveyItemAsync(SelectedSurveyItem);
+                request = new ItemRequest(UserAction.Create, SelectedSurveyItem);
+            }
+            else
+            {
+                SelectedSurveyItem = await Service.UpdateSurveyItemAsync(SelectedSurveyItem);
+                request = new ItemRequest(UserAction.Update, SelectedSurveyItem);
+            }
+
+            dialogService.Close(request);
+            CloseSurveyItem(false);
+        }
+        catch (Exception ex)
+        {
+            strError = ex.GetBaseException().Message;
         }
     }
 
@@ -57,18 +85,19 @@ public partial class EditSurveyItem : OwningComponentBase<SurveyService>
             dialogService.Close();
     }
 
-    private async Task DeleteSurveyItem()
+    private async Task Delete()
     {
         if (SelectedSurveyItem == null)
             throw new InvalidOperationException("Disallowed null reference to edited question.");
 
         bool result = await @Service.DeleteSurveyItemAsync(SelectedSurveyItem);
 
-        // Set the Id to -1 so we know it is deleted
-        SelectedSurveyItem.Id = "-1";
+        ItemRequest? request = null;
 
-        dialogService.Close(SelectedSurveyItem);
-        dialogService.Close(SelectedSurveyItem);
+        if (result)
+            request = new(UserAction.Delete, SelectedSurveyItem);
+
+        dialogService.Close(request);
         CloseSurveyItem(false);
     }
 
@@ -79,28 +108,7 @@ public partial class EditSurveyItem : OwningComponentBase<SurveyService>
     /// <param name="option"></param>
     private void RemoveOption(SurveyItemOption option)
     {
-        if (SelectedSurveyItem?.SurveyItemOptions != null)
-            SelectedSurveyItem.SurveyItemOptions.Remove(option);
-    }
-
-    private async Task UpdateSurveyItem()
-    {
-        if (SelectedSurveyItem == null)
-            return;
-
-        try
-        {
-            if (SelectedSurveyItem.Id == default)
-                SelectedSurveyItem = await Service.CreateSurveyItemAsync(SelectedSurveyItem);
-            else
-                SelectedSurveyItem = await Service.UpdateSurveyItemAsync(SelectedSurveyItem);
-
-            dialogService.Close(SelectedSurveyItem);
-            CloseSurveyItem(false);
-        }
-        catch (Exception ex)
-        {
-            strError = ex.GetBaseException().Message;
-        }
+        if (SelectedSurveyItem?.Options != null)
+            SelectedSurveyItem.Options.Remove(option);
     }
 }

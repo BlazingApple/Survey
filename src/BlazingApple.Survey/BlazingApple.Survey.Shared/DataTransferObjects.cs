@@ -4,10 +4,13 @@ using System.Text;
 
 namespace BlazingApple.Survey.Shared
 {
+    /// <summary>Represents a particular question's option value and the number of user's to have selected this option.</summary>
     public class AnswerResponse
     {
-        public string OptionLabel { get; set; }
+        /// <summary>The answer's value/label.</summary>
+        public string OptionLabel { get; set; } = null!;
 
+        /// <summary>The count of responses.</summary>
         public double Responses { get; set; }
     }
 
@@ -24,44 +27,55 @@ namespace BlazingApple.Survey.Shared
         /// <summary>The Key</summary>
         public Guid Id { get; set; }
 
-        public List<DTOSurveyItem> SurveyItems { get; set; }
+        /// <inheritdoc cref="Survey.Name" />
+        public string? Name { get; set; }
 
-        public string SurveyName { get; set; }
+        /// <inheritdoc cref="DTOSurveyItem" />
+        public List<DTOSurveyItem>? SurveyItems { get; set; }
 
-        public string UserId { get; set; }
+        /// <inheritdoc cref="Survey.UserId" />
+        public string? UserId { get; set; }
     }
 
     /// <summary>DTO for <see cref="SurveyItem" /></summary>
     /// <remarks><seealso cref="SurveyItem" /></remarks>
     public class DTOSurveyItem
     {
-        public List<AnswerResponse> AnswerResponses { get; set; }
+        /// <inheritdoc cref="AnswerResponse" />
+        public List<AnswerResponse>? AnswerResponses { get; set; }
 
+        /// <summary>If the <see cref="SurveyItem" /> is of type <see cref="ItemType.DateTime" />, this represents the user's answer.</summary>
         public DateTime? AnswerValueDateTime { get; set; }
 
-        public IEnumerable<string> AnswerValueList { get; set; }
+        /// <summary>If the <see cref="SurveyItem" /> is of type <see cref="ItemType.DropdownMultiSelect" />, this represents the user's answer.</summary>
+        public IEnumerable<string>? AnswerValueList { get; set; }
 
-        public string AnswerValueString { get; set; }
+        /// <summary>
+        ///     If the <see cref="SurveyItem" /> is of type <see cref="ItemType.TextArea" /> or <see cref="ItemType.TextBox" />, this represents the
+        ///     user's answer.
+        /// </summary>
+        public string? AnswerValueString { get; set; }
 
         /// <inheritdoc cref="SurveyItem.Id" />
         public Guid Id { get; set; }
 
-        /// <inheritdoc cref="SurveyItem.ItemLabel" />
-        public string ItemLabel { get; set; }
-
         /// <inheritdoc cref="SurveyItem.ItemType" />
-        public string ItemType { get; set; }
+        public string? ItemType { get; set; }
 
         /// <inheritdoc cref="SurveyItem.ItemValue" />
-        public string ItemValue { get; set; }
+        public string? ItemValue { get; set; }
+
+        /// <inheritdoc cref="DTOSurveyItemOption" />
+        public List<DTOSurveyItemOption>? Options { get; set; }
 
         /// <inheritdoc cref="SurveyItem.Position" />
         public int Position { get; set; }
 
+        /// <inheritdoc cref="SurveyItem.Prompt" />
+        public string? Prompt { get; set; }
+
         /// <inheritdoc cref="SurveyItem.Required" />
         public bool Required { get; set; }
-
-        public List<DTOSurveyItemOption> SurveyItemOptions { get; set; }
     }
 
     /// <summary>DTO for <see cref="SurveyItemOption" /></summary>
@@ -72,6 +86,6 @@ namespace BlazingApple.Survey.Shared
         public Guid Id { get; set; }
 
         /// <inheritdoc cref="SurveyItemOption.OptionLabel" />
-        public string OptionLabel { get; set; }
+        public string? OptionLabel { get; set; }
     }
 }

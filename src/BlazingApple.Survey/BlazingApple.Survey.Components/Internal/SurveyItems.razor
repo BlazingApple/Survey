@@ -1,7 +1,7 @@
 ﻿@if (SelectedSurvey != null)
 {
 	<h4>
-		Questions for @SelectedSurvey.SurveyName
+		Questions for @SelectedSurvey.Name
 	</h4>
 	foreach (SurveyItem item in SelectedSurvey.SurveyItems.OrderBy(x => x.Position))
 	{
@@ -25,7 +25,7 @@
 				}
 			</div>
 			<div class="col-md-10" style="text-align: left;margin-bottom: 20px">
-				<SurveyItemDisplay item="@item" PromptInline="PromptInline"/>
+				<SurveyItemDisplay Item="@item" PromptInline="PromptInline"/>
 			</div>
 		</div>
 	}

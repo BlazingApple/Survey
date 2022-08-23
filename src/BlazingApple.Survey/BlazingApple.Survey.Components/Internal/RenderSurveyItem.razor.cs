@@ -10,8 +10,10 @@ namespace BlazingApple.Survey.Components.Internal;
 public partial class RenderSurveyItem : ComponentBase
 {
     private DateTime? _dummyDateTime;
-    private string _dummyString, _idString;
-    private DTOSurveyItem Answer = new DTOSurveyItem();
+    private string _dummyString = null!;
+    private string _idString = null!;
+
+    private DTOSurveyItem Answer = new();
 
     /// <summary>The <see cref="Shared.SurveyItem" /> to render.</summary>
     [Parameter, EditorRequired]

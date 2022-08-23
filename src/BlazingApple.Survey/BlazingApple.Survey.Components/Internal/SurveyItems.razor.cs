@@ -11,8 +11,10 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace BlazingApple.Survey.Components.Internal;
 
+/// <summary>Render a list of <see cref="SurveyItem" /> for a <see cref="Shared.Survey" /></summary>
 public partial class SurveyItems : ComponentBase
 {
+    private readonly DialogOptions _options = new() { Width = "550px", Height = "380px" };
     private bool _showNewQuestion;
 
     /// <inheritdoc cref="Radzen.DialogService" />
@@ -47,9 +49,10 @@ public partial class SurveyItems : ComponentBase
     {
         if (!PromptInline)
         {
-            DialogService.Open<EditSurveyItem>($"New Question",
-                        new Dictionary<string, object>() { { "SelectedSurveyItem", new SurveyItem() { Id = Guid.Empty, Survey = SelectedSurvey } } },
-                        new DialogOptions() { Width = "550px", Height = "380px" });
+            DialogService.Open<EditSurveyItem>(
+                $"New Question",
+                new Dictionary<string, object>() { { "SelectedSurveyItem", new SurveyItem() { Id = Guid.Empty, Survey = SelectedSurvey } } },
+                _options);
         }
         else
         {

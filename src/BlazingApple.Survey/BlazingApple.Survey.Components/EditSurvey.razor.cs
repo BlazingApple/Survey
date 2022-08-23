@@ -37,44 +37,56 @@ public partial class EditSurvey : OwningComponentBase<SurveyService>
             SelectedSurvey = new Shared.Survey();
     }
 
-    private void Cancel()
-    {
-        DialogService.Close();
-        InvokeOnClose();
-    }
-
-    private async Task DeleteSurvey()
-    {
-        Validate();
-        bool result = await @Service.DeleteSurveyAsync(SelectedSurvey);
-
-        DialogService.Close(SelectedSurvey.Id);
-        InvokeOnClose();
-    }
-
-    private void InvokeOnClose()
-    {
-        if (OnClose != null)
-            OnClose.Invoke(this, null);
-    }
-
-    private async Task UpdateSurvey()
+    private async Task AddOrUpdate()
     {
         Validate();
         try
         {
+            SurveyRequest response;
             if (SelectedSurvey.Id == default)
+            {
                 SelectedSurvey = await @Service.CreateSurveyAsync(SelectedSurvey);
+                response = new(UserAction.Create, SelectedSurvey);
+            }
             else
+            {
                 SelectedSurvey = await @Service.UpdateSurveyAsync(SelectedSurvey);
+                response = new(UserAction.Update, SelectedSurvey);
+            }
 
-            DialogService.Close(SelectedSurvey);
+            DialogService.Close(response);
             InvokeOnClose();
         }
         catch (Exception ex)
         {
             strError = ex.GetBaseException().Message;
         }
+    }
+
+    private void Cancel()
+    {
+        DialogService.Close();
+        InvokeOnClose();
+    }
+
+    private async Task Delete()
+    {
+        Validate();
+        bool result = await @Service.DeleteSurveyAsync(SelectedSurvey);
+
+        if (!result)
+            throw new InvalidDataException("Error deleting survey");
+
+        SurveyRequest response = new(UserAction.Delete, SelectedSurvey);
+
+        DialogService.Close(response);
+        InvokeOnClose();
+    }
+
+    private void InvokeOnClose()
+    {
+        if (OnClose != null)
+            OnClose.Invoke(this, EventArgs.Empty);
     }
 
     [MemberNotNull(nameof(SelectedSurvey))]

@@ -12,12 +12,12 @@
 				<div class="form-group">
 					<label for="surveyName">Survey Name</label>
 				</div>
-				<InputText id="surveyName" class="form-control" @bind-Value="SelectedSurvey.SurveyName"></InputText>
+				<InputText id="surveyName" class="form-control" @bind-Value="SelectedSurvey.Name"></InputText>
 			</div>
 		</div>
 	</RadzenCard>
 	<div class="d-flex" style="flex-direction:row;">
-		<button class="btn btn-success mb-1 mr-1" @onclick="UpdateSurvey">Save</button>
+		<button class="btn btn-success mb-1 mr-1" @onclick="AddOrUpdate">Save</button>
 		<button class="btn btn-light mb-1 mr-1" @onclick="Cancel">Close</button>
 
 		@if (SelectedSurvey.Id != default)
@@ -33,7 +33,7 @@
 	async Task DeleteSurveyDialog() {
 		if(PromptInline)
 		{
-			await DeleteSurvey();
+			await Delete();
 		}
 		else
 		{
@@ -42,7 +42,7 @@
 				<p class="mb-2">Confirm?</p>
 				<div class="row">
 					<div class="col-md-12">
-						<button @onclick="DeleteSurvey" class="btn btn-primary mb-1">Yes</button>
+						<button @onclick="Delete" class="btn btn-primary mb-1">Yes</button>
 						<button @onclick="() => ds.Close(false)" class="btn btn-secondary mb-1">No</button>
 					</div>
 				</div>

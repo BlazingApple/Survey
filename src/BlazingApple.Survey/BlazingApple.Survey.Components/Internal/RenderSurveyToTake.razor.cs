@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace BlazingApple.Survey.Components.Internal;
 
 /// <summary>Allows a consumer to take a survey.</summary>
-public class RenderSurveyToTake : OwningComponentBase<SurveyService>
+public partial class RenderSurveyToTake : OwningComponentBase<SurveyService>
 {
     private bool SeeResults = false;
 
@@ -44,7 +44,7 @@ public class RenderSurveyToTake : OwningComponentBase<SurveyService>
         ShowSurveyComplete = true;
 
         // Clear Answers
-        foreach (DTOSurveyItem item in SelectedSurvey.SurveyItems)
+        foreach (DTOSurveyItem item in SelectedSurvey.SurveyItems!)
         {
             item.AnswerValueString = null;
             item.AnswerValueDateTime = null;
@@ -78,7 +78,7 @@ public class RenderSurveyToTake : OwningComponentBase<SurveyService>
         }
 
         if (OnSubmit != null)
-            OnSubmit.Invoke(this, null);
+            OnSubmit.Invoke(this, EventArgs.Empty);
     }
 
     [MemberNotNull(nameof(SelectedSurvey))]

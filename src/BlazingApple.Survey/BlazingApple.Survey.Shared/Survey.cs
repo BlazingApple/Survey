@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace BlazingApple.Survey.Shared
 {
@@ -15,14 +16,15 @@ namespace BlazingApple.Survey.Shared
         /// <summary>The survey's identifier.</summary>
         public Guid Id { get; set; }
 
+        /// <summary>The display name.</summary>
+        [Required]
+        public string Name { get; set; } = null!;
+
         /// <summary>The list of survey questions.</summary>
         public virtual ICollection<SurveyItem> SurveyItems { get; set; }
 
-        /// <summary>The display name.</summary>
-        public string SurveyName { get; set; }
-
         /// <summary>Foreign key for the user.</summary>
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
 
         /// <summary>Default constructor.</summary>
         public Survey() => SurveyItems = new HashSet<SurveyItem>();

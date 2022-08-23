@@ -13,7 +13,7 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label for="surveyText">Name</label>
-                        <InputText id="surveyText" class="form-control" @bind-Value="SelectedSurveyItem.ItemLabel" />
+                        <InputText id="surveyText" class="form-control" @bind-Value="SelectedSurveyItem.Prompt" />
                     </div>
                 </div>
             </div>
@@ -49,7 +49,7 @@
                 </div>
             </div>
         </RadzenCard>
-        <button @onclick="UpdateSurveyItem" class="btn btn-success mb-2 mr-1">Save</button>
+        <button @onclick="AddOrUpdate" class="btn btn-success mb-2 mr-1">Save</button>
         <button @onclick="(()=>CloseSurveyItem())" class="btn btn-light mb-2 mr-1">Close</button>
 
         @if (SelectedSurveyItem.Id != default)
@@ -66,12 +66,12 @@
                             <h3 class="modal-title">Edit Responses</h3>
                         </div>
                         <div class="modal-body">
-                            @if (SelectedSurveyItem.SurveyItemOptions != null)
+                            @if (SelectedSurveyItem.Options != null)
                             {
 
 
                                 <ul style="list-style-type:none;">
-                                    @foreach (var option in SelectedSurveyItem.SurveyItemOptions.OrderBy(x => x.Id))
+                                    @foreach (var option in SelectedSurveyItem.Options.OrderBy(x => x.Id))
                                     {
                                         <li>
                                             <div style="margin-bottom: 10px; width: 150px">
@@ -100,7 +100,7 @@
     {
         if (PromptInline)
         {
-            await DeleteSurveyItem();
+            await Delete();
         }
         else
         {
@@ -108,7 +108,7 @@
         <p Style="margin-bottom: 10px;">Confirm?</p>
         <div class="row">
             <div class="col-md-12">
-                <button class="btn btn-primary mb-1" @onclick="DeleteSurveyItem">Yes</button>
+                <button class="btn btn-primary mb-1" @onclick="Delete">Yes</button>
                 <button class="btn btn-secondary mb-1" @onclick="() => ds.Close(false)">No</button>
             </div>
         </div>

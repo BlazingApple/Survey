@@ -15,26 +15,18 @@ public partial class DisplaySurvey : OwningComponentBase<SurveyService>
 {
     private bool? _existingSurveys;
     private DTOSurvey? _selectedSurvey;
+
     private List<DTOSurvey>? _surveys;
     private string? strError;
-
-    private IEnumerable<DTOSurveyItem> SurveyResults;
-
-    // Survey Results
-    private int SurveyResultsCount;
-
-    private RenderSurveyResults surveyResultsRef;
-
-    [Inject]
-    private DialogService DialogService { get; set; } = null!;
 
     /// <summary>Load survey results.</summary>
     /// <param name="args"></param>
     /// <returns>Async op.</returns>
     public async Task LoadSurveyResultsData(LoadDataArgs args)
     {
-        SurveyResultsCount = await Service.GetSurveyResultsCount(_selectedSurvey.Id);
-        SurveyResults = await Service.GetSurveyResults(_selectedSurvey.Id, args);
+        if (_selectedSurvey is null)
+            throw new ArgumentNullException(nameof(_selectedSurvey), "Disallowed null.");
+
         await InvokeAsync(StateHasChanged);
     }
 
@@ -63,15 +55,15 @@ public partial class DisplaySurvey : OwningComponentBase<SurveyService>
         }
     }
 
-    // SelectedSurveyChange
-
-    private async void OnSurveySubmit(object sender, EventArgs args)
+    private async void OnSurveySubmit(object? sender, EventArgs args)
     {
-        LoadDataArgs loadArgs = new LoadDataArgs();
-        loadArgs.Filter = null;
-        loadArgs.OrderBy = null;
-        loadArgs.Skip = 0;
-        loadArgs.Top = 1;
+        LoadDataArgs loadArgs = new()
+        {
+            Filter = null,
+            OrderBy = null,
+            Skip = 0,
+            Top = 1
+        };
         await LoadSurveyResultsData(loadArgs);
     }
 
@@ -88,15 +80,20 @@ public partial class DisplaySurvey : OwningComponentBase<SurveyService>
 
     private async Task SelectedSurveyChange(object value)
     {
+        if (_selectedSurvey is null)
+            return;
+
         _surveys = new List<DTOSurvey>();
         await RefreshSurveys(_selectedSurvey.Id);
 
         // Refresh results
-        LoadDataArgs args = new LoadDataArgs();
-        args.Filter = null;
-        args.OrderBy = null;
-        args.Skip = 0;
-        args.Top = 1;
+        LoadDataArgs args = new()
+        {
+            Filter = null,
+            OrderBy = null,
+            Skip = 0,
+            Top = 1
+        };
 
         await LoadSurveyResultsData(args);
     }

@@ -8,8 +8,8 @@
 			<button class="btn btn-primary mr-2" title="New Survey" @onclick="OnNewSurveyClick">New</button>
 			@Title
 		</h2>
-		@if(PromptInline && ShouldShowNewInline) {
-			<EditSurveyInline @bind-Value="ShouldShowNewInline"></EditSurveyInline>
+		@if(PromptInline && _shouldShowNewInline) {
+			<EditSurveyInline @bind-Value="_shouldShowNewInline"></EditSurveyInline>
 		}
 		@if (ExistingSurveys == null)
 		{
@@ -25,14 +25,14 @@
 				<div class="mb-2 d-flex">
 					<RadzenDropDown id="selectsurvey" TValue="Survey"
 									Data="@_surveys"
-									TextProperty="SurveyName"
+									TextProperty="Name"
 									@bind-Value="_selectedSurvey"
 									Change="@(args => SelectedSurveyChange(args))" />
 					<button id="editsurvey" class="btn btn-outline-primary ml-1" title="Edit Survey" @onclick="OnEditSurveyClick">Edit Survey</button>
 				</div>
 
-				@if(PromptInline && ShouldShowEditInline) {
-					<EditSurveyInline @bind-Value="ShouldShowEditInline" SelectedSurvey="_selectedSurvey"></EditSurveyInline>
+				@if(PromptInline && _shouldShowEditInline) {
+					<EditSurveyInline @bind-Value="_shouldShowEditInline" SelectedSurvey="_selectedSurvey"></EditSurveyInline>
 				}
 				<div class="row">
 					<div class="col-md-12">
