@@ -19,7 +19,7 @@
     <Version>2.0.0</Version>
     <PackageReleaseNotes>
 2.0.0
-Make entities generic.
+Updated entity property names, code cleanup.
 1.2.5
 Change the Ids from ints to strings.
 1.2.4

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BlazingApple.Survey.Shared;
 
-/// <summary>Rep</summary>
+/// <summary>Represents a user that's answered a <see cref="BlazingApple.Survey.Shared.SurveyItem" /></summary>
 public partial class SurveyAnswer
 {
     /// <summary>The value of the answer.</summary>
@@ -25,4 +25,7 @@ public partial class SurveyAnswer
     /// <summary>FK for <see cref="SurveyItem" /></summary>
     [Required]
     public Guid SurveyItemId { get; set; }
+
+    /// <summary>The user id who filled this out (may be anonymous).</summary>
+    public string? UserId { get; set; }
 }

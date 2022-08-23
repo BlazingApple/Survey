@@ -2,14 +2,14 @@
 @page "/singlesurvey"
 @attribute [Authorize]
 
-@if (surveyId != -1)
+@if (surveyId != Guid.Empty)
 {
 	<SurveyTaker SurveyId="@surveyId" />
 }
 
 @code {
 	private List<Survey> surveys;
-	private int surveyId = -1;
+	private Guid surveyId = Guid.Empty;
 	protected override async Task OnInitializedAsync()
 	{
 		await base.OnInitializedAsync();
