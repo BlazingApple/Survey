@@ -60,7 +60,7 @@ namespace BlazingApple.Survey.Shared
         public Guid Id { get; set; }
 
         /// <inheritdoc cref="SurveyItem.ItemType" />
-        public string? ItemType { get; set; }
+        public ItemType ItemType { get; set; }
 
         /// <inheritdoc cref="SurveyItem.ItemValue" />
         public string? ItemValue { get; set; }

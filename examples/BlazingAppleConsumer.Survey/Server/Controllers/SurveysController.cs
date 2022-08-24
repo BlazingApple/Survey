@@ -112,11 +112,10 @@ namespace BlazingAppleConsumer.Server.Controllers
         }
 
         [HttpPost("results/{surveyId}")]
-        public async Task<ActionResult<List<DTOSurveyItem>>> GetSurveyResults([FromRoute] Guid surveyId, LoadDataArgs loadDataArgs)
+        public async Task<ActionResult<List<DTOSurveyItem>>> GetSurveyResults(Guid surveyId, LoadDataArgs loadDataArgs)
         {
             IQueryable<SurveyItem> query = _context.SurveyItems
-                .Where(x => x.Id == surveyId)
-                .Where(x => x.ItemType != "Text Area")
+                .Where(x => x.SurveyId == surveyId && x.ItemType != ItemType.TextArea)
                 .Include(x => x.Options)
                 .OrderBy(x => x.Position);
 
@@ -146,7 +145,7 @@ namespace BlazingAppleConsumer.Server.Controllers
 
                 List<AnswerResponse> ColAnswerResponse = new();
 
-                if ((SurveyItem.ItemType == "Date") || (SurveyItem.ItemType == "Date Time"))
+                if (SurveyItem.ItemType is ItemType.Date or ItemType.DateTime)
                 {
                     var TempColAnswerResponse = _context.SurveyAnswers
                         .Where(x => x.SurveyItemId == SurveyItem.Id)
@@ -222,7 +221,7 @@ namespace BlazingAppleConsumer.Server.Controllers
         {
             IQueryable<SurveyItem> query = _context.SurveyItems
                             .Where(x => x.SurveyId == surveyId)
-                            .Where(x => x.ItemType != "Text Area")
+                            .Where(x => x.ItemType != ItemType.TextArea)
                             .Include(x => x.Options)
                             .OrderBy(x => x.Position);
 
@@ -296,7 +295,7 @@ namespace BlazingAppleConsumer.Server.Controllers
 
                 // Save Answer
 
-                if (SurveyItem.ItemType != "Multi-Select Dropdown")
+                if (SurveyItem.ItemType != ItemType.DropdownMultiSelect)
                 {
                     SurveyAnswer NewSurveyAnswer = new()
                     {

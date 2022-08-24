@@ -3,43 +3,43 @@
 	<label for="@_idString">@Item.Prompt</label>
 	<br />
 	<EditForm Model="Item">
-		@if (Item.ItemType == "Text Box")
+		@if (Item.ItemType == ItemType.TextBox)
 		{
 			<InputText id="@_idString" class="form-control" @bind-Value="@_dummyString" />
 		}
-	@if (Item.ItemType == "Text Area")
-	{
-		<InputTextArea id="@_idString" class="form-control" @bind-Value="@_dummyString" />
-	}
-	@if (Item.ItemType == "Date")
-	{
-		<InputDate id="@_idString" class="form-control" DateFormat="d" TValue="DateTime?" @bind-Value="_dummyDateTime" />
-	}
-	@if (Item.ItemType == "Date Time")
-	{
-		<BlazingApple.Survey.Internal.InputDateTime id="@_idString" class="form-control" TValue="DateTime?" @bind-Value="@_dummyDateTime" />
-	}
-	@if (Item.ItemType == "Dropdown" && Item.Options != null)
-	{
-		<InputSelect id="@_idString" class="form-control" @bind-Value="@Answer.AnswerValueString">
-			@foreach (SurveyItemOption option in Item.Options.OrderBy(x => x.Id))
-				{
-				<option value="@option.OptionLabel">@option.OptionLabel</option>
-				}
-		</InputSelect>
-	}
-	@if (Item.ItemType == "Multi-Select Dropdown" && Item.Options != null)
-	{
-		<RadzenDropDown TValue="IEnumerable<string>"
-						Multiple="true"
-						AllowClear="true"
-						AllowFiltering="true"
-						Placeholder="Select..."
-						Data="@Item.Options.OrderBy(x => x.Id)"
-						@bind-Value="Answer.AnswerValueList"
-						TextProperty="OptionLabel"
-						ValueProperty="OptionLabel"
-						Style="width:300px;" />
-	}
+		else if (Item.ItemType == ItemType.TextArea)
+		{
+			<InputTextArea id="@_idString" class="form-control" @bind-Value="@_dummyString" />
+		}
+		else if (Item.ItemType == ItemType.Date)
+		{
+			<InputDate id="@_idString" class="form-control" DateFormat="d" TValue="DateTime?" @bind-Value="_dummyDateTime" />
+		}
+		else if (Item.ItemType == ItemType.DateTime)
+		{
+			<BlazingApple.Survey.Internal.InputDateTime id="@_idString" class="form-control" TValue="DateTime?" @bind-Value="@_dummyDateTime" />
+		}
+		else if (Item.ItemType == ItemType.Dropdown && Item.Options != null)
+		{
+			<InputSelect id="@_idString" class="form-control" @bind-Value="@Answer.AnswerValueString">
+				@foreach (SurveyItemOption option in Item.Options.OrderBy(x => x.Id))
+					{
+					<option value="@option.OptionLabel">@option.OptionLabel</option>
+					}
+			</InputSelect>
+		}
+		else if (Item.ItemType == ItemType.DropdownMultiSelect && Item.Options != null)
+		{
+			<RadzenDropDown TValue="IEnumerable<string>"
+							Multiple="true"
+							AllowClear="true"
+							AllowFiltering="true"
+							Placeholder="Select..."
+							Data="@Item.Options.OrderBy(x => x.Id)"
+							@bind-Value="Answer.AnswerValueList"
+							TextProperty="OptionLabel"
+							ValueProperty="OptionLabel"
+							Style="width:300px;" />
+		}
 	</EditForm>
 }

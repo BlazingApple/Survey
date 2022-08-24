@@ -4,6 +4,7 @@ using BlazingAppleConsumer.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlazingAppleConsumer.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220824024650_ChangeItemTypeToEnum")]
+    partial class ChangeItemTypeToEnum
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,9 +55,11 @@ namespace BlazingAppleConsumer.Server.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AnswerValue")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("AnswerValueDateTime")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("SurveyItemId")

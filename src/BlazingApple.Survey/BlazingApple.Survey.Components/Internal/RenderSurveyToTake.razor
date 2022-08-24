@@ -20,7 +20,7 @@ else if(SelectedSurvey is not null)
 	{
 		<h4>@NoQuestionsText</h4>
 	}
-	else if(SelectedSurvey != null)
+	else if(SelectedSurvey != null && SelectedSurvey.SurveyItems != null)
 	{
 		<EditForm Model="@SelectedSurvey" OnValidSubmit="@SaveSurvey">
 			<div>
@@ -31,28 +31,28 @@ else if(SelectedSurvey is not null)
 							<div class="col-md-9" style="text-align: left;margin-bottom: 20px">
 								<div class="form-group">
 									<label for="@SurveyItem.Id.ToString()">@SurveyItem.Prompt</label>
-									@if (SurveyItem.ItemType == "Text Box")
+									@if (SurveyItem.ItemType == ItemType.TextBox)
 									{
 										<InputText id="@SurveyItem.Id.ToString()" class="form-control"
 												   @bind-Value="@SurveyItem.AnswerValueString" disabled="@ShowSurveyComplete" />
 									}
-									@if (SurveyItem.ItemType == "Text Area")
+									@if (SurveyItem.ItemType == ItemType.TextArea)
 									{
 										<InputTextArea id="@SurveyItem.Id.ToString()" class="form-control"
 													   @bind-Value="@SurveyItem.AnswerValueString" disabled="@ShowSurveyComplete" />
 									}
-									@if (SurveyItem.ItemType == "Date")
+									@if (SurveyItem.ItemType == ItemType.Date)
 									{
 										<InputDate id="@SurveyItem.Id.ToString()" class="form-control"
 														  @bind-Value="@SurveyItem.AnswerValueDateTime"
 														  TValue="DateTime?" disabled="@ShowSurveyComplete" />
 									}
-									@if (SurveyItem.ItemType == "Date Time")
+									@if (SurveyItem.ItemType == ItemType.DateTime)
 									{
 										<BlazingApple.Survey.Internal.InputDateTime TValue="DateTime?" id="@SurveyItem.Id.ToString()" class="form-control"
 														  @bind-Value="@SurveyItem.AnswerValueDateTime" disabled="@ShowSurveyComplete" />
 									}
-									@if (SurveyItem.ItemType == "Dropdown")
+									@if (SurveyItem.ItemType == ItemType.Dropdown)
 									{
 										<InputSelect id="@SurveyItem.Id.ToString()" @bind-Value="@SurveyItem.AnswerValueString"
 													 class="form-control"
@@ -62,7 +62,7 @@ else if(SelectedSurvey is not null)
 											}
 										</InputSelect>
 									}
-									@if (SurveyItem.ItemType == "Multi-Select Dropdown")
+									@if (SurveyItem.ItemType == ItemType.DropdownMultiSelect)
 									{
 										<RadzenDropDown Name="@SurveyItem.Id.ToString()"
 														TValue="IEnumerable<string>"

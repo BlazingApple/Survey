@@ -9,11 +9,9 @@ namespace BlazingApple.Survey.Shared;
 public partial class SurveyAnswer
 {
     /// <summary>The value of the answer.</summary>
-    [Required]
     public string? AnswerValue { get; set; }
 
     /// <summary>The <see cref="DateTime" /> that the answer was provided.</summary>
-    [Required]
     public DateTime? AnswerValueDateTime { get; set; }
 
     /// <summary>The identifier</summary>

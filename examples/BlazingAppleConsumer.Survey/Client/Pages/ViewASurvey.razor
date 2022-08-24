@@ -2,19 +2,10 @@
 @inject HttpClient http
 @attribute [Authorize]
 
-@if (surveyId != Guid.Empty)
+@if(_surveys?.Count <= 0) {
+	<p>No surveys created yet!</p>
+}
+else if (surveyId != Guid.Empty)
 {
 	<SurveyResults SurveyId="@surveyId"></SurveyResults>
-}
-@code {
-	private List<Survey> surveys;
-	private Guid surveyId = Guid.Empty;
-	protected override async Task OnInitializedAsync()
-	{
-		await base.OnInitializedAsync();
-		surveys = await http.GetFromJsonAsync<List<Survey>>("api/surveys");
-		int count = surveys.Count;
-		int randomIndex = new Random().Next(0, count);
-		surveyId = surveys[randomIndex].Id;
-	}
 }

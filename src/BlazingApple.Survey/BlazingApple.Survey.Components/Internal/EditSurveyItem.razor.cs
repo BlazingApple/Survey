@@ -11,8 +11,7 @@ namespace BlazingApple.Survey.Components.Internal;
 /// <summary>Allows editing a <see cref="SurveyItem" /></summary>
 public partial class EditSurveyItem : OwningComponentBase<SurveyService>
 {
-    private readonly IEnumerable<string> FormTypes = new string[]
-        { "Text Box", "Text Area", "Date", "Date Time", "Dropdown", "Multi-Select Dropdown" };
+    private readonly IEnumerable<ItemType> FormTypes = Enum.GetValues<ItemType>();
     private string _newOption = string.Empty;
     private bool ShowPopup = false;
 

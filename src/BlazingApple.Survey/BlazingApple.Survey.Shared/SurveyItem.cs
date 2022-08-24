@@ -14,8 +14,8 @@ public partial class SurveyItem
     /// <summary>Id</summary>
     public Guid Id { get; set; }
 
-    /// <inheritdoc cref="BlazingApple.Survey.Shared.ItemType" />
-    public string? ItemType { get; set; }
+    /// <inheritdoc cref="Shared.ItemType" />
+    public ItemType ItemType { get; set; }
 
     public string? ItemValue { get; set; }
 
