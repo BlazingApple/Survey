@@ -6,7 +6,7 @@
 					Data="@SurveyResultSet"
 					LoadData="@LoadSurveyResultsData"
 					PageSize="1" WrapItems="true" AllowPaging="true"
-					TItem="DTOSurveyItem">
+					TItem="DTOQuestion">
 		<Template Context="item">
 			<RenderSurveyResult Label="@item.Prompt" Responses="@item.AnswerResponses"></RenderSurveyResult>
 		</Template>
@@ -18,7 +18,7 @@
 
 	// Survey Results
 	int SurveyResultsCount;
-	IEnumerable<DTOSurveyItem> SurveyResultSet;
+	IEnumerable<DTOQuestion> SurveyResultSet;
 
 	protected override async Task OnInitializedAsync()
 	{

@@ -121,13 +121,13 @@ public partial class SurveyAdmin : OwningComponentBase<SurveyService>
     private void ProcessItemRequest(ItemRequest itemRequest)
     {
         UserAction operation = itemRequest.Action;
-        SurveyItem modifiedSurveyItem = itemRequest.Record;
+        Question modifiedSurveyItem = itemRequest.Record;
 
         if (_selectedSurvey is null)
             throw new InvalidDataException("Unexpected null survey");
 
         // Refresh the SurveyItem
-        SurveyItem? existingSurveyItem = _selectedSurvey.SurveyItems.Where(x => x.Id == modifiedSurveyItem.Id).FirstOrDefault();
+        Question? existingSurveyItem = _selectedSurvey.SurveyItems.Where(x => x.Id == modifiedSurveyItem.Id).FirstOrDefault();
 
         if (existingSurveyItem is null)
             throw new InvalidOperationException("Could not find matching survey item");

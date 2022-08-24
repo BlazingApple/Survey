@@ -16,11 +16,11 @@ namespace BlazingAppleConsumer.Server.Data
 {
     public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
     {
-        public DbSet<SurveyAnswer> SurveyAnswers { get; set; }
+        public DbSet<Answer> SurveyAnswers { get; set; }
 
-        public DbSet<SurveyItemOption> SurveyItemOptions { get; set; }
+        public DbSet<QuestionOption> SurveyItemOptions { get; set; }
 
-        public DbSet<SurveyItem> SurveyItems { get; set; }
+        public DbSet<Question> SurveyItems { get; set; }
 
         public DbSet<apple.Survey> Surveys { get; set; }
 

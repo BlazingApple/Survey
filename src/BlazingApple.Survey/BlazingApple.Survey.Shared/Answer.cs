@@ -5,8 +5,8 @@ using System.Text;
 
 namespace BlazingApple.Survey.Shared;
 
-/// <summary>Represents a user that's answered a <see cref="BlazingApple.Survey.Shared.SurveyItem" /></summary>
-public partial class SurveyAnswer
+/// <summary>Represents a user that's answered a <see cref="BlazingApple.Survey.Shared.Question" /></summary>
+public partial class Answer
 {
     /// <summary>The value of the answer.</summary>
     public string? AnswerValue { get; set; }
@@ -17,12 +17,12 @@ public partial class SurveyAnswer
     /// <summary>The identifier</summary>
     public Guid Id { get; set; }
 
-    /// <inheritdoc cref="SurveyItem" />
-    public virtual SurveyItem? SurveyItem { get; set; }
+    /// <inheritdoc cref="Question" />
+    public virtual Question? Question { get; set; }
 
-    /// <summary>FK for <see cref="SurveyItem" /></summary>
+    /// <summary>FK for <see cref="Question" /></summary>
     [Required]
-    public Guid SurveyItemId { get; set; }
+    public Guid QuestionId { get; set; }
 
     /// <summary>The user id who filled this out (may be anonymous).</summary>
     public string? UserId { get; set; }

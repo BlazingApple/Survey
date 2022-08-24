@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 
 namespace BlazingApple.Survey.Components.Internal;
 
-/// <summary>Display a single <see cref="SurveyItem" /></summary>
+/// <summary>Display a single <see cref="Question" /></summary>
 public partial class SurveyItemDisplay : ComponentBase
 {
     private readonly DialogOptions _options = new() { Width = "550px", Height = "380px" };
 
     private bool _showEditForm;
 
-    /// <inheritdoc cref="SurveyItem" />
+    /// <inheritdoc cref="Question" />
     [Parameter, EditorRequired]
-    public SurveyItem? Item { get; set; }
+    public Question? Item { get; set; }
 
     /// <summary><c>True</c> if the question should be display inline, <c>false</c> otherwise.</summary>
     [Parameter]

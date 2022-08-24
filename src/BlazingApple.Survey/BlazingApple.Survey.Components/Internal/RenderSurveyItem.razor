@@ -3,32 +3,32 @@
 	<label for="@_idString">@Item.Prompt</label>
 	<br />
 	<EditForm Model="Item">
-		@if (Item.ItemType == ItemType.TextBox)
+		@if (Item.Type == QuestionType.TextBox)
 		{
 			<InputText id="@_idString" class="form-control" @bind-Value="@_dummyString" />
 		}
-		else if (Item.ItemType == ItemType.TextArea)
+		else if (Item.Type == QuestionType.TextArea)
 		{
 			<InputTextArea id="@_idString" class="form-control" @bind-Value="@_dummyString" />
 		}
-		else if (Item.ItemType == ItemType.Date)
+		else if (Item.Type == QuestionType.Date)
 		{
 			<InputDate id="@_idString" class="form-control" DateFormat="d" TValue="DateTime?" @bind-Value="_dummyDateTime" />
 		}
-		else if (Item.ItemType == ItemType.DateTime)
+		else if (Item.Type == QuestionType.DateTime)
 		{
 			<BlazingApple.Survey.Internal.InputDateTime id="@_idString" class="form-control" TValue="DateTime?" @bind-Value="@_dummyDateTime" />
 		}
-		else if (Item.ItemType == ItemType.Dropdown && Item.Options != null)
+		else if (Item.Type == QuestionType.Dropdown && Item.Options != null)
 		{
 			<InputSelect id="@_idString" class="form-control" @bind-Value="@Answer.AnswerValueString">
-				@foreach (SurveyItemOption option in Item.Options.OrderBy(x => x.Id))
+				@foreach (QuestionOption option in Item.Options.OrderBy(x => x.Id))
 					{
 					<option value="@option.OptionLabel">@option.OptionLabel</option>
 					}
 			</InputSelect>
 		}
-		else if (Item.ItemType == ItemType.DropdownMultiSelect && Item.Options != null)
+		else if (Item.Type == QuestionType.DropdownMultiSelect && Item.Options != null)
 		{
 			<RadzenDropDown TValue="IEnumerable<string>"
 							Multiple="true"

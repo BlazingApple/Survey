@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace BlazingApple.Survey.Components.Internal;
 
-/// <summary>Allows editing a <see cref="SurveyItem" /></summary>
+/// <summary>Allows editing a <see cref="Question" /></summary>
 public partial class EditSurveyItem : OwningComponentBase<SurveyService>
 {
-    private readonly IEnumerable<ItemType> FormTypes = Enum.GetValues<ItemType>();
+    private readonly IEnumerable<QuestionType> FormTypes = Enum.GetValues<QuestionType>();
     private string _newOption = string.Empty;
     private bool ShowPopup = false;
 
@@ -27,7 +27,7 @@ public partial class EditSurveyItem : OwningComponentBase<SurveyService>
 
     /// <summary>The question being edited.</summary>
     [Parameter, EditorRequired]
-    public SurveyItem? SelectedSurveyItem { get; set; }
+    public Question? SelectedSurveyItem { get; set; }
 
     /// <summary>Adds a response option to the survey question being edited.</summary>
 	private void AddOption()
@@ -35,7 +35,7 @@ public partial class EditSurveyItem : OwningComponentBase<SurveyService>
         if (!string.IsNullOrWhiteSpace(_newOption) && SelectedSurveyItem?.Options != null)
         {
             SelectedSurveyItem.Options
-                .Add(new SurveyItemOption
+                .Add(new QuestionOption
                 {
                     OptionLabel = _newOption
                 });
@@ -105,7 +105,7 @@ public partial class EditSurveyItem : OwningComponentBase<SurveyService>
 
     /// <summary>Remove the option from the list of items.</summary>
     /// <param name="option"></param>
-    private void RemoveOption(SurveyItemOption option)
+    private void RemoveOption(QuestionOption option)
     {
         if (SelectedSurveyItem?.Options != null)
             SelectedSurveyItem.Options.Remove(option);

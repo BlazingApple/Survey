@@ -13,6 +13,7 @@ using BlazingAppleConsumer.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Linq.Dynamic.Core;
+using BlazingApple.Survey.Shared.DataTransferObjects;
 
 namespace BlazingAppleConsumer.Server.Controllers
 {
@@ -79,9 +80,9 @@ namespace BlazingAppleConsumer.Server.Controllers
 
         // GET: api/surveys/5
         [HttpGet("answers/{id}")]
-        public async Task<ActionResult<SurveyAnswer>> GetSurveyAnswer(int id)
+        public async Task<ActionResult<Answer>> GetSurveyAnswer(int id)
         {
-            SurveyAnswer surveyAnswer = await _context.SurveyAnswers.FindAsync(id);
+            Answer surveyAnswer = await _context.SurveyAnswers.FindAsync(id);
             if (surveyAnswer == null)
             {
                 return NotFound();
@@ -92,30 +93,30 @@ namespace BlazingAppleConsumer.Server.Controllers
 
         // GET: api/surveys/answers
         [HttpGet("answers")]
-        public async Task<ActionResult<List<SurveyAnswer>>> GetSurveyAnswers()
+        public async Task<ActionResult<List<Answer>>> GetSurveyAnswers()
         {
             return await _context.SurveyAnswers.ToListAsync();
         }
 
         // GET: api/surveys/items/5
         [HttpGet("items/{id}")]
-        public async Task<ActionResult<SurveyItem>> GetSurveyItem(Guid itemId)
+        public async Task<ActionResult<Question>> GetSurveyItem(Guid itemId)
         {
             return await _context.SurveyItems.FirstOrDefaultAsync(item => item.Id == itemId);
         }
 
         // GET: api/surveys/5/items
         [HttpGet("{id}/items")]
-        public async Task<ActionResult<List<SurveyItem>>> GetSurveyItems(Guid id)
+        public async Task<ActionResult<List<Question>>> GetSurveyItems(Guid id)
         {
             return await _context.SurveyItems.Where(item => item.Id == id).ToListAsync();
         }
 
         [HttpPost("results/{surveyId}")]
-        public async Task<ActionResult<List<DTOSurveyItem>>> GetSurveyResults(Guid surveyId, LoadDataArgs loadDataArgs)
+        public async Task<ActionResult<List<DTOQuestion>>> GetSurveyResults(Guid surveyId, LoadDataArgs loadDataArgs)
         {
-            IQueryable<SurveyItem> query = _context.SurveyItems
-                .Where(x => x.SurveyId == surveyId && x.ItemType != ItemType.TextArea)
+            IQueryable<Question> query = _context.SurveyItems
+                .Where(x => x.SurveyId == surveyId && x.Type != QuestionType.TextArea)
                 .Include(x => x.Options)
                 .OrderBy(x => x.Position);
 
@@ -125,30 +126,30 @@ namespace BlazingAppleConsumer.Server.Controllers
             if (!string.IsNullOrEmpty(loadDataArgs.OrderBy))
                 query = query.OrderBy(loadDataArgs.OrderBy);
 
-            List<SurveyItem> Results = await query
+            List<Question> Results = await query
                 .Skip(loadDataArgs.Skip.Value)
                 .Take(loadDataArgs.Top.Value)
                 .ToListAsync();
 
-            List<DTOSurveyItem> SurveyResultsCollection = new();
+            List<DTOQuestion> SurveyResultsCollection = new();
 
-            foreach (SurveyItem SurveyItem in Results)
+            foreach (Question SurveyItem in Results)
             {
-                DTOSurveyItem NewDTOSurveyItem = new()
+                DTOQuestion NewDTOSurveyItem = new()
                 {
                     Id = SurveyItem.Id,
                     Prompt = SurveyItem.Prompt,
-                    ItemType = SurveyItem.ItemType,
+                    Type = SurveyItem.Type,
                     Position = SurveyItem.Position,
                     Required = SurveyItem.Required
                 };
 
                 List<AnswerResponse> ColAnswerResponse = new();
 
-                if (SurveyItem.ItemType is ItemType.Date or ItemType.DateTime)
+                if (SurveyItem.Type is QuestionType.Date or QuestionType.DateTime)
                 {
                     var TempColAnswerResponse = _context.SurveyAnswers
-                        .Where(x => x.SurveyItemId == SurveyItem.Id)
+                        .Where(x => x.QuestionId == SurveyItem.Id)
                         .GroupBy(n => n.AnswerValueDateTime)
                         .Select(n => new AnswerResponse
                         {
@@ -183,7 +184,7 @@ namespace BlazingAppleConsumer.Server.Controllers
                 else
                 {
                     ColAnswerResponse = _context.SurveyAnswers
-                        .Where(x => x.SurveyItemId == SurveyItem.Id)
+                        .Where(x => x.QuestionId == SurveyItem.Id)
                         .GroupBy(n => n.AnswerValue)
                         .Select(n => new AnswerResponse
                         {
@@ -219,13 +220,13 @@ namespace BlazingAppleConsumer.Server.Controllers
         [HttpGet("results/{surveyId}/count")]
         public async Task<ActionResult<int>> GetSurveyResultsCount([FromRoute] Guid surveyId)
         {
-            IQueryable<SurveyItem> query = _context.SurveyItems
+            IQueryable<Question> query = _context.SurveyItems
                             .Where(x => x.SurveyId == surveyId)
-                            .Where(x => x.ItemType != ItemType.TextArea)
+                            .Where(x => x.Type != QuestionType.TextArea)
                             .Include(x => x.Options)
                             .OrderBy(x => x.Position);
 
-            List<SurveyItem> Results = await query.ToListAsync();
+            List<Question> Results = await query.ToListAsync();
             return Results.Count;
         }
 
@@ -279,11 +280,11 @@ namespace BlazingAppleConsumer.Server.Controllers
         public async Task<ActionResult<bool>> PostSurveyAnswer(DTOSurvey paramDTOSurvey)
         {
             paramDTOSurvey.UserId = GetUserId();
-            foreach (var SurveyItem in paramDTOSurvey.SurveyItems)
+            foreach (var SurveyItem in paramDTOSurvey.Questions)
             {
                 // Delete possible existing answer
-                List<SurveyAnswer> ExistingAnswers = await _context.SurveyAnswers
-                    .Where(x => x.SurveyItemId == SurveyItem.Id)
+                List<Answer> ExistingAnswers = await _context.SurveyAnswers
+                    .Where(x => x.QuestionId == SurveyItem.Id)
                     .Where(x => x.UserId == paramDTOSurvey.UserId)
                     .ToListAsync();
 
@@ -295,13 +296,13 @@ namespace BlazingAppleConsumer.Server.Controllers
 
                 // Save Answer
 
-                if (SurveyItem.ItemType != ItemType.DropdownMultiSelect)
+                if (SurveyItem.Type != QuestionType.DropdownMultiSelect)
                 {
-                    SurveyAnswer NewSurveyAnswer = new()
+                    Answer NewSurveyAnswer = new()
                     {
                         AnswerValue = SurveyItem.AnswerValueString,
                         AnswerValueDateTime = SurveyItem.AnswerValueDateTime,
-                        SurveyItemId = SurveyItem.Id,
+                        QuestionId = SurveyItem.Id,
                         UserId = paramDTOSurvey.UserId
                     };
 
@@ -313,10 +314,10 @@ namespace BlazingAppleConsumer.Server.Controllers
                 {
                     foreach (var item in SurveyItem.AnswerValueList)
                     {
-                        SurveyAnswer NewSurveyAnswerValueList = new()
+                        Answer NewSurveyAnswerValueList = new()
                         {
                             AnswerValue = item,
-                            SurveyItemId = SurveyItem.Id,
+                            QuestionId = SurveyItem.Id,
                             UserId = paramDTOSurvey.UserId
                         };
 
@@ -331,7 +332,7 @@ namespace BlazingAppleConsumer.Server.Controllers
 
         // POST: api/surveys/items To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("items")]
-        public async Task<ActionResult<apple.Survey>> PostSurveyItem(SurveyItem surveyItem)
+        public async Task<ActionResult<apple.Survey>> PostSurveyItem(Question surveyItem)
         {
             if (SurveyItemExists(surveyItem.Id))
             {
@@ -392,7 +393,7 @@ namespace BlazingAppleConsumer.Server.Controllers
 
         // PUT: api/surveys/answers/5 To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("answers/{id}")]
-        public async Task<IActionResult> PutSurveyAnswer(Guid id, SurveyAnswer surveyAnswer)
+        public async Task<IActionResult> PutSurveyAnswer(Guid id, Answer surveyAnswer)
         {
             if (id != surveyAnswer.Id)
             {
@@ -421,7 +422,7 @@ namespace BlazingAppleConsumer.Server.Controllers
 
         // PUT: api/surveys/items/5 To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("items/{id}")]
-        public async Task<IActionResult> PutSurveyItem(Guid id, SurveyItem surveyItem)
+        public async Task<IActionResult> PutSurveyItem(Guid id, Question surveyItem)
         {
             if (id != surveyItem.Id)
             {

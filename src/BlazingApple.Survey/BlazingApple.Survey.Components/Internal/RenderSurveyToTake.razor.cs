@@ -44,7 +44,7 @@ public partial class RenderSurveyToTake : OwningComponentBase<SurveyService>
         ShowSurveyComplete = true;
 
         // Clear Answers
-        foreach (DTOSurveyItem item in SelectedSurvey.SurveyItems!)
+        foreach (DTOQuestion item in SelectedSurvey.Questions!)
         {
             item.AnswerValueString = null;
             item.AnswerValueDateTime = null;

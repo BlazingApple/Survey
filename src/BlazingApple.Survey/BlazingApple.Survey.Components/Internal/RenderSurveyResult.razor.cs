@@ -10,7 +10,7 @@ namespace BlazingApple.Survey.Components.Internal;
 /// <summary>Render the result for a single question.</summary>
 public partial class RenderSurveyResult : ComponentBase
 {
-    /// <summary>The name of the question or <see cref="SurveyItem" /></summary>
+    /// <summary>The name of the question or <see cref="Question" /></summary>
     [Parameter, EditorRequired]
     public string Label { get; set; } = null!;
 

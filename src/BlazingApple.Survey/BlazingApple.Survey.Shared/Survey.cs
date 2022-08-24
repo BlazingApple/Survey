@@ -21,12 +21,12 @@ namespace BlazingApple.Survey.Shared
         public string Name { get; set; } = null!;
 
         /// <summary>The list of survey questions.</summary>
-        public virtual ICollection<SurveyItem> SurveyItems { get; set; }
+        public virtual ICollection<Question> SurveyItems { get; set; }
 
         /// <summary>Foreign key for the user.</summary>
         public string? UserId { get; set; }
 
         /// <summary>Default constructor.</summary>
-        public Survey() => SurveyItems = new HashSet<SurveyItem>();
+        public Survey() => SurveyItems = new HashSet<Question>();
     }
 }

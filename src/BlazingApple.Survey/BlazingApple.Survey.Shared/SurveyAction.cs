@@ -11,7 +11,7 @@ public record SurveyRequest(UserAction Action, Survey Record) : ISurveyRequest<S
 {
 }
 
-/// <summary>CRUD Request for changing a <see cref="SurveyItem" />.</summary>
-public record ItemRequest(UserAction Action, SurveyItem Record) : ISurveyRequest<SurveyItem>
+/// <summary>CRUD Request for changing a <see cref="Question" />.</summary>
+public record ItemRequest(UserAction Action, Question Record) : ISurveyRequest<Question>
 {
 }

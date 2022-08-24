@@ -5,8 +5,8 @@ using System.Text;
 
 namespace BlazingApple.Survey.Shared
 {
-    /// <summary>A multiple choice option for a single survey question <see cref="SurveyItem" />.</summary>
-    public partial class SurveyItemOption
+    /// <summary>A multiple choice option for a single survey question <see cref="Question" />.</summary>
+    public partial class QuestionOption
     {
         /// <summary>The identifier.</summary>
         public Guid Id { get; set; }
@@ -16,10 +16,10 @@ namespace BlazingApple.Survey.Shared
         public string? OptionLabel { get; set; }
 
         /// <summary>The question this option is tied to.</summary>
-        public virtual SurveyItem? SurveyItem { get; set; }
+        public virtual Question? Question { get; set; }
 
-        /// <summary>Foreign key for <see cref="SurveyItem" /></summary>
+        /// <summary>Foreign key for <see cref="Question" /></summary>
         [Required]
-        public Guid SurveyItemId { get; set; }
+        public Guid QuestionId { get; set; }
     }
 }

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace BlazingApple.Survey.Shared;
 
-/// <summary>The type of question ( <see cref="SurveyItem" />).</summary>
-public enum ItemType
+/// <summary>The type of question ( <see cref="Question" />).</summary>
+public enum QuestionType
 {
     /// <summary>A date picker.</summary>
     Date,

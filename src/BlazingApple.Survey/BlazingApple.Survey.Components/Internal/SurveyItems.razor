@@ -3,7 +3,7 @@
 	<h4>
 		Questions for @SelectedSurvey.Name
 	</h4>
-	foreach (SurveyItem item in SelectedSurvey.SurveyItems.OrderBy(x => x.Position))
+	foreach (Question item in SelectedSurvey.SurveyItems.OrderBy(x => x.Position))
 	{
 		<div class="row">
 			<div class="col-md-2">
@@ -33,7 +33,7 @@
 		<div class="col-md-12">
 			@if (PromptInline && _showNewQuestion)
 			{
-				<EditSurveyItem OnClose="CloseQuestionHandler" SelectedSurveyItem="@(new SurveyItem() { Id = Guid.Empty, Survey = SelectedSurvey })"></EditSurveyItem>
+				<EditSurveyItem OnClose="CloseQuestionHandler" SelectedSurveyItem="@(new Question() { Id = Guid.Empty, Survey = SelectedSurvey })"></EditSurveyItem>
 			}
 			@if (!_showNewQuestion)
 			{

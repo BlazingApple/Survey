@@ -30,25 +30,25 @@ public class SurveyService
         {
             Id = survey.Id,
             Name = survey.Name,
-            SurveyItems = new List<DTOSurveyItem>(),
+            Questions = new List<DTOQuestion>(),
         };
 
-        foreach (SurveyItem SurveyItem in survey.SurveyItems)
+        foreach (Question SurveyItem in survey.SurveyItems)
         {
-            DTOSurveyItem dtoSurveyItem = new()
+            DTOQuestion dtoSurveyItem = new()
             {
                 Id = SurveyItem.Id,
                 Prompt = SurveyItem.Prompt,
-                ItemType = SurveyItem.ItemType,
+                Type = SurveyItem.Type,
                 Position = SurveyItem.Position,
                 Required = SurveyItem.Required,
 
-                Options = new List<DTOSurveyItemOption>()
+                Options = new List<DTOQuestionOption>()
             };
 
-            foreach (SurveyItemOption option in SurveyItem.Options!.OrderBy(x => x.Id))
+            foreach (QuestionOption option in SurveyItem.Options!.OrderBy(x => x.Id))
             {
-                DTOSurveyItemOption objDTOSurveyItemOption = new()
+                DTOQuestionOption objDTOSurveyItemOption = new()
                 {
                     Id = option.Id,
                     OptionLabel = option.OptionLabel,
@@ -57,12 +57,12 @@ public class SurveyService
                 dtoSurveyItem.Options.Add(objDTOSurveyItemOption);
             }
 
-            dtoSurvey.SurveyItems.Add(dtoSurveyItem);
+            dtoSurvey.Questions.Add(dtoSurveyItem);
         }
         return dtoSurvey;
     }
 
-    /// <summary>Add answers/options to a particular <see cref="SurveyItem" /> async.</summary>
+    /// <summary>Add answers/options to a particular <see cref="Question" /> async.</summary>
     /// <param name="paramDTOSurvey">The survey.</param>
     /// <returns><c>true</c> if successful, <c>false</c> otherwise.</returns>
     public async Task<bool> CreateSurveyAnswersAsync(DTOSurvey paramDTOSurvey)
@@ -89,16 +89,16 @@ public class SurveyService
     /// <summary>Add a new question to a survey and save it to the database.</summary>
     /// <param name="newSurveyItem">The question to save.</param>
     /// <returns>The saved question.</returns>
-    public async Task<SurveyItem> CreateSurveyItemAsync(SurveyItem newSurveyItem)
+    public async Task<Question> CreateSurveyItemAsync(Question newSurveyItem)
     {
         newSurveyItem.SurveyId = newSurveyItem.Survey!.Id;
         newSurveyItem.Position = newSurveyItem.Survey.SurveyItems.Count;
-        SurveyItem dtoSurveyItem = GetDTOItemCopy(newSurveyItem);
+        Question dtoSurveyItem = GetDTOItemCopy(newSurveyItem);
 
         HttpResponseMessage response = await _client.PostAsJsonAsync(API_PREFIX + "/items", dtoSurveyItem);
         response.EnsureSuccessStatusCode();
 
-        return (await response.Content.ReadFromJsonAsync<SurveyItem>())!;
+        return (await response.Content.ReadFromJsonAsync<Question>())!;
     }
 
     /// <summary>Delete a survey.</summary>
@@ -121,7 +121,7 @@ public class SurveyService
     /// <summary>Delete a question from a survey.</summary>
     /// <param name="item">The question to delete.</param>
     /// <returns><c>true</c> if successful, <c>false</c> otherwise.</returns>
-    public async Task<bool> DeleteSurveyItemAsync(SurveyItem item)
+    public async Task<bool> DeleteSurveyItemAsync(Question item)
     {
         try
         {
@@ -136,11 +136,11 @@ public class SurveyService
         return true;
     }
 
-    /// <summary>Get all of the questions/ <see cref="SurveyItem" /> for the survey id.</summary>
+    /// <summary>Get all of the questions/ <see cref="Question" /> for the survey id.</summary>
     /// <param name="surveyId">The survey identifier.</param>
     /// <returns>The list of questions.</returns>
-    public async Task<List<SurveyItem>> GetAllSurveyItemsAsync(string surveyId)
-        => (await _client.GetFromJsonAsync<List<SurveyItem>>($"{API_PREFIX}/{surveyId}/items"))!;
+    public async Task<List<Question>> GetAllSurveyItemsAsync(string surveyId)
+        => (await _client.GetFromJsonAsync<List<Question>>($"{API_PREFIX}/{surveyId}/items"))!;
 
     /// <summary>Get all the <see cref="shared.Survey" /> s.</summary>
     /// <returns>The list of <see cref="shared.Survey" /></returns>
@@ -163,21 +163,21 @@ public class SurveyService
         return response;
     }
 
-    /// <summary>Get a <see cref="SurveyItem" /></summary>
+    /// <summary>Get a <see cref="Question" /></summary>
     /// <param name="surveyItemId">The survey question.</param>
-    /// <returns>The question/ <see cref="SurveyItem" /></returns>
-    public async Task<SurveyItem> GetSurveyItemAsync(string surveyItemId)
-        => (await _client.GetFromJsonAsync<SurveyItem>($"{API_PREFIX}/items/{surveyItemId}"))!;
+    /// <returns>The question/ <see cref="Question" /></returns>
+    public async Task<Question> GetSurveyItemAsync(string surveyItemId)
+        => (await _client.GetFromJsonAsync<Question>($"{API_PREFIX}/items/{surveyItemId}"))!;
 
     /// <summary>Get the results for a particular survey.</summary>
     /// <param name="surveyId">The id for the survey.</param>
     /// <param name="args"><see cref="LoadDataArgs" /></param>
     /// <returns></returns>
-    public async Task<List<DTOSurveyItem>> GetSurveyResults(Guid surveyId, LoadDataArgs args)
+    public async Task<List<DTOQuestion>> GetSurveyResults(Guid surveyId, LoadDataArgs args)
     {
         HttpResponseMessage response = await _client.PostAsJsonAsync($"{API_PREFIX}/results/{surveyId}", args);
         response.EnsureSuccessStatusCode();
-        List<DTOSurveyItem> result = (await response.Content.ReadFromJsonAsync<List<DTOSurveyItem>>())!;
+        List<DTOQuestion> result = (await response.Content.ReadFromJsonAsync<List<DTOQuestion>>())!;
         return result;
     }
 
@@ -198,29 +198,28 @@ public class SurveyService
         return (await response.Content.ReadFromJsonAsync<shared.Survey>())!;
     }
 
-    /// <summary>Update a particular <see cref="shared.SurveyItem" />.</summary>
+    /// <summary>Update a particular <see cref="shared.Question" />.</summary>
     /// <param name="objExistingSurveyItem">The question to update.</param>
     /// <returns>The object from the database.</returns>
-    public async Task<SurveyItem> UpdateSurveyItemAsync(SurveyItem objExistingSurveyItem)
+    public async Task<Question> UpdateSurveyItemAsync(Question objExistingSurveyItem)
     {
-        SurveyItem dtoSurveyItem = GetDTOItemCopy(objExistingSurveyItem);
+        Question dtoSurveyItem = GetDTOItemCopy(objExistingSurveyItem);
 
         HttpResponseMessage response = await _client.PutAsJsonAsync(API_PREFIX + "/items/" + dtoSurveyItem.Id, dtoSurveyItem);
         response.EnsureSuccessStatusCode();
-        SurveyItem? result = await response.Content.ReadFromJsonAsync<SurveyItem>();
+        Question? result = await response.Content.ReadFromJsonAsync<Question>();
         return result!;
     }
 
     // Survey Answers
-    private SurveyItem GetDTOItemCopy(SurveyItem itemToCopy)
+    private Question GetDTOItemCopy(Question itemToCopy)
     {
-        SurveyItem dtoSurveyItem = new();
+        Question dtoSurveyItem = new();
         dtoSurveyItem.Id = itemToCopy.Id;
         dtoSurveyItem.SurveyId = itemToCopy.SurveyId;
         dtoSurveyItem.Position = itemToCopy.Position;
         dtoSurveyItem.Prompt = itemToCopy.Prompt;
-        dtoSurveyItem.ItemType = itemToCopy.ItemType;
-        dtoSurveyItem.ItemValue = itemToCopy.ItemValue;
+        dtoSurveyItem.Type = itemToCopy.Type;
         dtoSurveyItem.Required = itemToCopy.Required;
         dtoSurveyItem.Options = itemToCopy.Options;
         return dtoSurveyItem;

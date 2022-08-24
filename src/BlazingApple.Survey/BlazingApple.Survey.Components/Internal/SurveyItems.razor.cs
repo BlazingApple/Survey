@@ -11,7 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace BlazingApple.Survey.Components.Internal;
 
-/// <summary>Render a list of <see cref="SurveyItem" /> for a <see cref="Shared.Survey" /></summary>
+/// <summary>Render a list of <see cref="Question" /> for a <see cref="Shared.Survey" /></summary>
 public partial class SurveyItems : ComponentBase
 {
     private readonly DialogOptions _options = new() { Width = "550px", Height = "380px" };
@@ -21,7 +21,7 @@ public partial class SurveyItems : ComponentBase
     [Parameter]
     public DialogService DialogService { get; set; } = null!;
 
-    /// <summary>If <c>true</c> show the questions for the <see cref="SurveyItem" /> inline, otherwise, open a modal popup.</summary>
+    /// <summary>If <c>true</c> show the questions for the <see cref="Question" /> inline, otherwise, open a modal popup.</summary>
     [Parameter]
     public bool PromptInline { get; set; }
 
@@ -51,7 +51,7 @@ public partial class SurveyItems : ComponentBase
         {
             DialogService.Open<EditSurveyItem>(
                 $"New Question",
-                new Dictionary<string, object>() { { "SelectedSurveyItem", new SurveyItem() { Id = Guid.Empty, Survey = SelectedSurvey } } },
+                new Dictionary<string, object>() { { "SelectedSurveyItem", new Question() { Id = Guid.Empty, Survey = SelectedSurvey } } },
                 _options);
         }
         else
@@ -66,7 +66,7 @@ public partial class SurveyItems : ComponentBase
     private async Task SelectedSurveyMoveDown(object value)
     {
         Validate();
-        SurveyItem objSurveyItem = (SurveyItem)value;
+        Question objSurveyItem = (Question)value;
         int DesiredPosition = (objSurveyItem.Position + 1);
 
         // Move the current element in that position
@@ -81,7 +81,7 @@ public partial class SurveyItems : ComponentBase
         }
 
         // Move Item Down
-        SurveyItem SurveyItemToMoveDown = objSurveyItem;
+        Question SurveyItemToMoveDown = objSurveyItem;
 
         if (SurveyItemToMoveDown != null)
         {
@@ -98,7 +98,7 @@ public partial class SurveyItems : ComponentBase
     private async Task SelectedSurveyMoveUp(object value)
     {
         Validate();
-        SurveyItem objSurveyItem = (SurveyItem)value;
+        Question objSurveyItem = (Question)value;
         int DesiredPosition = (objSurveyItem.Position - 1);
 
         // Move the current element in that position
@@ -113,7 +113,7 @@ public partial class SurveyItems : ComponentBase
         }
 
         // Move Item Up
-        SurveyItem SurveyItemToMoveUp = objSurveyItem;
+        Question SurveyItemToMoveUp = objSurveyItem;
 
         if (SurveyItemToMoveUp != null)
         {

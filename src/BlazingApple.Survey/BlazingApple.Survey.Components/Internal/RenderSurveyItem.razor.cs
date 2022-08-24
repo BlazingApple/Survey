@@ -7,17 +7,18 @@ using System.Threading.Tasks;
 
 namespace BlazingApple.Survey.Components.Internal;
 
+/// <summary>Renders a particular <see cref="Question" /></summary>
 public partial class RenderSurveyItem : ComponentBase
 {
     private DateTime? _dummyDateTime;
     private string _dummyString = null!;
     private string _idString = null!;
 
-    private DTOSurveyItem Answer = new();
+    private DTOQuestion Answer = new();
 
-    /// <summary>The <see cref="Shared.SurveyItem" /> to render.</summary>
+    /// <summary>The <see cref="Shared.Question" /> to render.</summary>
     [Parameter, EditorRequired]
-    public SurveyItem? Item { get; set; }
+    public Question? Item { get; set; }
 
     /// <inheritdoc />
     protected override void OnParametersSet()
