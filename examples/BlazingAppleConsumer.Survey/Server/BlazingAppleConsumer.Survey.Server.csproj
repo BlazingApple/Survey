@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>BlazingAppleConsumer.Survey.Server-BCADAC69-4D88-48EB-9F25-FF9F204EED4C</UserSecretsId>
     <RootNamespace>BlazingAppleConsumer.Server</RootNamespace>
+	  <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

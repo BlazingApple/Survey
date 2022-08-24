@@ -4,6 +4,7 @@ using BlazingAppleConsumer.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlazingAppleConsumer.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220824113744_ChangePropertyNamesPartTwo")]
+    partial class ChangePropertyNamesPartTwo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,7 +46,7 @@ namespace BlazingAppleConsumer.Server.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Answers");
+                    b.ToTable("SurveyAnswers");
                 });
 
             modelBuilder.Entity("BlazingApple.Survey.Shared.Question", b =>
@@ -92,7 +94,7 @@ namespace BlazingAppleConsumer.Server.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("QuestionOptions");
+                    b.ToTable("SurveyItemOptions");
                 });
 
             modelBuilder.Entity("BlazingApple.Survey.Shared.Survey", b =>

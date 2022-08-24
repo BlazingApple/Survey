@@ -3,7 +3,7 @@
 	<h4>
 		Questions for @SelectedSurvey.Name
 	</h4>
-	foreach (Question item in SelectedSurvey.SurveyItems.OrderBy(x => x.Position))
+	foreach (Question item in SelectedSurvey.Questions.OrderBy(x => x.Position))
 	{
 		<div class="row">
 			<div class="col-md-2">
@@ -15,7 +15,7 @@
 								  Style="margin-top: 20px"
 								  Click="@(args => SelectedSurveyMoveUp(item))" />
 				}
-				@if (item.Position < SelectedSurvey.SurveyItems.Count() - 1)
+				@if (item.Position < SelectedSurvey.Questions.Count() - 1)
 				{
 					<RadzenButton ButtonStyle="ButtonStyle.Light"
 								  Size="Radzen.ButtonSize.Medium"

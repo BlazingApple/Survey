@@ -127,15 +127,15 @@ public partial class SurveyAdmin : OwningComponentBase<SurveyService>
             throw new InvalidDataException("Unexpected null survey");
 
         // Refresh the SurveyItem
-        Question? existingSurveyItem = _selectedSurvey.SurveyItems.Where(x => x.Id == modifiedSurveyItem.Id).FirstOrDefault();
+        Question? existingSurveyItem = _selectedSurvey.Questions.Where(x => x.Id == modifiedSurveyItem.Id).FirstOrDefault();
 
         if (existingSurveyItem is null)
             throw new InvalidOperationException("Could not find matching survey item");
 
         if (operation == UserAction.Delete)
-            _selectedSurvey.SurveyItems.Remove(existingSurveyItem);
+            _selectedSurvey.Questions.Remove(existingSurveyItem);
         else
-            RemoveAndAdd(_selectedSurvey.SurveyItems, existingSurveyItem, modifiedSurveyItem);
+            RemoveAndAdd(_selectedSurvey.Questions, existingSurveyItem, modifiedSurveyItem);
     }
 
     private void ProcessSurveyRequest(SurveyRequest surveyRequest)

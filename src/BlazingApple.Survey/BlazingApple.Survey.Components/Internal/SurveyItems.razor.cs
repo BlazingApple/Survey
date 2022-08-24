@@ -70,7 +70,7 @@ public partial class SurveyItems : ComponentBase
         int DesiredPosition = (objSurveyItem.Position + 1);
 
         // Move the current element in that position
-        var CurrentSurveyItem = SelectedSurvey.SurveyItems.FirstOrDefault(x => x.Position == DesiredPosition);
+        var CurrentSurveyItem = SelectedSurvey.Questions.FirstOrDefault(x => x.Position == DesiredPosition);
 
         if (CurrentSurveyItem != null)
         {
@@ -102,7 +102,7 @@ public partial class SurveyItems : ComponentBase
         int DesiredPosition = (objSurveyItem.Position - 1);
 
         // Move the current element in that position
-        var CurrentSurveyItem = SelectedSurvey.SurveyItems.FirstOrDefault(x => x.Position == DesiredPosition);
+        var CurrentSurveyItem = SelectedSurvey.Questions.FirstOrDefault(x => x.Position == DesiredPosition);
 
         if (CurrentSurveyItem != null)
         {

@@ -33,7 +33,7 @@ public class SurveyService
             Questions = new List<DTOQuestion>(),
         };
 
-        foreach (Question SurveyItem in survey.SurveyItems)
+        foreach (Question SurveyItem in survey.Questions)
         {
             DTOQuestion dtoSurveyItem = new()
             {
@@ -92,7 +92,7 @@ public class SurveyService
     public async Task<Question> CreateSurveyItemAsync(Question newSurveyItem)
     {
         newSurveyItem.SurveyId = newSurveyItem.Survey!.Id;
-        newSurveyItem.Position = newSurveyItem.Survey.SurveyItems.Count;
+        newSurveyItem.Position = newSurveyItem.Survey.Questions.Count;
         Question dtoSurveyItem = GetDTOItemCopy(newSurveyItem);
 
         HttpResponseMessage response = await _client.PostAsJsonAsync(API_PREFIX + "/items", dtoSurveyItem);
