@@ -6,10 +6,10 @@
 			<button class="btn btn-light btn-sm mt-2" @onclick="@(args => OpenQuestion())">Edit</button>
 		</div>
 		<div>
-			<RenderSurveyItem Item="Item" />
+			<RenderQuestion Item="Item" />
 			@if (_showEditForm)
 			{
-				<EditSurveyItem SelectedSurveyItem="Item" OnClose="CloseQuestion" PromptInline="true"></EditSurveyItem>
+				<EditQuestion SelectedSurveyItem="Item" OnClose="CloseQuestion" PromptInline="true"></EditQuestion>
 			}
 		</div>
 	</div>

@@ -25,7 +25,7 @@
 				}
 			</div>
 			<div class="col-md-10" style="text-align: left;margin-bottom: 20px">
-				<SurveyItemDisplay Item="@item" PromptInline="PromptInline"/>
+				<QuestionDisplay Item="@item" PromptInline="PromptInline" />
 			</div>
 		</div>
 	}
@@ -33,7 +33,7 @@
 		<div class="col-md-12">
 			@if (PromptInline && _showNewQuestion)
 			{
-				<EditSurveyItem OnClose="CloseQuestionHandler" SelectedSurveyItem="@(new Question() { Id = Guid.Empty, Survey = SelectedSurvey })"></EditSurveyItem>
+				<EditQuestion OnClose="CloseQuestionHandler" SelectedSurveyItem="@(new Question() { Id = Guid.Empty, Survey = SelectedSurvey })"></EditQuestion>
 			}
 			@if (!_showNewQuestion)
 			{

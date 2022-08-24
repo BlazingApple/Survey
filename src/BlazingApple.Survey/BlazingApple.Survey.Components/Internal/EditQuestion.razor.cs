@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace BlazingApple.Survey.Components.Internal;
 
 /// <summary>Allows editing a <see cref="Question" /></summary>
-public partial class EditSurveyItem : OwningComponentBase<SurveyService>
+public partial class EditQuestion : OwningComponentBase<SurveyService>
 {
     private readonly IEnumerable<QuestionType> FormTypes = Enum.GetValues<QuestionType>();
     private string _newOption = string.Empty;

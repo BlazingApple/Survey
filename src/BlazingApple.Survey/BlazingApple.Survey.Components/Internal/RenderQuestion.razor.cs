@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace BlazingApple.Survey.Components.Internal;
 
 /// <summary>Renders a particular <see cref="Question" /></summary>
-public partial class RenderSurveyItem : ComponentBase
+public partial class RenderQuestion : ComponentBase
 {
     private DateTime? _dummyDateTime;
     private string _dummyString = null!;

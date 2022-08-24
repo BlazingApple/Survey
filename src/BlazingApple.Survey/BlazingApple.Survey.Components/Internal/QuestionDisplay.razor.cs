@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace BlazingApple.Survey.Components.Internal;
 
 /// <summary>Display a single <see cref="Question" /></summary>
-public partial class SurveyItemDisplay : ComponentBase
+public partial class QuestionDisplay : ComponentBase
 {
     private readonly DialogOptions _options = new() { Width = "550px", Height = "380px" };
 
@@ -32,7 +32,7 @@ public partial class SurveyItemDisplay : ComponentBase
     private void OpenQuestion()
     {
         if (!PromptInline)
-            DialogService.Open<EditSurveyItem>($"Edit Question", new Dictionary<string, object?>() { { "SelectedSurveyItem", Item } }, _options);
+            DialogService.Open<EditQuestion>($"Edit Question", new Dictionary<string, object?>() { { "SelectedSurveyItem", Item } }, _options);
         else
             _showEditForm = true;
     }

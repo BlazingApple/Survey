@@ -49,7 +49,7 @@ public partial class SurveyItems : ComponentBase
     {
         if (!PromptInline)
         {
-            DialogService.Open<EditSurveyItem>(
+            DialogService.Open<EditQuestion>(
                 $"New Question",
                 new Dictionary<string, object>() { { "SelectedSurveyItem", new Question() { Id = Guid.Empty, Survey = SelectedSurvey } } },
                 _options);
