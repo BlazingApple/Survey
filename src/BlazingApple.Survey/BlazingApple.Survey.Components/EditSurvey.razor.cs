@@ -1,22 +1,27 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using BlazingApple.Survey.Components.Services;
+using Microsoft.AspNetCore.Components;
 using Radzen;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BlazingApple.Survey.Components;
 
 /// <summary>Edit an existing survey.</summary>
-public partial class EditSurvey : OwningComponentBase<SurveyService>
+public partial class EditSurvey
 {
     private string strError = "";
 
     /// <summary>Called after the user finishes editing.</summary>
     [Parameter]
     public EventHandler? OnClose { get; set; }
+
+    /// <summary>
+    /// Additional route segments when posting or editing a survey
+    /// </summary>
+    [Parameter]
+    public string? AdditionalSegments { get; set; }
+
+    [Inject]
+    private ISurveyClient Service { get; set; } = null!;
 
     /// <summary>Whether to launch the edit pane in-line or as a modal.</summary>
     [Parameter]
@@ -33,8 +38,7 @@ public partial class EditSurvey : OwningComponentBase<SurveyService>
     protected override async Task OnParametersSetAsync()
     {
         await base.OnParametersSetAsync();
-        if (SelectedSurvey == null)
-            SelectedSurvey = new Shared.Survey();
+        SelectedSurvey ??= new Shared.Survey();
     }
 
     private async Task AddOrUpdate()
@@ -45,7 +49,7 @@ public partial class EditSurvey : OwningComponentBase<SurveyService>
             SurveyRequest response;
             if (SelectedSurvey.Id == default)
             {
-                SelectedSurvey = await @Service.CreateSurveyAsync(SelectedSurvey);
+                SelectedSurvey = await @Service.CreateSurveyAsync(SelectedSurvey, AdditionalSegments);
                 response = new(UserAction.Create, SelectedSurvey);
             }
             else
@@ -75,7 +79,9 @@ public partial class EditSurvey : OwningComponentBase<SurveyService>
         bool result = await @Service.DeleteSurveyAsync(SelectedSurvey);
 
         if (!result)
+        {
             throw new InvalidDataException("Error deleting survey");
+        }
 
         SurveyRequest response = new(UserAction.Delete, SelectedSurvey);
 
@@ -85,14 +91,15 @@ public partial class EditSurvey : OwningComponentBase<SurveyService>
 
     private void InvokeOnClose()
     {
-        if (OnClose != null)
-            OnClose.Invoke(this, EventArgs.Empty);
+        OnClose?.Invoke(this, EventArgs.Empty);
     }
 
     [MemberNotNull(nameof(SelectedSurvey))]
     private void Validate()
     {
         if (SelectedSurvey is null)
+        {
             throw new InvalidOperationException();
+        }
     }
 }

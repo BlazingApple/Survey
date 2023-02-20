@@ -1,6 +1,6 @@
 ﻿@using System.Linq;
 @using System.Linq.Dynamic.Core
-@inherits OwningComponentBase<SurveyService>
+@using BlazingApple.Survey.Components.Services
 
 @strError
 @if (_existingSurveys == null)
@@ -19,23 +19,22 @@ else
 							Change="@(args => SelectedSurveyChange(args))" />
 		</div>
 		<br />
-		@if(_selectedSurvey != null) {
-
 		
-		<RadzenTabs>
-			<Tabs>
-				<RadzenTabsItem Text="Survey">
-					<RenderSurveyToTake SelectedSurvey="@_selectedSurvey" OnSubmit="@((sender, args) => OnSurveySubmit(sender,args))" />
-				</RadzenTabsItem>
-				<RadzenTabsItem Text="Responses">
-					<RadzenPanel AllowCollapse="false" Style="margin-bottom: 10px">
-						<ChildContent>
-							<RenderSurveyResults SelectedSurvey="@_selectedSurvey"></RenderSurveyResults>
-						</ChildContent>
-					</RadzenPanel>
-				</RadzenTabsItem>
-			</Tabs>
-		</RadzenTabs>
+		@if(_selectedSurvey != null) {
+			<RadzenTabs>
+				<Tabs>
+					<RadzenTabsItem Text="Survey">
+							<RenderSurveyToTake SelectedSurvey="@_selectedSurvey" UserId="@UserId" OnSubmit="@((sender, args) => OnSurveySubmit(sender,args))" />
+					</RadzenTabsItem>
+					<RadzenTabsItem Text="Responses">
+						<RadzenPanel AllowCollapse="false" Style="margin-bottom: 10px">
+							<ChildContent>
+								<RenderSurveyResults SelectedSurvey="@_selectedSurvey"></RenderSurveyResults>
+							</ChildContent>
+						</RadzenPanel>
+					</RadzenTabsItem>
+				</Tabs>
+			</RadzenTabs>
 		}
 	}
 }

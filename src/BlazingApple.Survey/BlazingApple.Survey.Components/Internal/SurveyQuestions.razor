@@ -3,29 +3,29 @@
 	<h4>
 		Questions for @SelectedSurvey.Name
 	</h4>
-	foreach (Question item in SelectedSurvey.Questions.OrderBy(x => x.Position))
+	foreach (Question question in SelectedSurvey.Questions.OrderBy(x => x.Position))
 	{
 		<div class="row">
 			<div class="col-md-2">
-				@if (item.Position > 0)
+				@if (question.Position > 0)
 				{
 					<RadzenButton ButtonStyle="ButtonStyle.Light"
 								  Size="Radzen.ButtonSize.Medium"
 								  Icon="arrow_circle_up"
 								  Style="margin-top: 20px"
-								  Click="@(args => SelectedSurveyMoveUp(item))" />
+								  Click="@(args => SelectedSurveyMoveUp(question))" />
 				}
-				@if (item.Position < SelectedSurvey.Questions.Count() - 1)
+				@if (question.Position < SelectedSurvey.Questions.Count() - 1)
 				{
 					<RadzenButton ButtonStyle="ButtonStyle.Light"
 								  Size="Radzen.ButtonSize.Medium"
 								  Icon="arrow_circle_down"
 								  Style="margin-top: 20px"
-								  Click="@(args => SelectedSurveyMoveDown(item))" />
+								  Click="@(args => SelectedSurveyMoveDown(question))" />
 				}
 			</div>
 			<div class="col-md-10" style="text-align: left;margin-bottom: 20px">
-				<QuestionDisplay Item="@item" PromptInline="PromptInline" />
+				<QuestionDisplay Question="@question" PromptInline="PromptInline" />
 			</div>
 		</div>
 	}
@@ -33,11 +33,11 @@
 		<div class="col-md-12">
 			@if (PromptInline && _showNewQuestion)
 			{
-				<EditQuestion OnClose="CloseQuestionHandler" SelectedSurveyItem="@(new Question() { Id = Guid.Empty, Survey = SelectedSurvey })"></EditQuestion>
+				<EditQuestion OnClose="CloseQuestionHandler" SelectedQuestion="@(new Question() { Id = Guid.Empty, Survey = SelectedSurvey })"></EditQuestion>
 			}
 			@if (!_showNewQuestion)
 			{
-				<button class="btn btn-primary mr-2" @onclick="@(args =>OpenQuestion())">Add Question</button>
+				<button class="btn btn-primary me-2" @onclick="@(args =>OpenQuestion())">Add Question</button>
 			}
 		</div>
 	</div>

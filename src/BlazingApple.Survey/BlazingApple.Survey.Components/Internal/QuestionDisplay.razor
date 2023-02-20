@@ -1,15 +1,15 @@
 ﻿@inject DialogService DialogService
-@if (Item != null)
+@if (Question != null)
 {
 	<div class="d-flex" style="flex-direction:row;">
-		<div class="mr-2">
+		<div class="me-2">
 			<button class="btn btn-light btn-sm mt-2" @onclick="@(args => OpenQuestion())">Edit</button>
 		</div>
 		<div>
-			<RenderQuestion Item="Item" />
+			<RenderQuestion Question="Question" />
 			@if (_showEditForm)
 			{
-				<EditQuestion SelectedSurveyItem="Item" OnClose="CloseQuestion" PromptInline="true"></EditQuestion>
+				<EditQuestion SelectedQuestion="Question" OnClose="CloseQuestion" PromptInline="true"></EditQuestion>
 			}
 		</div>
 	</div>

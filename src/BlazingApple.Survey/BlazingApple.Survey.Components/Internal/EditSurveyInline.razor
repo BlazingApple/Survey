@@ -1,36 +1,9 @@
 ﻿
-<div class="d-flex" style="flex-direction: column;">
-	<div class="d-flex" style="justify-content:flex-end;">
-		<button @onclick="OnButtonClick" class="btn btn-light">Close</button>
+@if(SelectedSurvey is not null) {
+	<div class="d-flex" style="flex-direction: column;">
+		<div class="d-flex" style="justify-content:flex-end;">
+			<button @onclick="OnButtonClick" class="btn btn-light">Close</button>
+		</div>
+		<EditSurvey SelectedSurvey="SelectedSurvey" AdditionalSegments="@AdditionalSegments" OnClose="OnSurveyEditClosed" PromptInline="true"></EditSurvey>
 	</div>
-	<EditSurvey SelectedSurvey="SelectedSurvey" OnClose="OnSurveyEditClosed" PromptInline="true"></EditSurvey>
-</div>
-
-@code {
-	[Parameter]
-	public bool Value { get; set; }
-
-	[Parameter]
-	public EventCallback<bool> ValueChanged { get; set; }
-
-	[Parameter]
-	public Survey SelectedSurvey { get; set; }
-
-	public bool BoundValue
-	{
-		get => Value;
-		set
-		{
-			ValueChanged.InvokeAsync(value);
-		}
-	}
-
-	private void OnSurveyEditClosed(object sender, EventArgs args)
-	{
-		BoundValue = false;
-	}
-	private void OnButtonClick()
-	{
-		BoundValue = !BoundValue;
-	}
 }

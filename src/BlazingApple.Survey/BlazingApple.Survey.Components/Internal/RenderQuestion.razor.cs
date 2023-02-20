@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BlazingApple.Survey.Components.Internal;
 
-/// <summary>Renders a particular <see cref="Question" /></summary>
+/// <summary>Renders a particular <see cref="Shared.Question" /></summary>
 public partial class RenderQuestion : ComponentBase
 {
     private DateTime? _dummyDateTime;
@@ -18,12 +18,12 @@ public partial class RenderQuestion : ComponentBase
 
     /// <summary>The <see cref="Shared.Question" /> to render.</summary>
     [Parameter, EditorRequired]
-    public Question? Item { get; set; }
+    public Question? Question { get; set; }
 
     /// <inheritdoc />
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        _idString = "itemControl-" + Item?.Position;
+        _idString = "itemControl-" + Question?.Position;
     }
 }

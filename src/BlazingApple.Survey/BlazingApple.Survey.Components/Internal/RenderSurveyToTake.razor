@@ -1,9 +1,9 @@
-﻿@inherits OwningComponentBase<SurveyService>
+﻿@using BlazingApple.Survey.Components.Services
 
 @strError
 @if (SeeResults)
 {
-	<button @onclick="OnStartOverClick" class="ml-1 btn btn-primary">Back</button>
+	<button @onclick="OnStartOverClick" class="ms-1 btn btn-primary">Back</button>
 	<RenderSurveyResults SelectedSurvey="SelectedSurvey"></RenderSurveyResults>
 }
 else if(SelectedSurvey is not null)
@@ -24,61 +24,61 @@ else if(SelectedSurvey is not null)
 	{
 		<EditForm Model="@SelectedSurvey" OnValidSubmit="@SaveSurvey">
 			<div>
-				@foreach (var SurveyItem in SelectedSurvey.Questions.OrderBy(x => x.Position))
+				@foreach (DTOQuestion Question in SelectedSurvey.Questions.OrderBy(x => x.Position))
 				{
-					@if(SurveyItem is not null) {
+					@if(Question is not null) {
 						<div class="row">
 							<div class="col-md-9" style="text-align: left;margin-bottom: 20px">
 								<div class="form-group">
-									<label for="@SurveyItem.Id.ToString()">@SurveyItem.Prompt</label>
-									@if (SurveyItem.Type == QuestionType.TextBox)
+									<label for="@Question.Id.ToString()">@Question.Prompt</label>
+									@if (Question.Type == QuestionType.TextBox)
 									{
-										<InputText id="@SurveyItem.Id.ToString()" class="form-control"
-												   @bind-Value="@SurveyItem.AnswerValueString" disabled="@ShowSurveyComplete" />
+										<InputText id="@Question.Id.ToString()" class="form-control"
+												   @bind-Value="@Question.AnswerValueString" disabled="@ShowSurveyComplete" />
 									}
-									@if (SurveyItem.Type == QuestionType.TextArea)
+									@if (Question.Type == QuestionType.TextArea)
 									{
-										<InputTextArea id="@SurveyItem.Id.ToString()" class="form-control"
-													   @bind-Value="@SurveyItem.AnswerValueString" disabled="@ShowSurveyComplete" />
+										<InputTextArea id="@Question.Id.ToString()" class="form-control"
+													   @bind-Value="@Question.AnswerValueString" disabled="@ShowSurveyComplete" />
 									}
-									@if (SurveyItem.Type == QuestionType.Date)
+									@if (Question.Type == QuestionType.Date)
 									{
-										<InputDate id="@SurveyItem.Id.ToString()" class="form-control"
-														  @bind-Value="@SurveyItem.AnswerValueDateTime"
+										<InputDate id="@Question.Id.ToString()" class="form-control"
+														  @bind-Value="@Question.AnswerValueDateTime"
 														  TValue="DateTime?" disabled="@ShowSurveyComplete" />
 									}
-									@if (SurveyItem.Type == QuestionType.DateTime)
+									@if (Question.Type == QuestionType.DateTime)
 									{
-										<BlazingApple.Survey.Internal.InputDateTime TValue="DateTime?" id="@SurveyItem.Id.ToString()" class="form-control"
-														  @bind-Value="@SurveyItem.AnswerValueDateTime" disabled="@ShowSurveyComplete" />
+										<BlazingApple.Survey.Internal.InputDateTime TValue="DateTime?" id="@Question.Id.ToString()" class="form-control"
+														  @bind-Value="@Question.AnswerValueDateTime" disabled="@ShowSurveyComplete" />
 									}
-									@if (SurveyItem.Type == QuestionType.Dropdown)
+									@if (Question.Type == QuestionType.Dropdown)
 									{
-										<InputSelect id="@SurveyItem.Id.ToString()" @bind-Value="@SurveyItem.AnswerValueString"
+										<InputSelect id="@Question.Id.ToString()" @bind-Value="@Question.AnswerValueString"
 													 class="form-control"
 													 disabled="@ShowSurveyComplete" >
-											@foreach(DTOQuestionOption option in @SurveyItem.Options!.OrderBy(x => x.Id)) {
+											@foreach(DTOQuestionOption option in @Question.Options!.OrderBy(x => x.Id)) {
 												<option value="@option.OptionLabel">@option.OptionLabel</option>
 											}
 										</InputSelect>
 									}
-									@if (SurveyItem.Type == QuestionType.DropdownMultiSelect)
+									@if (Question.Type == QuestionType.DropdownMultiSelect)
 									{
-										<RadzenDropDown Name="@SurveyItem.Id.ToString()"
+										<RadzenDropDown Name="@Question.Id.ToString()"
 														TValue="IEnumerable<string>"
 														Multiple="true"
 														AllowClear="true"
 														AllowFiltering="true"
-														@bind-Value="SurveyItem.AnswerValueList"
+														@bind-Value="Question.AnswerValueList"
 														Placeholder="Select..."
-														Data="@SurveyItem.Options"
+														Data="@Question.Options"
 														TextProperty="OptionLabel"
 														ValueProperty="OptionLabel"
 														Style="max-width:300px;" Disabled="ShowSurveyComplete" />
 									}
-									@if (SurveyItem.Required)
+									@if (Question.Required)
 									{
-										@*<br /><RadzenRequiredValidator Component="@SurveyItem.Id.ToString()"
+										@*<br /><RadzenRequiredValidator Component="@Question.Id.ToString()"
 															  Text="Required" Popup="false"
 															  Style="position: absolute" />*@
 									}

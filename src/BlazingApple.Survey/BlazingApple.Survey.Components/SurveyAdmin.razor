@@ -1,15 +1,15 @@
-﻿@inherits OwningComponentBase<SurveyService>
+﻿@using BlazingApple.Survey.Components.Services
 
 @strError
 @if (_selectedSurvey != null && _surveys != null)
 {
 	<div>
 		<h2 style="display:flex; align-items: center;">
-			<button class="btn btn-primary mr-2" title="New Survey" @onclick="OnNewSurveyClick">New</button>
+			<button class="btn btn-primary me-2" title="New Survey" @onclick="OnNewSurveyClick">New</button>
 			@Title
 		</h2>
 		@if(PromptInline && _shouldShowNewInline) {
-			<EditSurveyInline @bind-Value="_shouldShowNewInline"></EditSurveyInline>
+			<EditSurveyInline SelectedSurvey="_selectedSurvey" AdditionalSegments="@AdditionalSegments" @bind-Value="_shouldShowNewInline"></EditSurveyInline>
 		}
 		@if (ExistingSurveys == null)
 		{
@@ -28,15 +28,15 @@
 									TextProperty="Name"
 									@bind-Value="_selectedSurvey"
 									Change="@(args => SelectedSurveyChange(args))" />
-					<button id="editsurvey" class="btn btn-outline-primary ml-1" title="Edit Survey" @onclick="OnEditSurveyClick">Edit Survey</button>
+					<button id="editsurvey" class="btn btn-outline-primary ms-1" title="Edit Survey" @onclick="OnEditSurveyClick">Edit Survey</button>
 				</div>
 
 				@if(PromptInline && _shouldShowEditInline) {
-					<EditSurveyInline @bind-Value="_shouldShowEditInline" SelectedSurvey="_selectedSurvey"></EditSurveyInline>
+					<EditSurveyInline @bind-Value="_shouldShowEditInline" AdditionalSegments="@AdditionalSegments" SelectedSurvey="_selectedSurvey"></EditSurveyInline>
 				}
 				<div class="row">
 					<div class="col-md-12">
-						<SurveyItems SelectedSurvey="@_selectedSurvey" DialogService="@DialogService" PromptInline="PromptInline"></SurveyItems>
+						<SurveyQuestions SelectedSurvey="@_selectedSurvey" DialogService="@DialogService" PromptInline="PromptInline"></SurveyQuestions>
 					</div>
 				</div>
 			}

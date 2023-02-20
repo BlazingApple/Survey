@@ -1,17 +1,12 @@
-﻿using BlazingApple.Survey.Components.Internal;
+﻿using BlazingApple.Survey.Components.Services;
 using Microsoft.AspNetCore.Components;
 using Radzen;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BlazingApple.Survey.Components;
 
 /// <summary>Displays a survey for an end user.</summary>
-public partial class DisplaySurvey : OwningComponentBase<SurveyService>
+public partial class DisplaySurvey : ComponentBase
 {
     private bool? _existingSurveys;
     private DTOSurvey? _selectedSurvey;
@@ -19,13 +14,24 @@ public partial class DisplaySurvey : OwningComponentBase<SurveyService>
     private List<DTOSurvey>? _surveys;
     private string? strError;
 
+    [Inject]
+    private ISurveyClient Service { get; set; } = null!;
+
+    /// <summary>
+    /// User taking the survey.
+    /// </summary>
+    [Parameter, EditorRequired]
+    public string UserId { get; set; } = null!;
+
+
     /// <summary>Load survey results.</summary>
-    /// <param name="args"></param>
     /// <returns>Async op.</returns>
-    public async Task LoadSurveyResultsData(LoadDataArgs args)
+    public async Task LoadSurveyResultsData()
     {
         if (_selectedSurvey is null)
+        {
             throw new ArgumentNullException(nameof(_selectedSurvey), "Disallowed null.");
+        }
 
         await InvokeAsync(StateHasChanged);
     }
@@ -41,11 +47,15 @@ public partial class DisplaySurvey : OwningComponentBase<SurveyService>
         {
             List<Shared.Survey> surveys = await Service.GetAllSurveysAsync();
 
-            foreach (var survey in surveys)
+            foreach (Shared.Survey survey in surveys)
+            {
                 _surveys.Add(Service.ConvertSurveyToDTO(survey));
+            }
 
             if (_surveys.Count > 0)
+            {
                 _selectedSurvey = _surveys.First();
+            }
 
             _existingSurveys = _selectedSurvey != null;
         }
@@ -57,14 +67,7 @@ public partial class DisplaySurvey : OwningComponentBase<SurveyService>
 
     private async void OnSurveySubmit(object? sender, EventArgs args)
     {
-        LoadDataArgs loadArgs = new()
-        {
-            Filter = null,
-            OrderBy = null,
-            Skip = 0,
-            Top = 1
-        };
-        await LoadSurveyResultsData(loadArgs);
+        await LoadSurveyResultsData();
     }
 
     private async Task RefreshSurveys(Guid surveyId)
@@ -72,8 +75,10 @@ public partial class DisplaySurvey : OwningComponentBase<SurveyService>
         Validate();
         List<Shared.Survey> surveys = await Service.GetAllSurveysAsync();
 
-        foreach (var survey in surveys)
+        foreach (Shared.Survey survey in surveys)
+        {
             _surveys.Add(Service.ConvertSurveyToDTO(survey));
+        }
 
         _selectedSurvey = _surveys.Where(x => x.Id == surveyId).FirstOrDefault();
     }
@@ -81,27 +86,22 @@ public partial class DisplaySurvey : OwningComponentBase<SurveyService>
     private async Task SelectedSurveyChange(object value)
     {
         if (_selectedSurvey is null)
+        {
             return;
+        }
 
         _surveys = new List<DTOSurvey>();
         await RefreshSurveys(_selectedSurvey.Id);
 
-        // Refresh results
-        LoadDataArgs args = new()
-        {
-            Filter = null,
-            OrderBy = null,
-            Skip = 0,
-            Top = 1
-        };
-
-        await LoadSurveyResultsData(args);
+        await LoadSurveyResultsData();
     }
 
     [MemberNotNull(nameof(_surveys))]
     private void Validate()
     {
         if (_surveys == null)
+        {
             throw new InvalidOperationException("Disallowed null");
+        }
     }
 }

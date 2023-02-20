@@ -1,41 +1,41 @@
-﻿@if(Item != null) {
+﻿@if(Question != null) {
 
-	<label for="@_idString">@Item.Prompt</label>
+	<label for="@_idString">@Question.Prompt</label>
 	<br />
-	<EditForm Model="Item">
-		@if (Item.Type == QuestionType.TextBox)
+	<EditForm Model="Question">
+		@if (Question.Type == QuestionType.TextBox)
 		{
 			<InputText id="@_idString" class="form-control" @bind-Value="@_dummyString" />
 		}
-		else if (Item.Type == QuestionType.TextArea)
+		else if (Question.Type == QuestionType.TextArea)
 		{
 			<InputTextArea id="@_idString" class="form-control" @bind-Value="@_dummyString" />
 		}
-		else if (Item.Type == QuestionType.Date)
+		else if (Question.Type == QuestionType.Date)
 		{
 			<InputDate id="@_idString" class="form-control" DateFormat="d" TValue="DateTime?" @bind-Value="_dummyDateTime" />
 		}
-		else if (Item.Type == QuestionType.DateTime)
+		else if (Question.Type == QuestionType.DateTime)
 		{
 			<BlazingApple.Survey.Internal.InputDateTime id="@_idString" class="form-control" TValue="DateTime?" @bind-Value="@_dummyDateTime" />
 		}
-		else if (Item.Type == QuestionType.Dropdown && Item.Options != null)
+		else if (Question.Type == QuestionType.Dropdown && Question.Options != null)
 		{
 			<InputSelect id="@_idString" class="form-control" @bind-Value="@Answer.AnswerValueString">
-				@foreach (QuestionOption option in Item.Options.OrderBy(x => x.Id))
+				@foreach (QuestionOption option in Question.Options.OrderBy(x => x.Id))
 					{
 					<option value="@option.OptionLabel">@option.OptionLabel</option>
 					}
 			</InputSelect>
 		}
-		else if (Item.Type == QuestionType.DropdownMultiSelect && Item.Options != null)
+		else if (Question.Type == QuestionType.DropdownMultiSelect && Question.Options != null)
 		{
 			<RadzenDropDown TValue="IEnumerable<string>"
 							Multiple="true"
 							AllowClear="true"
 							AllowFiltering="true"
 							Placeholder="Select..."
-							Data="@Item.Options.OrderBy(x => x.Id)"
+							Data="@Question.Options.OrderBy(x => x.Id)"
 							@bind-Value="Answer.AnswerValueList"
 							TextProperty="OptionLabel"
 							ValueProperty="OptionLabel"

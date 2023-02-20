@@ -1,9 +1,9 @@
-﻿@inherits OwningComponentBase<SurveyService>
+﻿@using BlazingApple.Survey.Components.Services;
 
 @if (SelectedSurvey != null)
 {
-	<RadzenDataList Count="@SurveyResultsCount"
-					Data="@SurveyResultSet"
+	<RadzenDataList Count="@_surveyResultsCount"
+					Data="@_surveyResultSet"
 					LoadData="@LoadSurveyResultsData"
 					PageSize="1" WrapItems="true" AllowPaging="true"
 					TItem="DTOQuestion">
@@ -11,31 +11,4 @@
 			<RenderSurveyResult Label="@item.Prompt" Responses="@item.AnswerResponses"></RenderSurveyResult>
 		</Template>
 	</RadzenDataList>
-}
-@code {
-	[Parameter]
-	public DTOSurvey SelectedSurvey { get; set; }
-
-	// Survey Results
-	int SurveyResultsCount;
-	IEnumerable<DTOQuestion> SurveyResultSet;
-
-	protected override async Task OnInitializedAsync()
-	{
-		await base.OnInitializedAsync();
-
-		LoadDataArgs loadArgs = new LoadDataArgs();
-		loadArgs.Filter = null;
-		loadArgs.OrderBy = null;
-		loadArgs.Skip = 0;
-		loadArgs.Top = 1;
-		await LoadSurveyResultsData(loadArgs);
-	}
-
-	public async Task LoadSurveyResultsData(LoadDataArgs args)
-	{
-		SurveyResultsCount = await Service.GetSurveyResultsCount(SelectedSurvey.Id);
-		SurveyResultSet = await Service.GetSurveyResults(SelectedSurvey.Id, args);
-		await InvokeAsync(StateHasChanged);
-	}
 }

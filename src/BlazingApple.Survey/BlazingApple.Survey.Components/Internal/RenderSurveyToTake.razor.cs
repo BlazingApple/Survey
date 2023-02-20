@@ -1,22 +1,21 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using BlazingApple.Survey.Components.Services;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BlazingApple.Survey.Components.Internal;
 
 /// <summary>Allows a consumer to take a survey.</summary>
-public partial class RenderSurveyToTake : OwningComponentBase<SurveyService>
+public partial class RenderSurveyToTake : ComponentBase
 {
     private bool SeeResults = false;
 
     private bool ShowSurveyComplete = false;
 
     private string strError = "";
+
+    [Inject]
+    private ISurveyClient Service { get; set; } = null!;
 
     /// <summary>Whether or not to allow consumers/users to see the results after they complete the survey.</summary>
     [Parameter]
@@ -30,6 +29,12 @@ public partial class RenderSurveyToTake : OwningComponentBase<SurveyService>
     [Parameter]
     public EventHandler? OnSubmit { get; set; }
 
+    /// <summary>
+    /// Pass this if you'd like to override the default route to post the survey to.
+    /// </summary>
+    [Parameter]
+    public string? Route { get; set; }
+
     /// <summary>The survey to allow the user to take.</summary>
     [Parameter, EditorRequired]
     public DTOSurvey? SelectedSurvey { get; set; }
@@ -38,21 +43,30 @@ public partial class RenderSurveyToTake : OwningComponentBase<SurveyService>
     [Parameter]
     public string? SurveyCompleteText { get; set; } = "Survey Complete";
 
+    /// <summary>
+    /// User taking the survey.
+    /// </summary>
+    [Parameter, EditorRequired]
+    public string UserId { get; set; } = null!;
+
     private void CompleteSurvey()
     {
         Validate();
         ShowSurveyComplete = true;
 
         // Clear Answers
-        foreach (DTOQuestion item in SelectedSurvey.Questions!)
+        foreach (DTOQuestion question in SelectedSurvey.Questions!)
         {
-            item.AnswerValueString = null;
-            item.AnswerValueDateTime = null;
-            item.AnswerValueList = null;
+            question.AnswerValueString = null;
+            question.AnswerValueDateTime = null;
+            question.AnswerValueList = null;
         }
     }
 
-    private void OnSeeResultsClick(MouseEventArgs args) => SeeResults = true;
+    private void OnSeeResultsClick(MouseEventArgs args)
+    {
+        SeeResults = true;
+    }
 
     private void OnStartOverClick(MouseEventArgs args)
     {
@@ -68,7 +82,7 @@ public partial class RenderSurveyToTake : OwningComponentBase<SurveyService>
 
         try
         {
-            var result = await @Service.CreateSurveyAnswersAsync(SelectedSurvey);
+            bool result = await @Service.TakeSurvey(SelectedSurvey, UserId, Route);
 
             CompleteSurvey();
         }
@@ -77,14 +91,15 @@ public partial class RenderSurveyToTake : OwningComponentBase<SurveyService>
             strError = ex.GetBaseException().Message;
         }
 
-        if (OnSubmit != null)
-            OnSubmit.Invoke(this, EventArgs.Empty);
+        OnSubmit?.Invoke(this, EventArgs.Empty);
     }
 
     [MemberNotNull(nameof(SelectedSurvey))]
     private void Validate()
     {
         if (SelectedSurvey is null)
+        {
             throw new ArgumentNullException(nameof(SelectedSurvey));
+        }
     }
 }

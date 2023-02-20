@@ -1,6 +1,6 @@
-﻿@inherits OwningComponentBase<SurveyService>
+﻿@using BlazingApple.Survey.Components.Services
 
 @if (_survey != null && _surveyDTO != null)
 {
-	<RenderSurveyToTake SelectedSurvey="@_surveyDTO" />
+	<RenderSurveyToTake SelectedSurvey="@_surveyDTO" Route="@Route" UserId="@UserId" />
 }

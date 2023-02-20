@@ -1,19 +1,19 @@
 ﻿@using System.Linq;
+@using BlazingApple.Survey.Components.Services
 @inject Radzen.DialogService dialogService
-@inherits OwningComponentBase<SurveyService>
 @strError
 
-@if (SelectedSurveyItem != null)
+@if (SelectedQuestion != null)
 {
 
 
-    <EditForm Model="SelectedSurveyItem">
+    <EditForm Model="SelectedQuestion">
         <RadzenCard Style="margin: .1rem;">
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
                         <label for="surveyText">Name</label>
-                        <InputText id="surveyText" class="form-control" @bind-Value="SelectedSurveyItem.Prompt" />
+                        <InputText id="surveyText" class="form-control" @bind-Value="SelectedQuestion.Prompt" />
                     </div>
                 </div>
             </div>
@@ -22,7 +22,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="itemType">Type</label>
-                        <InputSelect id="itemType" class="form-control" TValue="QuestionType" @bind-Value="SelectedSurveyItem.Type">
+                        <InputSelect id="itemType" class="form-control" TValue="QuestionType" @bind-Value="SelectedQuestion.Type">
                             @foreach (QuestionType itemType in FormTypes)
                             {
                                 <option value="@itemType">@itemType</option>
@@ -32,7 +32,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" @bind-value="@SelectedSurveyItem.Required" id="requiredCheck">
+                        <input class="form-check-input" type="checkbox" @bind-value="@SelectedQuestion.Required" id="requiredCheck">
                         <label class="form-check-label" for="requiredCheck">
                             Required
                         </label>
@@ -41,20 +41,20 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    @if ((SelectedSurveyItem.Type == QuestionType.Dropdown)
-                   || (SelectedSurveyItem.Type == QuestionType.DropdownMultiSelect))
+                    @if ((SelectedQuestion.Type == QuestionType.Dropdown)
+                   || (SelectedQuestion.Type == QuestionType.DropdownMultiSelect))
                     {
                         <button class="btn btn-info btn-sm" @onclick="OpenPopup">Edit Options</button>
                     }
                 </div>
             </div>
         </RadzenCard>
-        <button @onclick="AddOrUpdate" class="btn btn-success mb-2 mr-1">Save</button>
-        <button @onclick="(()=>CloseSurveyItem())" class="btn btn-light mb-2 mr-1">Close</button>
+        <button @onclick="AddOrUpdate" class="btn btn-success mb-2 me-1">Save</button>
+        <button @onclick="(()=>CloseQuestion())" class="btn btn-light mb-2 me-1">Close</button>
 
-        @if (SelectedSurveyItem.Id != default)
+        @if (SelectedQuestion.Id != default)
         {
-            <button @onclick="DeleteSurveyItemDialog" class="btn btn-danger mb-2 mr-1">Delete</button>
+            <button @onclick="DeleteQuestionDialog" class="btn btn-danger mb-2 me-1">Delete</button>
         }
 
         @if (ShowPopup)
@@ -66,12 +66,12 @@
                             <h3 class="modal-title">Edit Responses</h3>
                         </div>
                         <div class="modal-body">
-                            @if (SelectedSurveyItem.Options != null)
+                            @if (SelectedQuestion.Options != null)
                             {
 
 
                                 <ul style="list-style-type:none;">
-                                    @foreach (var option in SelectedSurveyItem.Options.OrderBy(x => x.Id))
+                                    @foreach (QuestionOption option in SelectedQuestion.Options.OrderBy(x => x.Id))
                                     {
                                         <li>
                                             <div style="margin-bottom: 10px; width: 150px">
@@ -96,7 +96,7 @@
 }
 @code {
 
-    async Task DeleteSurveyItemDialog()
+    async Task DeleteQuestionDialog()
     {
         if (PromptInline)
         {
