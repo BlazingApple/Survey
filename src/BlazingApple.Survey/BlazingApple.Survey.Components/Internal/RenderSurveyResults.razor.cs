@@ -18,7 +18,7 @@ public partial class RenderSurveyResults : ComponentBase
     public DTOSurvey? SelectedSurvey { get; set; }
 
     // Survey Results
-    private int _surveyResultsCount;
+    private int _numberOfQuestions;
 
     /// <summary>
     /// Set of questions in survey.
@@ -42,7 +42,7 @@ public partial class RenderSurveyResults : ComponentBase
         }
         LoadArgs args = new(loadArgs.Skip ?? default, loadArgs.Top ?? 1);
 
-        _surveyResultsCount = await Service.GetSurveyResultsCount(SelectedSurvey.Id);
+        _numberOfQuestions = (await Service.GetSurvey(SelectedSurvey.Id)).Questions?.Count ?? 0;
         _surveyResultSet = await Service.GetSurveyResults(SelectedSurvey.Id, args);
         await InvokeAsync(StateHasChanged);
     }

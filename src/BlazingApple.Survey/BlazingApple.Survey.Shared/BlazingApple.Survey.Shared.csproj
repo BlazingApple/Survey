@@ -13,8 +13,8 @@
 		<RepositoryUrl>https://github.com/BlazingApple/Survey</RepositoryUrl>
 		<PackageIcon>BlazingApple.png</PackageIcon>
 		<PackageTags>Blazor,Blazor-WASM,Survey</PackageTags>
-		<Version>2.1.5</Version>
-		<AssemblyVersion>2.1.5</AssemblyVersion>
+		<Version>2.2.0</Version>
+		<AssemblyVersion>2.2.0</AssemblyVersion>
 		<PackageReleaseNotes>Code cleanup</PackageReleaseNotes>
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>

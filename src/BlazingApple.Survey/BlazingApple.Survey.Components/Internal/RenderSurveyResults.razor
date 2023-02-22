@@ -2,7 +2,7 @@
 
 @if (SelectedSurvey != null)
 {
-	<RadzenDataList Count="@_surveyResultsCount"
+	<RadzenDataList Count="@_numberOfQuestions"
 					Data="@_surveyResultSet"
 					LoadData="@LoadSurveyResultsData"
 					PageSize="1" WrapItems="true" AllowPaging="true"

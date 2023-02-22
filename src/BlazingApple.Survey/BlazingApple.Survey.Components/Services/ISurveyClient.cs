@@ -44,13 +44,13 @@ public interface ISurveyClient
 	Task<List<Question>> GetAllQuestionsAsync(string surveyId);
 
 	/// <summary>Get all the <see cref="Shared.Survey" /> s.</summary>
+	/// <param name="routeOverride">The route to retrieve the survey</param>
 	/// <returns>The list of <see cref="Shared.Survey" /></returns>
-	Task<List<Shared.Survey>> GetAllSurveysAsync();
+	Task<List<Shared.Survey>> GetAllSurveysAsync(string? routeOverride = null);
 
 	/// <summary>Get a survey.</summary>
 	/// <param name="Id">The survey id.</param>
-	/// <param name="routeOverride"></param>
-	/// <parm name="routeOverride">The route to retrieve the survey</parm>
+	/// <param name="routeOverride">The route to retrieve the survey</param>
 	/// <returns>The survey retrieved from the survey.</returns>
 	Task<Shared.Survey> GetSurvey(Guid Id, string? routeOverride = null);
 

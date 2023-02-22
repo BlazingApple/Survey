@@ -343,3 +343,4 @@ healthchecksdb
 
 *.map
 README/BlazingApplesDemo.mp4
+**/lib/**

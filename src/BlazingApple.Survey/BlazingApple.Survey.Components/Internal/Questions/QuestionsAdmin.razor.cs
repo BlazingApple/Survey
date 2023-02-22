@@ -3,21 +3,12 @@ using Microsoft.AspNetCore.Components;
 using Radzen;
 using System.Diagnostics.CodeAnalysis;
 
-namespace BlazingApple.Survey.Components.Internal;
+namespace BlazingApple.Survey.Components.Internal.Questions;
 
 /// <summary>Render a list of <see cref="Question" /> for a <see cref="Shared.Survey" /></summary>
-public partial class SurveyQuestions : ComponentBase
+public partial class QuestionsAdmin : ComponentBase
 {
-	private readonly DialogOptions _options = new() { Width = "550px", Height = "380px" };
 	private bool _showNewQuestion;
-
-	/// <inheritdoc cref="Radzen.DialogService" />
-	[Parameter]
-	public DialogService DialogService { get; set; } = null!;
-
-	/// <summary>If <c>true</c> show the questions for the <see cref="Question" /> inline, otherwise, open a modal popup.</summary>
-	[Parameter]
-	public bool PromptInline { get; set; }
 
 	/// <summary>The <see cref="Shared.Survey" /> to render questions for.</summary>
 	[Parameter, EditorRequired]
@@ -49,17 +40,7 @@ public partial class SurveyQuestions : ComponentBase
 
 	private void OpenQuestion()
 	{
-		if (!PromptInline)
-		{
-			DialogService.Open<EditQuestion>(
-				$"New Question",
-				new Dictionary<string, object>() { { nameof(EditQuestion.SelectedQuestion), new Question() { Id = Guid.Empty, Survey = SelectedSurvey } } },
-				_options);
-		}
-		else
-		{
-			_showNewQuestion = true;
-		}
+		_showNewQuestion = true;
 	}
 
 	private async Task RefreshSurvey(Guid SurveyId)
@@ -67,10 +48,28 @@ public partial class SurveyQuestions : ComponentBase
 		SelectedSurvey = await @Service.GetSurvey(SurveyId);
 	}
 
-	private async Task SelectedSurveyMoveDown(object value)
+	private async Task RefreshSurvey()
+	{
+		if (SelectedSurvey is not null)
+		{
+			SelectedSurvey = await @Service.GetSurvey(SelectedSurvey.Id);
+			StateHasChanged();
+		}
+	}
+
+	private async Task QuestionDeleted(Question value)
+	{
+		if (SelectedSurvey is not null)
+		{
+			SelectedSurvey = await @Service.GetSurvey(SelectedSurvey.Id);
+			StateHasChanged();
+		}
+	}
+
+	private async Task MoveQuestionDown(Question value)
 	{
 		Validate();
-		Question question = (Question)value;
+		Question question = value;
 		int DesiredPosition = question.Position + 1;
 
 		// Move the current element in that position
@@ -99,10 +98,10 @@ public partial class SurveyQuestions : ComponentBase
 		await RefreshSurvey(SelectedSurvey.Id);
 	}
 
-	private async Task SelectedSurveyMoveUp(object value)
+	private async Task MoveQuestionUp(Question value)
 	{
 		Validate();
-		Question question = (Question)value;
+		Question question = value;
 		int DesiredPosition = question.Position - 1;
 
 		// Move the current element in that position
@@ -129,11 +128,6 @@ public partial class SurveyQuestions : ComponentBase
 
 		// Refresh SelectedSurvey
 		SelectedSurvey = await @Service.GetSurvey(SelectedSurvey.Id, Route);
-	}
-
-	private void ShowTooltip(ElementReference elementReference, TooltipOptions? options = null)
-	{
-		TooltipService.Open(elementReference, options?.Text, options);
 	}
 
 	[MemberNotNull(nameof(SelectedSurvey))]

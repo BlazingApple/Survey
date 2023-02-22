@@ -1,0 +1,63 @@
+﻿@using System.Linq;
+@using BlazingApple.Survey.Components.Services
+@using BlazingApple.Survey.Components.Internal.Questions
+@inject Radzen.DialogService dialogService
+@strError
+
+@if (SelectedQuestion != null)
+{
+	<EditForm Model="SelectedQuestion">
+		<div style="max-width:50rem;">
+			<div class="row align-items-center">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label for="surveyText">Prompt</label>
+						<InputText id="surveyText" class="form-control" @bind-Value="SelectedQuestion.Prompt" />
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label></label>
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" @bind-value="@SelectedQuestion.Required" id="requiredCheck">
+							<label class="form-check-label" for="requiredCheck">
+								Required
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<br />
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label for="itemType">Type</label>
+						<InputSelect id="itemType" class="form-select" TValue="QuestionType" @bind-Value="SelectedQuestion.Type">
+							@foreach (QuestionType itemType in FormTypes)
+							{
+								<option value="@itemType">@itemType</option>
+							}
+						</InputSelect>
+					</div>
+				</div>
+				<div class="col-md-6">
+					@if ((SelectedQuestion.Type == QuestionType.Dropdown) || (SelectedQuestion.Type == QuestionType.DropdownMultiSelect))
+					{
+						<div class="form-group">
+							<label>Options</label>
+							<QuestionOptionsAdmin Question="SelectedQuestion"></QuestionOptionsAdmin>
+						</div>
+					}
+				</div>
+			</div>
+			<div class="row my-2">
+				<div class="col-md-12">
+					<div class="d-flex align-items-center justify-content-center">
+						<button @onclick="AddOrUpdate" class="btn btn-primary mb-2 mx-1">Save</button>
+						<button @onclick="(()=>CloseQuestion())" class="btn btn-light mb-2 mx-1">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</EditForm>
+}

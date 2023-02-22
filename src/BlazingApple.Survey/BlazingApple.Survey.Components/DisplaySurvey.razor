@@ -24,7 +24,7 @@ else
 			<RadzenTabs>
 				<Tabs>
 					<RadzenTabsItem Text="Survey">
-							<RenderSurveyToTake SelectedSurvey="@_selectedSurvey" UserId="@UserId" OnSubmit="@((sender, args) => OnSurveySubmit(sender,args))" />
+						<RenderSurveyToTake SelectedSurvey="@_selectedSurvey" UserId="@UserId" OnSubmit="OnSurveySubmit" />
 					</RadzenTabsItem>
 					<RadzenTabsItem Text="Responses">
 						<RadzenPanel AllowCollapse="false" Style="margin-bottom: 10px">

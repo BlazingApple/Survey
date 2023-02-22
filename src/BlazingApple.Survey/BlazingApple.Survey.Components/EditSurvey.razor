@@ -4,51 +4,23 @@
 @strError
 @if (SelectedSurvey != null)
 {
-
-
 	<EditForm Model="SelectedSurvey">
-		<RadzenCard Style="margin: .1rem; margin-bottom: 20px;">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="form-group">
-						<label for="surveyName">Survey Name</label>
-					</div>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group">
+					<label for="surveyName">Survey Name</label>
 					<InputText id="surveyName" class="form-control" @bind-Value="SelectedSurvey.Name"></InputText>
 				</div>
 			</div>
-		</RadzenCard>
-		<div class="d-flex" style="flex-direction:row;">
-			<button class="btn btn-success mb-1 me-1" @onclick="AddOrUpdate">Save</button>
-			<button class="btn btn-light mb-1 me-1" @onclick="Cancel">Close</button>
-
-			@if (SelectedSurvey.Id != default)
-			{
-				<button class="btn btn-danger mb-1" @onclick="DeleteSurveyDialog">Delete</button>
-			}
-		</div>
-	</EditForm>
-}
-@code {
-
-
-	async Task DeleteSurveyDialog()
-	{
-		if (PromptInline)
-		{
-			await Delete();
-		}
-		else
-		{
-			await DialogService.OpenAsync("Delete Survey", ds =>
-	@<RadzenCard Style="padding: 20px;">
-		<p class="mb-2">Confirm?</p>
-		<div class="row">
-			<div class="col-md-12">
-				<button @onclick="Delete" class="btn btn-primary mb-1">Yes</button>
-				<button @onclick="() => ds.Close(false)" class="btn btn-secondary mb-1">No</button>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label for="saveSurvey"></label>
+				</div>
+				<div class="d-flex" style="flex-direction:row;">
+					<button id="saveSurvey" type="button" class="btn btn-primary mb-1 me-1" @onclick="AddOrUpdate">Save</button>
+					<button type="button" class="btn btn-light mb-1 mx-1" @onclick="Cancel">Close</button>
+				</div>
 			</div>
 		</div>
-	</RadzenCard>);
-		}
-	}
+	</EditForm>
 }

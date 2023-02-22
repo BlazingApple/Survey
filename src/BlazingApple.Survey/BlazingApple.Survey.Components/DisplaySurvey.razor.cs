@@ -65,7 +65,7 @@ public partial class DisplaySurvey : ComponentBase
         }
     }
 
-    private async void OnSurveySubmit(object? sender, EventArgs args)
+    private async void OnSurveySubmit(DTOSurvey survey)
     {
         await LoadSurveyResultsData();
     }

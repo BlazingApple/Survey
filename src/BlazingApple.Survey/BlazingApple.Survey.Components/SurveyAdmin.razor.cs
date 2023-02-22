@@ -9,23 +9,14 @@ namespace BlazingApple.Survey.Components;
 /// <summary>Admin operations for conducting CRUD operations for surveys and their questions.</summary>
 public partial class SurveyAdmin : ComponentBase
 {
-	private readonly DialogOptions _options = new() { Width = "500px", Height = "280px" };
-	private Shared.Survey? _selectedSurvey;
-	private bool _shouldShowEditInline;
-	private bool _shouldShowNewInline;
+	private Shared.Survey? _newSurvey;
+	private bool _isEditing;
+	private bool _isCreatingNewSurvey;
 	private List<Shared.Survey>? _surveys;
 	private readonly string strError = "";
 
 	[Inject]
 	private ISurveyClient Service { get; set; } = null!;
-
-	/// <summary>Edit the survey inline if <c>true</c>, <c>false</c> otherwise.</summary>
-	[Parameter]
-	public bool PromptInline { get; set; }
-
-	/// <summary>The form title for editing the survey</summary>
-	[Parameter]
-	public string? Title { get; set; }
 
 	/// <summary>
 	/// Additional route segments when posting or editing a survey
@@ -33,38 +24,50 @@ public partial class SurveyAdmin : ComponentBase
 	[Parameter]
 	public string? AdditionalSegments { get; set; }
 
+	/// <summary>
+	/// Content to render in the header of each survey card.
+	/// </summary>
+	[Parameter]
+	public RenderFragment<Shared.Survey>? SurveyHeaderContent { get; set; }
+
+	/// <summary>
+	/// Content to render in the body of the survey cards.
+	/// </summary>
+	[Parameter]
+	public RenderFragment<Shared.Survey>? SurveyBodyContent { get; set; }
+
+	/// <summary>
+	/// Shown when loading
+	/// </summary>
+	[Parameter]
+	public RenderFragment? LoadingContent { get; set; }
+
+	/// <summary>
+	/// Survey for the new survey button.
+	/// </summary>
+	[Parameter]
+	public string? NewSurveyLabel { get; set; } = "Create new survey";
+
 	[Inject]
 	private DialogService DialogService { get; set; } = null!;
 
 	private bool? ExistingSurveys => _surveys?.Count > 0;
 
-	[Inject]
-	private TooltipService TooltipService { get; set; } = null!;
+	/// <summary>
+	/// Provide to this to override the route at which the surveys are requested.
+	/// </summary>
+	[Parameter]
+	public string? SurveyRetrievalRoute { get; set; }
 
 	/// <inheritdoc />
 	protected override async Task OnInitializedAsync()
 	{
 		_surveys = new List<Shared.Survey>();
-		_selectedSurvey = new Shared.Survey();
+		_newSurvey = new Shared.Survey();
 
 		DialogService.OnClose += DialogClose; // detect when a dialog has closed
 
-		_surveys = await @Service.GetAllSurveysAsync();
-
-		if (_surveys.Count > 0)
-		{
-			_selectedSurvey = _surveys.First();
-		}
-	}
-
-	/// <inheritdoc />
-	protected override void OnParametersSet()
-	{
-		base.OnParametersSet();
-		if (string.IsNullOrEmpty(Title))
-		{
-			Title = "Manage Surveys";
-		}
+		_surveys = await @Service.GetAllSurveysAsync(SurveyRetrievalRoute);
 	}
 
 	private static void RemoveAndAdd<T>(ICollection<T> collection, T toRemove, T toAdd)
@@ -73,10 +76,29 @@ public partial class SurveyAdmin : ComponentBase
 		collection.Add(toAdd);
 	}
 
-	private void DialogClose(dynamic result)
+	private async Task Delete(Shared.Survey survey)
 	{
 		Validate();
-		if (_selectedSurvey is null)
+		bool result = await @Service.DeleteSurveyAsync(survey);
+
+		if (!result)
+		{
+			throw new InvalidDataException("Error deleting survey");
+		}
+		else
+		{
+			_surveys.Remove(survey);
+		}
+
+		SurveyRequest response = new(UserAction.Delete, survey);
+		await RefreshSurveys();
+		DialogService.Close(response);
+	}
+
+	private async void DialogClose(dynamic result)
+	{
+		Validate();
+		if (_newSurvey is null)
 		{
 			throw new InvalidOperationException("Disallowed null for the selected survey");
 		}
@@ -85,7 +107,7 @@ public partial class SurveyAdmin : ComponentBase
 		{
 			if (result is ItemRequest itemRequest)
 			{
-				ProcessItemRequest(itemRequest);
+				await ProcessItemRequest(itemRequest);
 			}
 			else if (result is SurveyRequest surveyRequest)
 			{
@@ -98,83 +120,26 @@ public partial class SurveyAdmin : ComponentBase
 
 	private void OnEditSurveyClick(MouseEventArgs args)
 	{
-		if (PromptInline)
+		_isEditing = !_isEditing;
+		if (_isEditing)
 		{
-			_shouldShowEditInline = !_shouldShowEditInline;
-			if (_shouldShowEditInline)
-			{
-				_shouldShowNewInline = false;
-			}
-		}
-		else if (_selectedSurvey is not null)
-		{
-			Dictionary<string, object> parameters = new() {
-					{ nameof(EditSurvey.SelectedSurvey), _selectedSurvey },
-				};
-
-			if (!string.IsNullOrEmpty(AdditionalSegments))
-			{
-				parameters.Add(nameof(EditSurvey.AdditionalSegments), AdditionalSegments);
-			}
-
-			DialogService.Open<EditSurvey>($"New Survey", parameters, _options);
+			_isCreatingNewSurvey = false;
 		}
 	}
 
 	private void OnNewSurveyClick(MouseEventArgs args)
 	{
-		if (PromptInline)
+		_isCreatingNewSurvey = !_isCreatingNewSurvey;
+
+		if (_isCreatingNewSurvey)
 		{
-			_shouldShowNewInline = !_shouldShowNewInline;
-
-			if (_shouldShowNewInline)
-			{
-				_shouldShowEditInline = false;
-			}
-		}
-		else
-		{
-			Shared.Survey newSurvey = new() { Id = Guid.Empty };
-			Dictionary<string, object> parameters = new()
-			{
-				{ nameof(EditSurvey.SelectedSurvey), newSurvey },
-			};
-
-			if (!string.IsNullOrEmpty(AdditionalSegments))
-			{
-				parameters.Add(nameof(EditSurvey.AdditionalSegments), AdditionalSegments);
-			}
-
-			DialogService.Open<EditSurvey>($"New Survey", parameters, _options);
+			_isEditing = false;
 		}
 	}
 
-	private void ProcessItemRequest(ItemRequest itemRequest)
+	private async Task ProcessItemRequest(ItemRequest itemRequest)
 	{
-		UserAction operation = itemRequest.Action;
-		Question modifiedQuestion = itemRequest.Record;
-
-		if (_selectedSurvey is null)
-		{
-			throw new InvalidDataException("Unexpected null survey");
-		}
-
-		// Refresh the question.
-		Question? existingQuestion = _selectedSurvey.Questions.Where(x => x.Id == modifiedQuestion.Id).FirstOrDefault();
-
-		if (existingQuestion is null)
-		{
-			throw new InvalidOperationException("Could not find matching survey item");
-		}
-
-		if (operation == UserAction.Delete)
-		{
-			_selectedSurvey.Questions.Remove(existingQuestion);
-		}
-		else
-		{
-			RemoveAndAdd(_selectedSurvey.Questions, existingQuestion, modifiedQuestion);
-		}
+		await RefreshSurveys();
 	}
 
 	private void ProcessSurveyRequest(SurveyRequest surveyRequest)
@@ -189,7 +154,6 @@ public partial class SurveyAdmin : ComponentBase
 			if (surveyToEdit is null)
 			{
 				_surveys.Add(surveyRequest.Record);
-				_selectedSurvey = surveyRequest.Record;
 			}
 		}
 		else if (operation == UserAction.Update)
@@ -204,31 +168,12 @@ public partial class SurveyAdmin : ComponentBase
 			{
 				_surveys.Remove(surveyToDelete);
 			}
-
-			_selectedSurvey = _surveys.FirstOrDefault();
 		}
 	}
 
-	private async Task RefreshSurveys(Guid surveyToRefresh)
+	private async Task RefreshSurveys()
 	{
-		_surveys = await Service.GetAllSurveysAsync();
-		_selectedSurvey = _surveys.Where(x => x.Id == surveyToRefresh).FirstOrDefault();
-	}
-
-	private async Task SelectedSurveyChange(object value)
-	{
-		if (_selectedSurvey == null)
-		{
-			return;
-		}
-
-		await RefreshSurveys(_selectedSurvey.Id);
-		StateHasChanged();
-	}
-
-	private void ShowTooltip(ElementReference elementReference, TooltipOptions? options = null)
-	{
-		TooltipService.Open(elementReference, options?.Text, options);
+		_surveys = await Service.GetAllSurveysAsync(SurveyRetrievalRoute);
 	}
 
 	[MemberNotNull(nameof(_surveys))]

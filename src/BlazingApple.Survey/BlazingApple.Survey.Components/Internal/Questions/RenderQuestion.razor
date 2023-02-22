@@ -1,0 +1,54 @@
+﻿@if (QuestionAnswer != null)
+{
+	<label for="@_idString">@QuestionAnswer.Prompt</label>
+	@if (QuestionAnswer.Type == QuestionType.TextBox)
+	{
+		<InputText id="@_idString" class="form-control" disabled="@IsDisabled" @bind-Value="@QuestionAnswer.AnswerValueString" />
+	}
+	else if (QuestionAnswer.Type == QuestionType.TextArea)
+	{
+		<InputTextArea id="@_idString" class="form-control" disabled="@IsDisabled" @bind-Value="@QuestionAnswer.AnswerValueString" />
+	}
+	else if (QuestionAnswer.Type is QuestionType.DateTime or QuestionType.Date)
+	{
+		InputDateType dateType = QuestionAnswer.Type == QuestionType.DateTime ? InputDateType.DateTimeLocal : InputDateType.Date;
+
+		<InputDate id="@_idString"
+		   Type="@dateType"
+		   class="form-control"
+		   disabled="@IsDisabled"
+		   TValue="DateTime?"
+		   @bind-Value="@QuestionAnswer.AnswerValueDateTime" />
+	}
+	else if (QuestionAnswer.Type == QuestionType.Dropdown && QuestionAnswer.Options != null)
+	{
+		<InputSelect id="@_idString" disabled="@IsDisabled" class="form-select" @bind-Value="@QuestionAnswer.AnswerValueString">
+			<option value="">Choose one...</option>
+			@foreach (DTOQuestionOption option in QuestionAnswer.Options.OrderBy(x => x.Id))
+			{
+				<option value="@option.OptionLabel">@option.OptionLabel</option>
+			}
+		</InputSelect>
+	}
+	else if (QuestionAnswer.Type == QuestionType.DropdownMultiSelect && QuestionAnswer.Options != null)
+	{
+		<RadzenDropDown 
+				Name="@_idString"
+				TValue="IEnumerable<string>"
+				Multiple="true"
+				AllowClear="true"
+				AllowFiltering="true"
+				Disabled="@IsDisabled"
+				Placeholder="Select..."
+				Data="@QuestionAnswer.Options.OrderBy(x => x.Id)"
+				@bind-Value="QuestionAnswer.AnswerValueList"
+				TextProperty="@nameof(QuestionOption.OptionLabel)"
+				ValueProperty="@nameof(QuestionOption.OptionLabel)"
+				Style="width:300px;" />
+	}
+	@*@if (QuestionAnswer.Required)
+	{
+		<br />
+		<RadzenRequiredValidator Component="@_idString" Text="Required" Popup="false" Style="position: absolute" />
+	}*@
+}

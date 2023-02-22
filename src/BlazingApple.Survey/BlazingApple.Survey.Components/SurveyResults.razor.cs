@@ -23,9 +23,9 @@ public partial class SurveyResults : ComponentBase
     public Guid SurveyId { get; set; }
 
     /// <inheritdoc />
-    protected override async Task OnParametersSetAsync()
+    protected override async Task OnInitializedAsync()
     {
-        await base.OnParametersSetAsync();
+        await base.OnInitializedAsync();
 
         _survey = await Service.GetSurvey(SurveyId, Route);
         _surveyDto = Service.ConvertSurveyToDTO(_survey);

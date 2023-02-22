@@ -137,9 +137,10 @@ public class SurveyClient : ISurveyClient
 	}
 
 	/// <inheritdoc/>
-	public async Task<List<Shared.Survey>> GetAllSurveysAsync()
+	public async Task<List<Shared.Survey>> GetAllSurveysAsync(string? routeOverride = null)
 	{
-		List<Shared.Survey> surveys = (await _client.GetFromJsonAsync<List<Shared.Survey>>(API_PREFIX))!;
+		string route = routeOverride ?? API_PREFIX;
+		List<Shared.Survey> surveys = (await _client.GetFromJsonAsync<List<Shared.Survey>>(route))!;
 
 		return surveys.OrderBy(x => x.Name).ToList();
 	}

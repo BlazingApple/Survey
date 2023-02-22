@@ -1,0 +1,79 @@
+﻿@using BlazingApple.Components
+@using BlazingApple.Components.Services
+@if (Question != null)
+{
+	<li title="@(Question.Required ? "Required": "Optional")" class="mb-1">
+		@if (!_isEditing) {
+			<div class="d-flex">
+				<div class="me-2">
+					@Question.Prompt
+					@if (Question.Required)
+					{
+						<span style="color: red;">*</span>
+					}
+
+					<small class="ms-2 text-muted" style="font-style: italic;">
+						@GetEnumDisplayName(Question.Type)
+					</small>
+				</div>
+				<div>
+					@if (Question.Position > 0 && MovedUp.HasDelegate)
+					{
+						<button type="button" class="btn btn-outline-primary btn-sm ms-1" style="border-radius:50%;" title="Move up" @onclick="(async () => await MovedUp.InvokeAsync(Question!))">
+							<i class="fas fa-chevron-up"></i>
+						</button>
+					}
+					@if (Question.Position < QuestionCount - 1 && MovedDown.HasDelegate)
+					{
+						<button type="button" class="btn btn-outline-primary btn-sm ms-1" style="border-radius:50%;" title="Move down" @onclick="(async () => await MovedDown.InvokeAsync(Question!))">
+							<i class="fas fa-chevron-down"></i>
+						</button>
+					}
+
+					<button class="btn btn-link btn-sm ms-2 px-1" disabled="@_isEditing" @onclick="@(args => OpenQuestion())">
+						<Icon I="IconType.Edit" />
+					</button>
+
+					@if (Question.Id != default)
+					{
+						<button @onclick="DeleteQuestionDialog" class="btn btn-link btn-sm ms-2 px-1">
+							<Icon I="IconType.Delete" />
+						</button>
+					}
+				</div>
+			</div>
+			@if(Question.Type is QuestionType.Dropdown or QuestionType.DropdownMultiSelect && Question.Options is not null)
+			{
+				<ul>
+					@foreach(QuestionOption option in Question.Options)
+					{
+						<li>
+							@option.OptionLabel
+						</li>
+					}
+				</ul>
+			}
+		}
+		else
+		{
+			<div>
+				<EditQuestion SelectedQuestion="Question" OnClose="CloseQuestion"></EditQuestion>
+			</div>
+		}
+	</li>
+}
+
+@code {
+	async Task DeleteQuestionDialog()
+	{
+		await DialogService.OpenAsync("Delete Question", ds => @<div>
+		<p Style="margin-bottom: 10px;">Continue? This action cannot be undone.</p>
+		<div class="row">
+			<div class="col-md-12">
+				<button class="btn btn-outline-danger mb-1" @onclick="Delete">Yes, delete</button>
+				<button class="btn btn-secondary mb-1" @onclick="() => ds.Close(false)">Cancel</button>
+			</div>
+		</div>
+	</div>);
+	}
+}

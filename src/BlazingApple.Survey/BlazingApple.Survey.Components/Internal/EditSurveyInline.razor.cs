@@ -37,8 +37,20 @@ public partial class EditSurveyInline : ComponentBase
     public bool BoundValue
     {
         get => Value;
-        set => ValueChanged.InvokeAsync(value);
+        set
+        {
+            ValueChanged.InvokeAsync(value);
+            if (OnClose.HasDelegate)
+                OnClose.InvokeAsync();
+
+		}
     }
+
+	/// <summary>
+	/// Called when the survey edit is closed.
+	/// </summary>
+	[Parameter]
+	public EventCallback OnClose { get; set; }
 
     private void OnSurveyEditClosed(object? sender, EventArgs args)
     {

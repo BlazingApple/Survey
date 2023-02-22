@@ -1,0 +1,51 @@
+﻿@if (Question is not null)  {
+
+	@if(_isEditing)
+	{
+		
+	<div>
+			@if (Question.Options != null)
+			{
+				<ul style="list-style-type:none;">
+					@foreach (QuestionOption option in Question.Options.OrderBy(x => x.Id))
+					{
+						<li>
+							<div style="margin-bottom: 10px; width: 150px">
+								<button class="btn btn-outline-danger btn-sm" @onclick="(() => RemoveOption(option))">
+									<span aria-hidden="true">&times;</span>
+								</button>
+								<label>@option.OptionLabel</label>
+							</div>
+						</li>
+					}
+					<li>
+						<div class="d-flex align-items-center" style="max-width: 25rem;">
+							<InputText class="form-control" @bind-Value="_newOption" />
+						</div>
+					</li>
+				</ul>
+				<div class="d-flex my-2 align-items-center">
+					<button @onclick="AddOption" class="btn btn-sm btn-primary mx-2">Add</button>
+					<button @onclick="EditToggle" class="btn btn-sm btn-light mx-2">Close</button>
+				</div>
+			}
+		</div>
+	}
+	else
+	{
+		@if(Question.Options is not null) {
+			<ul>
+				@foreach (QuestionOption option in Question.Options.OrderBy(x => x.Id))
+				{
+					<li id="@option.Id">
+						@option.OptionLabel
+					</li>
+				}
+			</ul>
+		}
+
+		<div class="d-flex align-items-center">
+			<button class="btn btn-primary btn-sm" @onclick="EditToggle">Edit</button>
+		</div>
+	}
+}

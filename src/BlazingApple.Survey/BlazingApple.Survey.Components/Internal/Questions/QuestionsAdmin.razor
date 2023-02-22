@@ -1,0 +1,27 @@
+﻿@if (SelectedSurvey != null)
+{
+	<h4>
+		Questions for @SelectedSurvey.Name
+	</h4>
+	<ol>
+		@foreach (Question question in SelectedSurvey.Questions.OrderBy(x => x.Position))
+		{
+			<QuestionAdminDisplay Question="@question" MovedUp="MoveQuestionUp" Deleted="QuestionDeleted" MovedDown="MoveQuestionDown" QuestionCount="@SelectedSurvey.Questions.Count" />
+		}
+	</ol>
+
+	<div class="row">
+		<div class="col-md-12">
+			@if (_showNewQuestion)
+			{
+				<hr/>
+
+				<EditQuestion OnClose="CloseQuestionHandler" SelectedQuestion="@(new Question() { Id = Guid.Empty, Survey = SelectedSurvey })" OnChange="RefreshSurvey"></EditQuestion>
+			}
+			else
+			{
+				<button type="button" class="btn btn-primary me-2" @onclick="@(args =>OpenQuestion())">Add Question</button>
+			}
+		</div>
+	</div>
+}

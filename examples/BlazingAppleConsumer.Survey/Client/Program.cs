@@ -1,15 +1,12 @@
+using BlazingApple.Survey.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using System;
 using Radzen;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using StardustDL.RazorComponents.Markdown;
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace BlazingAppleConsumer.Survey.Client
 {
@@ -17,7 +14,7 @@ namespace BlazingAppleConsumer.Survey.Client
 	{
 		public static async Task Main(string[] args)
 		{
-			var builder = WebAssemblyHostBuilder.CreateDefault(args);
+			WebAssemblyHostBuilder builder = WebAssemblyHostBuilder.CreateDefault(args);
 			builder.RootComponents.Add<App>("#app");
 
 			builder.Services.AddHttpClient("BlazingAppleConsumer.Survey.ServerAPI", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
@@ -30,7 +27,7 @@ namespace BlazingAppleConsumer.Survey.Client
 			builder.Services.AddScoped<DialogService>();
 			builder.Services.AddScoped<TooltipService>();
 			builder.Services.AddScoped<NotificationService>();
-			builder.Services.AddScoped<BlazingApple.SurveyService>();
+			builder.Services.AddSurveyClients();
 			builder.Services.AddMarkdownComponent();
 
 			await builder.Build().RunAsync();
