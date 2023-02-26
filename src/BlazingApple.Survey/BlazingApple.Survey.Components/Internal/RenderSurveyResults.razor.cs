@@ -17,6 +17,18 @@ public partial class RenderSurveyResults : ComponentBase
     [Parameter, EditorRequired]
     public DTOSurvey? SelectedSurvey { get; set; }
 
+    /// <summary>
+    /// The route override to use when requesting the results.
+    /// </summary>
+    [Parameter]
+    public string? ResultsRoute { get; set; }
+
+    /// <summary>
+    /// The route override to use when requesting the survey.
+    /// </summary>
+    [Parameter]
+    public string? Route { get; set; }
+
     // Survey Results
     private int _numberOfQuestions;
 
@@ -42,8 +54,8 @@ public partial class RenderSurveyResults : ComponentBase
         }
         LoadArgs args = new(loadArgs.Skip ?? default, loadArgs.Top ?? 1);
 
-        _numberOfQuestions = (await Service.GetSurvey(SelectedSurvey.Id)).Questions?.Count ?? 0;
-        _surveyResultSet = await Service.GetSurveyResults(SelectedSurvey.Id, args);
+        _numberOfQuestions = SelectedSurvey.Questions?.Count ?? (await Service.GetSurvey(SelectedSurvey.Id, Route)).Questions?.Count ?? 0;
+        _surveyResultSet = await Service.GetSurveyResults(SelectedSurvey.Id, args, ResultsRoute);
         await InvokeAsync(StateHasChanged);
     }
 }

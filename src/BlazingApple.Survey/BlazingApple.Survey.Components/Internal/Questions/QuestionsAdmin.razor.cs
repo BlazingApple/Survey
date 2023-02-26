@@ -14,6 +14,12 @@ public partial class QuestionsAdmin : ComponentBase
 	[Parameter, EditorRequired]
 	public Shared.Survey? SelectedSurvey { get; set; }
 
+	/// <summary>
+	/// The maximum number of <see cref="QuestionOption"/> to render below a question.
+	/// </summary>
+	[Parameter]
+	public int MaxOptionsDisplay { get; set; } = 2;
+
 	[Inject]
 	private ISurveyClient Service { get; set; } = null!;
 

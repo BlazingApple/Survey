@@ -19,6 +19,11 @@ public partial class QuestionAdminDisplay : ComponentBase
 	[Parameter, EditorRequired]
 	public int QuestionCount { get; set; }
 
+	/// <summary>
+	/// The maximum number of <see cref="QuestionOption"/> to render below a question.
+	/// </summary>
+	[Parameter]
+	public int MaxOptionsDisplay { get; set; }
 	private void CloseQuestion(object? sender, EventArgs args)
 	{
 		_isEditing = false;
@@ -109,5 +114,21 @@ public partial class QuestionAdminDisplay : ComponentBase
 
 		IEnumerable<TAttrib> attributes = field.GetCustomAttributes<TAttrib>(false);
 		return attributes;
+	}
+
+	private string GetQuestionTitleText()
+	{
+		if (Question is null)
+		{
+			return "";
+		}
+
+		string titleText = Question.Required ? "Required" : "Optional";
+		if ((Question.Type is QuestionType.Dropdown or QuestionType.DropdownMultiSelect) && Question.Options is not null)
+		{
+			titleText += $", {Question.Options.Count} options: {string.Join(',', Question.Options.Select(o => o.OptionLabel))}";
+		}
+
+		return titleText;
 	}
 }

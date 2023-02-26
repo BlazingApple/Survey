@@ -6,7 +6,7 @@
 	<ol>
 		@foreach (Question question in SelectedSurvey.Questions.OrderBy(x => x.Position))
 		{
-			<QuestionAdminDisplay Question="@question" MovedUp="MoveQuestionUp" Deleted="QuestionDeleted" MovedDown="MoveQuestionDown" QuestionCount="@SelectedSurvey.Questions.Count" />
+			<QuestionAdminDisplay Question="@question" MaxOptionsDisplay="@MaxOptionsDisplay" MovedUp="MoveQuestionUp" Deleted="QuestionDeleted" MovedDown="MoveQuestionDown" QuestionCount="@SelectedSurvey.Questions.Count" />
 		}
 	</ol>
 

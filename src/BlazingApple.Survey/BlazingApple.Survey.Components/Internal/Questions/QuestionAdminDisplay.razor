@@ -2,7 +2,7 @@
 @using BlazingApple.Components.Services
 @if (Question != null)
 {
-	<li title="@(Question.Required ? "Required": "Optional")" class="mb-1">
+	<li title="@GetQuestionTitleText()" class="mb-1">
 		@if (!_isEditing) {
 			<div class="d-flex">
 				<div class="me-2">
@@ -42,7 +42,7 @@
 					}
 				</div>
 			</div>
-			@if(Question.Type is QuestionType.Dropdown or QuestionType.DropdownMultiSelect && Question.Options is not null)
+			@if (Question.Type is QuestionType.Dropdown or QuestionType.DropdownMultiSelect && Question.Options is not null && MaxOptionsDisplay > 0)
 			{
 				<ul>
 					@foreach(QuestionOption option in Question.Options)

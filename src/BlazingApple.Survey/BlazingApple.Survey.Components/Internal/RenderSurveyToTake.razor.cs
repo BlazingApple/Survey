@@ -37,7 +37,19 @@ public partial class RenderSurveyToTake : ComponentBase
 	/// Pass this if you'd like to override the default route to post the survey to.
 	/// </summary>
 	[Parameter]
-	public string? Route { get; set; }
+	public string? AnswersRoute { get; set; }
+
+	/// <summary>
+	/// The route override used when requesting the survey overall.
+	/// </summary>
+	[Parameter]
+	public string? SurveyRoute { get; set; }
+
+	/// <summary>
+	/// The route override used when requesting the results of a survey.
+	/// </summary>
+	[Parameter]
+	public string? ResultsRoute { get; set; }
 
 	/// <summary>The survey to allow the user to take.</summary>
 	[Parameter, EditorRequired]
@@ -76,11 +88,13 @@ public partial class RenderSurveyToTake : ComponentBase
 		await base.OnInitializedAsync();
 
 		if (SelectedSurvey is null)
+		{
 			return;
+		}
 
 		_editContext = new(SelectedSurvey);
-		_messageStore = new(_editContext);
 		_editContext.OnValidationRequested += HandleValidationRequested;
+		_messageStore = new(_editContext);
 
 	}
 
@@ -90,24 +104,48 @@ public partial class RenderSurveyToTake : ComponentBase
 	private void HandleValidationRequested(object? sender, ValidationRequestedEventArgs args)
 	{
 		if (_messageStore is null || SelectedSurvey?.Questions is null)
+		{
 			throw new InvalidOperationException("Unexpected call to unregistered handler");
+		}
 
 		_messageStore.Clear();
 
 		Validate();
 
 		int index = -1;
-		foreach (DTOQuestion question in SelectedSurvey.Questions)
+		foreach (DTOQuestion question in SelectedSurvey.Questions.OrderBy(q => q.Position)
 		{
 			index++;
 			if (!question.Required)
+			{
 				continue;
-			else if (question.Type is QuestionType.Date or QuestionType.DateTime && (!question.AnswerValueDateTime.HasValue || question.AnswerValueDateTime == DateTime.MinValue))
-				_messageStore.Add(() => SelectedSurvey.Questions[index], "Question is required");
-			else if (question.Type is QuestionType.DropdownMultiSelect && (question.AnswerValueList is not null && !question.AnswerValueList.Any()))
-				_messageStore.Add(() => SelectedSurvey.Questions[index], "Question is required");
-			else if (string.IsNullOrEmpty(question.AnswerValueString))
-				_messageStore.Add(() => SelectedSurvey.Questions[index], "Question is required");
+			}
+			switch (question.Type)
+			{
+				case QuestionType.Date or QuestionType.DateTime:
+					if (!question.AnswerValueDateTime.HasValue || question.AnswerValueDateTime == DateTime.MinValue)
+					{
+						_messageStore.Add(() => SelectedSurvey.Questions, $"Question {index + 1} is required");
+					}
+
+					break;
+				case QuestionType.DropdownMultiSelect:
+					if (question.AnswerValueList is not null && !question.AnswerValueList.Any())
+					{
+						_messageStore.Add(() => SelectedSurvey.Questions, $"Question {index + 1} is required");
+					}
+
+					break;
+				case QuestionType.TextBox or QuestionType.TextArea or QuestionType.Dropdown:
+					if (string.IsNullOrEmpty(question.AnswerValueString))
+					{
+						_messageStore.Add(() => SelectedSurvey.Questions, $"Question {index + 1} is required");
+					}
+
+					break;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(sender), "Unexpected question type");
+			}
 		}
 	}
 
@@ -119,7 +157,7 @@ public partial class RenderSurveyToTake : ComponentBase
 
 		try
 		{
-			bool result = await @Service.TakeSurvey(SelectedSurvey, UserId, Route);
+			bool result = await @Service.TakeSurvey(SelectedSurvey, UserId, AnswersRoute);
 
 			CompleteSurvey();
 		}

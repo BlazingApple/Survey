@@ -5,7 +5,7 @@
 @if (SeeResults)
 {
 	<button @onclick="OnStartOverClick" class="ms-1 btn btn-primary">Back</button>
-	<RenderSurveyResults SelectedSurvey="SelectedSurvey"></RenderSurveyResults>
+	<RenderSurveyResults SelectedSurvey="SelectedSurvey" Route="@SurveyRoute" ResultsRoute="@ResultsRoute"></RenderSurveyResults>
 }
 else if(SelectedSurvey is not null)
 {
@@ -26,17 +26,22 @@ else if(SelectedSurvey is not null)
 		<EditForm EditContext="_editContext" OnValidSubmit="@SaveSurvey">
 			<DataAnnotationsValidator />
 			<div>
+				@{
+					int index = 0;
+				}
 				@foreach (DTOQuestion Question in SelectedSurvey.Questions.OrderBy(x => x.Position))
 				{
 					@if(Question is not null) {
 						<div class="row">
 							<div class="col-md-9" style="text-align: left;margin-bottom: 20px">
 								<div class="form-group">
+									<ValidationMessage For="() => SelectedSurvey.Questions" />
 									<RenderQuestion QuestionAnswer="Question"/>
 								</div>
 							</div>
 						</div>
 					}
+					index++;
 				}
 			</div>
 			<div class="row">

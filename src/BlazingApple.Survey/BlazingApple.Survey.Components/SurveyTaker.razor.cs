@@ -27,13 +27,25 @@ public partial class SurveyTaker : ComponentBase
 	/// Pass this if you'd like to override the default route to post the survey to.
 	/// </summary>
 	[Parameter]
-	public string? Route { get; set; }
+	public string? AnswersRoute { get; set; }
+
+	/// <summary>
+	/// Pass this if you'd like to override the default route to request the survey from.
+	/// </summary>
+	[Parameter]
+	public string? SurveyRoute { get; set; }
 
 	/// <summary>
 	/// User taking the survey.
 	/// </summary>
 	[Parameter, EditorRequired]
 	public string UserId { get; set; } = null!;
+
+	/// <summary>
+	/// The route override string used when requesting the routes.
+	/// </summary>
+	[Parameter]
+	public string? ResultsRoute { get; set; }
 
 	/// <inheritdoc />
 	protected override async Task OnInitializedAsync()
@@ -42,7 +54,7 @@ public partial class SurveyTaker : ComponentBase
 
 		if (SurveyId != Guid.Empty)
 		{
-			_survey = await Service.GetSurvey(SurveyId, Route);
+			_survey = await Service.GetSurvey(SurveyId, SurveyRoute);
 		}
 		else if (Survey is not null)
 		{
