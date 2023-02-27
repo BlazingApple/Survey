@@ -113,7 +113,7 @@ public partial class RenderSurveyToTake : ComponentBase
 		Validate();
 
 		int index = -1;
-		foreach (DTOQuestion question in SelectedSurvey.Questions.OrderBy(q => q.Position)
+		foreach (DTOQuestion question in SelectedSurvey.Questions.OrderBy(q => q.Position))
 		{
 			index++;
 			if (!question.Required)

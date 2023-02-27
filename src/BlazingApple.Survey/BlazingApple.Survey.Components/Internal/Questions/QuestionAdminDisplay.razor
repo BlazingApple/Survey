@@ -45,11 +45,22 @@
 			@if (Question.Type is QuestionType.Dropdown or QuestionType.DropdownMultiSelect && Question.Options is not null && MaxOptionsDisplay > 0)
 			{
 				<ul>
-					@foreach(QuestionOption option in Question.Options)
+					@{
+						List<QuestionOption> options = Question.Options.ToList();
+					}
+					@for (int i = 0; i < options.Count; i++)
 					{
-						<li>
-							@option.OptionLabel
-						</li>
+						QuestionOption option = options[i];
+
+						@if(i<MaxOptionsDisplay) {
+							<li>
+								@option.OptionLabel
+							</li>
+						}
+						else if (i == MaxOptionsDisplay)
+						{
+							<li title="@GetQuestionTitleText()">...and @(options.Count-MaxOptionsDisplay) more</li>
+						}
 					}
 				</ul>
 			}
