@@ -5,10 +5,11 @@
 			<div class="text-center">@Label</div>
 			<div class="customColors">
 				<RadzenChart>
-					<RadzenDonutSeries Data="@Responses"
+					<RadzenDonutSeries Data="@ResponseDisplays"
 									   CategoryProperty="OptionLabel"
-									   ValueProperty="Responses">
-						<Radzen.Blazor.RadzenLegend Position="LegendPosition.Bottom"></Radzen.Blazor.RadzenLegend>
+									   ValueProperty="Responses"
+					>
+						<Radzen.Blazor.RadzenLegend Position="LegendPosition.Right" />
 					</RadzenDonutSeries>
 				</RadzenChart>
 			</div>

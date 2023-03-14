@@ -10,7 +10,6 @@ namespace BlazingApple.Survey.Components;
 public partial class SurveyAdmin : ComponentBase
 {
 	private Shared.Survey? _newSurvey;
-	private bool _isEditing;
 	private bool _isCreatingNewSurvey;
 	private List<Shared.Survey>? _surveys;
 	private readonly string strError = "";
@@ -85,20 +84,8 @@ public partial class SurveyAdmin : ComponentBase
 	private async Task Delete(Shared.Survey survey)
 	{
 		Validate();
-		bool result = await @Service.DeleteSurveyAsync(survey);
-
-		if (!result)
-		{
-			throw new InvalidDataException("Error deleting survey");
-		}
-		else
-		{
-			_surveys.Remove(survey);
-		}
-
-		SurveyRequest response = new(UserAction.Delete, survey);
+		_surveys.Remove(survey);
 		await RefreshSurveys();
-		DialogService.Close(response);
 	}
 
 	private async void DialogClose(dynamic result)
@@ -124,23 +111,9 @@ public partial class SurveyAdmin : ComponentBase
 		StateHasChanged();
 	}
 
-	private void OnEditSurveyClick(MouseEventArgs args)
-	{
-		_isEditing = !_isEditing;
-		if (_isEditing)
-		{
-			_isCreatingNewSurvey = false;
-		}
-	}
-
 	private void OnNewSurveyClick(MouseEventArgs args)
 	{
 		_isCreatingNewSurvey = !_isCreatingNewSurvey;
-
-		if (_isCreatingNewSurvey)
-		{
-			_isEditing = false;
-		}
 	}
 
 	private async Task ProcessItemRequest(ItemRequest itemRequest)

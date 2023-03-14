@@ -22,38 +22,25 @@
 			{
 				@foreach(Shared.Survey survey in _surveys)
 				{
-					<Card Title="@survey.Name">
-						<HeaderContent>
-							<div>
-								@if (SurveyHeaderContent is not null)
-								{
-									@SurveyHeaderContent(survey)
-								}
-								<button title="Edit survey" type="button" class="btn btn-link px-1" @onclick="OnEditSurveyClick" disabled="@_isEditing">
-									<Icon I="BlazingApple.Components.Services.IconType.Edit" />
-								</button>
-								<button title="Delete survey" type="button" class="btn btn-link px-1" @onclick="(async () => await DeleteSurveyDialog(survey))" disabled="@_isEditing">
-									<Icon I="BlazingApple.Components.Services.IconType.Delete" />
-								</button>
-							</div>
-						</HeaderContent>
-						<ChildContent>
+					<RenderSurveyCardAdmin
+						AdditionalSegments="@AdditionalSegments"
+						Survey="survey" 
+						MaxOptionsDisplay="@MaxOptionsDisplay" 
+						OnUpdate="RefreshSurveys" 
+						OnDelete="Delete">
+						<SurveyHeaderContent>
+							@if (SurveyHeaderContent is not null)
+							{
+								@SurveyHeaderContent(survey)
+							}
+						</SurveyHeaderContent>
+						<SurveyBodyContent>
 							@if (SurveyBodyContent is not null)
 							{
 								@SurveyBodyContent(survey)
 							}
-
-							@if(_isEditing) {
-								<EditSurveyInline @bind-Value="_isEditing" AdditionalSegments="@AdditionalSegments" SelectedSurvey="survey" OnClose="RefreshSurveys"></EditSurveyInline>
-							}
-
-							<div class="row">
-								<div class="col-md-12">
-									<QuestionsAdmin SelectedSurvey="@survey" MaxOptionsDisplay="@MaxOptionsDisplay"></QuestionsAdmin>
-								</div>
-							</div>
-						</ChildContent>
-					</Card>
+						</SurveyBodyContent>
+					</RenderSurveyCardAdmin>
 				}
 			}
 		}
@@ -73,20 +60,4 @@
 		}
 	</div>
 
-}
-
-@code {
-	async Task DeleteSurveyDialog(Shared.Survey survey)
-	{
-		await DialogService.OpenAsync("Delete Survey", ds =>
-	@<div>
-		<p class="mb-2">Are you sure you want to delete this survey? This action cannot be undone.</p>
-		<div class="row">
-			<div class="col-md-12">
-				<button type="button" @onclick="(async () => await Delete(survey))" class="btn btn-outline-danger mb-1">Yes, delete</button>
-				<button type="button" @onclick="() => ds.Close(false)" class="btn btn-secondary mb-1">Cancel</button>
-			</div>
-		</div>
-	</div>);
-	}
 }
