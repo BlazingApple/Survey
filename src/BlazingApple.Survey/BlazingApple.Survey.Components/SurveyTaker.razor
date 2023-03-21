@@ -2,5 +2,5 @@
 
 @if (_survey != null && _surveyDTO != null)
 {
-	<RenderSurveyToTake SelectedSurvey="@_surveyDTO" SurveyRoute="@SurveyRoute" AnswersRoute="@AnswersRoute" ResultsRoute="@ResultsRoute" UserId="@UserId" />
+	<RenderSurveyToTake SelectedSurvey="@_surveyDTO" SurveyRoute="@SurveyRoute" AnswersRoute="@AnswersRoute" AllowSeeResults="_survey.ShowResultsOnCompletion" ResultsRoute="@ResultsRoute" UserId="@UserId" />
 }

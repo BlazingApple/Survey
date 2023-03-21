@@ -9,13 +9,14 @@
 		<Company>BlazingApple</Company>
 		<Authors>Taylor White</Authors>
 		<Copyright>2023</Copyright>
+		<Description>BlazingApple is a collection of business objects and corresponding components to speed application development. BlazingApple.Survey renders survey management components and components to take a survey as well as sending the objects to a server.</Description>
+		<PackageIcon>BlazingApple.png</PackageIcon>
 		<PackageProjectUrl>https://github.com/BlazingApple/Survey</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/BlazingApple/Survey</RepositoryUrl>
-		<PackageIcon>BlazingApple.png</PackageIcon>
 		<PackageTags>Blazor,Blazor-WASM,Survey</PackageTags>
-		<Version>2.2.0</Version>
-		<AssemblyVersion>2.2.0</AssemblyVersion>
-		<PackageReleaseNotes>Code cleanup</PackageReleaseNotes>
+		<Version>2.2.9</Version>
+		<AssemblyVersion>2.2.9</AssemblyVersion>
+		<PackageReleaseNotes>Allow hiding survey results from survey takers.</PackageReleaseNotes>
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>

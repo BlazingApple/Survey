@@ -13,11 +13,37 @@
 				</div>
 			</div>
 			<div class="col-md-6">
-				<div class="form-group">
-					<label for="saveSurvey">&nbsp;</label>
-					<div class="d-flex" style="flex-direction:row;">
-						<button id="saveSurvey" type="button" class="btn btn-primary mb-1 me-1" @onclick="AddOrUpdate">Save</button>
-						<button type="button" class="btn btn-light mb-1 mx-1" @onclick="Cancel">Close</button>
+				<label for="surveyName">
+					Show aggregate results to recipients (after survey completion)
+				</label>
+				<div>
+					<InputRadioGroup Name="show-results" @bind-Value="SelectedSurvey.ShowResultsOnCompletion">
+						<div class="btn-group">						
+							<InputRadio Value="true" class="btn-check" Name="show-results" id="show-results-outlined" autocomplete="off" />
+							<label class="btn btn-outline-primary" for="show-results-outlined" title="If set, respondents can see the number of recipients that voted for a particular option, but not who responded in each way.">
+								<i class="fas fa-eye"></i> 
+								Show results
+							</label>
+
+							<InputRadio Value="false" class="btn-check" Name="show-results" id="dont-show-results-outlined" autocomplete="off" />
+							<label class="btn btn-outline-primary" for="dont-show-results-outlined">
+								<i class="fas fa-eye-slash"></i> 
+								Don't show results
+							</label>
+						</div>
+					</InputRadioGroup>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="d-flex justify-content-center align-items-center">
+					<div class="form-group">
+						<label for="saveSurvey">&nbsp;</label>
+						<div class="d-flex" style="flex-direction:row;">
+							<button id="saveSurvey" type="button" class="btn btn-primary mb-1 me-1" @onclick="AddOrUpdate">Save</button>
+							<button type="button" class="btn btn-light mb-1 mx-1" @onclick="Cancel">Close</button>
+						</div>
 					</div>
 				</div>
 			</div>

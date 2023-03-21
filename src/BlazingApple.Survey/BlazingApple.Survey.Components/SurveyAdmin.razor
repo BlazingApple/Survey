@@ -40,6 +40,12 @@
 								@SurveyBodyContent(survey)
 							}
 						</SurveyBodyContent>
+						<SurveyFooterContent>
+							@if (SurveyFooterContent is not null)
+							{
+								@SurveyFooterContent(survey)
+							}
+						</SurveyFooterContent>
 					</RenderSurveyCardAdmin>
 				}
 			}
@@ -56,7 +62,9 @@
 
 		@if (_isCreatingNewSurvey && _newSurvey is not null)
 		{
-			<EditSurveyInline SelectedSurvey="_newSurvey" AdditionalSegments="@AdditionalSegments" @bind-Value="_isCreatingNewSurvey" OnClose="RefreshSurveys"></EditSurveyInline>
+			<div class="my-2">
+				<EditSurveyInline SelectedSurvey="_newSurvey" AdditionalSegments="@AdditionalSegments" @bind-Value="_isCreatingNewSurvey" OnClose="RefreshSurveys"></EditSurveyInline>
+			</div>
 		}
 	</div>
 

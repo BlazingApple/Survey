@@ -21,4 +21,5 @@ public partial class DTOSurvey
 
 	/// <inheritdoc cref="Survey.UserId" />
 	public string? UserId { get; set; }
+
 }

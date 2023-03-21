@@ -18,6 +18,9 @@ public partial class Survey
 	[Required]
 	public string Name { get; set; } = null!;
 
+	/// <summary>Whether to show the results to users after the survey was completed.</summary>
+	public bool ShowResultsOnCompletion { get; set; }
+
 	/// <summary>The list of survey questions.</summary>
 	public virtual ICollection<Question> Questions { get; set; }
 

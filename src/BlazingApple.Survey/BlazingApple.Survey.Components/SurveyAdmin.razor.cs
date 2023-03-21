@@ -30,13 +30,19 @@ public partial class SurveyAdmin : ComponentBase
 	public RenderFragment<Shared.Survey>? SurveyHeaderContent { get; set; }
 
 	/// <summary>
+	/// Content to render at the end of the body of the survey cards.
+	/// </summary>
+	[Parameter]
+	public RenderFragment<Shared.Survey>? SurveyFooterContent { get; set; }
+
+	/// <summary>
 	/// The maximum number of <see cref="QuestionOption"/> to render below a question.
 	/// </summary>
 	[Parameter]
 	public int MaxOptionsDisplay { get; set; } = 2;
 
 	/// <summary>
-	/// Content to render in the body of the survey cards.
+	/// Content to render at the start of the body of the survey cards.
 	/// </summary>
 	[Parameter]
 	public RenderFragment<Shared.Survey>? SurveyBodyContent { get; set; }

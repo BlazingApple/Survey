@@ -16,10 +16,10 @@
 		<StaticWebAssetBasePath></StaticWebAssetBasePath>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-		<Version>2.2.8</Version>
-		<PackageReleaseNotes>Support setting the user Id on all survey submissions.</PackageReleaseNotes>
-		<AssemblyVersion>2.2.8</AssemblyVersion>
-		<FileVersion>2.2.8</FileVersion>
+		<Version>2.3.1</Version>
+		<PackageReleaseNotes>Allow showing/hiding results for clients, add footer content of survey card admin.</PackageReleaseNotes>
+		<AssemblyVersion>2.3.1</AssemblyVersion>
+		<FileVersion>2.3.1</FileVersion>
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<Title>Blazing Apple Survey</Title>

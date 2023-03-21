@@ -49,10 +49,16 @@ public partial class RenderSurveyCardAdmin : ComponentBase
 	public RenderFragment<Shared.Survey>? SurveyHeaderContent { get; set; }
 
 	/// <summary>
-	/// Content to render in the body of the survey cards.
+	/// Content to render at the start of the body of the survey cards.
 	/// </summary>
 	[Parameter]
 	public RenderFragment<Shared.Survey>? SurveyBodyContent { get; set; }
+
+	/// <summary>
+	/// Content to render at the end of the body of the survey cards.
+	/// </summary>
+	[Parameter]
+	public RenderFragment<Shared.Survey>? SurveyFooterContent { get; set; }
 
 	[Inject]
 	private ISurveyClient Service { get; set; } = null!;

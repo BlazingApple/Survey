@@ -33,6 +33,11 @@
 					<QuestionsAdmin SelectedSurvey="@Survey" MaxOptionsDisplay="@MaxOptionsDisplay"></QuestionsAdmin>
 				</div>
 			</div>
+
+			@if (SurveyFooterContent is not null)
+			{
+				@SurveyFooterContent(Survey)
+			}
 		</ChildContent>
 	</Card>
 }
