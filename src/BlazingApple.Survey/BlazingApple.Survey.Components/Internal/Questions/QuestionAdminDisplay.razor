@@ -4,8 +4,8 @@
 {
 	<li title="@GetQuestionTitleText()" class="mb-1">
 		@if (!_isEditing) {
-			<div class="d-flex">
-				<div class="me-2">
+			<div class="d-flex" style="justify-content: space-between;">
+				<div class="me-2" style="flex-grow:0; flex-shrink: 1;">
 					@Question.Prompt
 					@if (Question.Required)
 					{
@@ -16,7 +16,7 @@
 						@GetEnumDisplayName(Question.Type)
 					</small>
 				</div>
-				<div>
+				<div style="flex-shrink: 0;">
 					@if (Question.Position > 0 && MovedUp.HasDelegate)
 					{
 						<button type="button" class="btn btn-outline-primary btn-sm ms-1" style="border-radius:50%;" title="Move up" @onclick="(async () => await MovedUp.InvokeAsync(Question!))">
@@ -30,13 +30,13 @@
 						</button>
 					}
 
-					<button class="btn btn-link btn-sm ms-2 px-1" disabled="@_isEditing" @onclick="@(args => OpenQuestion())">
+					<button class="btn btn-link btn-sm ms-1 px-1" disabled="@_isEditing" @onclick="@(args => OpenQuestion())">
 						<Icon I="IconType.Edit" />
 					</button>
 
 					@if (Question.Id != default)
 					{
-						<button @onclick="DeleteQuestionDialog" class="btn btn-link btn-sm ms-2 px-1">
+						<button @onclick="DeleteQuestionDialog" class="btn btn-link btn-sm px-1">
 							<Icon I="IconType.Delete" />
 						</button>
 					}

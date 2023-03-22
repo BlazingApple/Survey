@@ -16,10 +16,10 @@
 		<StaticWebAssetBasePath></StaticWebAssetBasePath>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-		<Version>2.3.1</Version>
-		<PackageReleaseNotes>Allow showing/hiding results for clients, add footer content of survey card admin.</PackageReleaseNotes>
-		<AssemblyVersion>2.3.1</AssemblyVersion>
-		<FileVersion>2.3.1</FileVersion>
+		<Version>2.3.3</Version>
+		<PackageReleaseNotes>Bug fix--allow setting question dropdown options</PackageReleaseNotes>
+		<AssemblyVersion>2.3.3</AssemblyVersion>
+		<FileVersion>2.3.3</FileVersion>
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<Title>Blazing Apple Survey</Title>

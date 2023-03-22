@@ -30,6 +30,18 @@
 
 			<div class="row">
 				<div class="col-md-12">
+					<div class="mb-2">
+						@if(Survey.ShowResultsOnCompletion)
+						{
+							<i class="fas fa-eye" style="color: #69c300;"></i>
+							<span class="fst-italic">Results will be shown to users (in aggregate).</span>
+						}
+						else
+						{
+							<i class="fas fa-eye-slash" style="color:#d94e6f;"></i>
+							<span class="fst-italic">Results will not be shown to users</span>
+						}
+						</div>
 					<QuestionsAdmin SelectedSurvey="@Survey" MaxOptionsDisplay="@MaxOptionsDisplay"></QuestionsAdmin>
 				</div>
 			</div>

@@ -15,7 +15,7 @@ public partial class Survey
 	public Guid Id { get; set; }
 
 	/// <summary>The display name.</summary>
-	[Required]
+	[Required(AllowEmptyStrings = false)]
 	public string Name { get; set; } = null!;
 
 	/// <summary>Whether to show the results to users after the survey was completed.</summary>

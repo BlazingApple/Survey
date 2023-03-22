@@ -2,9 +2,8 @@
 
 	@if(_isEditing)
 	{
-		
 		<div>
-			@if (Question.Options != null && Question.Options.Count > 0)
+			@if (Question.Options != null)
 			{
 				<ul style="list-style-type:none;">
 					@foreach (QuestionOption option in Question.Options.OrderBy(x => x.Id))

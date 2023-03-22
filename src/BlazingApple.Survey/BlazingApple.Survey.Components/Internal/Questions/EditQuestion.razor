@@ -37,7 +37,7 @@
 						<InputSelect id="itemType" class="form-select" TValue="QuestionType" @bind-Value="SelectedQuestion.Type">
 							@foreach (QuestionType itemType in FormTypes)
 							{
-								<option value="@itemType">@itemType</option>
+								<option value="@itemType">@(QuestionAdminDisplay.GetEnumDisplayName(itemType))</option>
 							}
 						</InputSelect>
 					</div>
